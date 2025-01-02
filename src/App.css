@@ -1,0 +1,6 @@
+@font-face {
+    font-family: 'Canela Thin';
+    src: url('/fonts/Canela-Thin.ttf') format('truetype');
+    font-weight: 100; /* Adjust weight as per the font specification */
+    font-style: normal;
+  }

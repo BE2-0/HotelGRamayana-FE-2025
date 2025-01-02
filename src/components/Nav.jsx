@@ -1,13 +1,35 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import logo from "../assets/images/logo.png"
+import logo2 from "../assets/images/logo2.png"
+import { useState } from 'react'
 const Nav = () => {
+  const [isDown, setIsDown] = useState(false);
+  const triggerHeight = 200; // Height in pixels to toggle isDown
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPosition = window.scrollY;
+
+      if (currentScrollPosition > triggerHeight && !isDown) {
+        setIsDown(true);
+      } else if (currentScrollPosition <= triggerHeight && isDown) {
+        setIsDown(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isDown]);
   return (
     <>
-      <div className=' fixed top-0 left-0 w-full z-20'>
-        <div className='mx-20 text-white'>
-          <div className='flex relative justify-center text-sm items-center py-5 text-white border-b border-gray-400'>
+      <div className="z-20 relative" >
+        <div className=' text-white'>
+          <div className="flex relative justify-center text-sm items-center py-5 text-white border-b border-gray-400 mx-20">
             <div className='w-32'>
-              <img src={logo} alt="" className='w-full object-contain brightness-200' />
+              <img src={logo} alt="" className='w-full object-contain brightness-[2.5]' />
             </div>
             <div className='flex absolute right-0 top-0 bottom-0 gap-8 items-center'>
               <h2 className='cursor-pointer'>Sign In</h2>
@@ -16,7 +38,7 @@ const Nav = () => {
             </div>
           </div>
 
-          <div className='flex justify-center text-sm py-5'>
+          <div className={`flex  items-center text-sm py-5 px-10 justify-center`}>
             <ul className='uppercase flex gap-4 tracking-wider'>
               <li><a className='cursor-pointer' href="">About</a></li>
               <li><a className='cursor-pointer' href="">Suites</a></li>
@@ -32,6 +54,41 @@ const Nav = () => {
           </div>
         </div>
       </div>
+
+
+      <div className={`z-20 w-full ${isDown ? "fixed top-0 left-0 transform translate-y-0" : "transform -translate-y-full"
+        } transition-transform duration-300 ease-in-out`} >
+        <div className=' text-white'>
+          <div className={`flex  items-center text-sm py-2 px-10 bg-white shadow-lg text-black justify-between`}>
+            <div className={`flex items-center gap-2`}>
+              <div className='w-10 '>
+                <img src={logo2} alt="" className='w-full object-contain' />
+              </div>
+              <div className='px-3 border-l border-gray-800'>
+                <h2 className='text-sm font-semibold uppercase'>Ramayana</h2>
+              </div>
+            </div>
+            <ul className='uppercase flex gap-4 tracking-wider'>
+              <li><a className='cursor-pointer' href="">About</a></li>
+              <li><a className='cursor-pointer' href="">Suites</a></li>
+              <li><a className='cursor-pointer' href="">Dining</a></li>
+              <li><a className='cursor-pointer' href="">Wellness</a></li>
+              <li><a className='cursor-pointer' href="">Experiences</a></li>
+              <li><a className='cursor-pointer' href="">What's on</a></li>
+              <li><a className='cursor-pointer' href="">occasions</a></li>
+              <li><a className='cursor-pointer' href="">offers</a></li>
+              <li><a className='cursor-pointer' href="">gallery</a></li>
+              <li><a className='cursor-pointer' href="">gift card</a></li>
+            </ul>
+            <div className={`flex gap-8 items-center`}>
+              <h2 className='cursor-pointer'>Sign In</h2>
+              <h2 className='cursor-pointer'>Contact</h2>
+              <a href="" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer'>Book</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </>
   )
 }
