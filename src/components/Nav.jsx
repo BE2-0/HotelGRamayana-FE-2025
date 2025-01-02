@@ -25,7 +25,7 @@ const Nav = () => {
   }, [isDown]);
   return (
     <>
-      <div className="z-20 relative" >
+      <div className="z-20 relative tracking-wider" >
         <div className=' text-white'>
           <div className="flex relative justify-center text-sm items-center py-5 text-white border-b border-gray-400 mx-20">
             <div className='w-32'>
@@ -34,12 +34,12 @@ const Nav = () => {
             <div className='flex absolute right-0 top-0 bottom-0 gap-8 items-center'>
               <h2 className='cursor-pointer'>Sign In</h2>
               <h2 className='cursor-pointer'>Contact</h2>
-              <a href="" className='px-8 py-2 border font-bold uppercase border-white cursor-pointer'>Book</a>
+              <a href="" className='px-8 py-2 border font-bold text-xs uppercase border-white cursor-pointer  font-akzidenz'>Book</a>
             </div>
           </div>
 
           <div className={`flex  items-center text-sm py-5 px-10 justify-center`}>
-            <ul className='uppercase flex gap-4 tracking-wider'>
+            <ul className='uppercase flex gap-4 tracking-widest'>
               <li><a className='cursor-pointer' href="">About</a></li>
               <li><a className='cursor-pointer' href="">Suites</a></li>
               <li><a className='cursor-pointer' href="">Dining</a></li>
@@ -56,7 +56,7 @@ const Nav = () => {
       </div>
 
 
-      <div className={`z-20 w-full ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
+      <div className={`z-20 w-full tracking-wider ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
         } transition-transform duration-300 ease-in-out`} >
         <div className=' text-white'>
           <div className={`flex  items-center text-sm py-2 px-10 bg-white shadow-lg text-black justify-between`}>
@@ -65,10 +65,10 @@ const Nav = () => {
                 <img src={logo2} alt="" className='w-full object-contain' />
               </div>
               <div className='px-3 border-l border-gray-800'>
-                <h2 className='text-sm font-semibold uppercase'>Ramayana</h2>
+                <h2 className='text-sm  tracking-widest uppercase font-medium font-akzidenz'>Ramayana</h2>
               </div>
             </div>
-            <ul className='uppercase flex gap-4 tracking-wider'>
+            <ul className='uppercase flex gap-4 tracking-widest'>
               <li><a className='cursor-pointer' href="">About</a></li>
               <li><a className='cursor-pointer' href="">Suites</a></li>
               <li><a className='cursor-pointer' href="">Dining</a></li>
@@ -83,7 +83,7 @@ const Nav = () => {
             <div className={`flex gap-8 items-center`}>
               <h2 className='cursor-pointer'>Sign In</h2>
               <h2 className='cursor-pointer'>Contact</h2>
-              <a href="" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer'>Book</a>
+              <a href="" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer  font-akzidenz text-xs'>Book</a>
             </div>
           </div>
         </div>
