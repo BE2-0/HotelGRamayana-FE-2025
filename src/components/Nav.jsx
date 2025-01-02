@@ -56,7 +56,7 @@ const Nav = () => {
       </div>
 
 
-      <div className={`z-20 w-full ${isDown ? "fixed top-0 left-0 transform translate-y-0" : "transform -translate-y-full"
+      <div className={`z-20 w-full ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
         } transition-transform duration-300 ease-in-out`} >
         <div className=' text-white'>
           <div className={`flex  items-center text-sm py-2 px-10 bg-white shadow-lg text-black justify-between`}>

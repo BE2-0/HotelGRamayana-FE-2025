@@ -138,7 +138,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          {/*end of dining */}
+          {/*end of spa */}
         </div>
       </div>
     </>
