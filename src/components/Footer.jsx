@@ -47,11 +47,11 @@ const Footer = () => {
                     <div className='text-sm tracking-wide flex justify-center'>
                         <div>
                             <p className='text-xs'>Sign up for news from Ramayana Hotel Nepal</p>
-                            <div className='flex w-full items-center gap-4'>
+                            <div className='flex w-full items-center gap-4  mt-3'>
                                 <div className=''>
                                     <input type="text"
                                         placeholder='Email Address'
-                                        className='p-4 bg-transparent border mt-3 border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-auto tracking-wider placeholder:text-gray-400' />
+                                        className='p-4 bg-transparent border border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-auto tracking-wider placeholder:text-gray-400' />
                                 </div>
                                 <div className='flex items-center m-auto'>
                                     <button className="flex text-base items-center cursor-pointer m-auto">
