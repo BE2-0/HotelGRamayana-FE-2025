@@ -5,6 +5,7 @@ import aboutimage from "../assets/images/about.png"
 import historyimage from "../assets/images/history.png"
 import dineimage from "../assets/images/dine.png"
 import bedimage from "../assets/images/bed.png"
+import Footer from '../components/Footer'
 const Home = () => {
   return (
     <>
@@ -139,6 +140,12 @@ const Home = () => {
             </div>
           </div>
           {/*end of spa */}
+
+
+
+          {/* footer */}
+          <Footer />
+          {/*end of footer */}
         </div>
       </div>
     </>
