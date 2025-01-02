@@ -20,7 +20,7 @@ const Home = () => {
         {/* end of hero section */}
 
         {/* Overlay */}
-      <div className="absolute top-0 left-0 w-full h-[40vh] bg-gradient-to-b from-black opacity-70 z-10"></div>
+      <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
       </div>
     </>
   )
