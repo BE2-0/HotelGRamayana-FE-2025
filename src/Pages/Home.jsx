@@ -94,10 +94,10 @@ const Home = () => {
                   <div className=''>
                     <h2 className='font-bold uppercase font-akzidenz text-sm'>Dining</h2>
                     <h2 className='font-canela text-5xl !font-thin tracking-wide my-6' >Butcher's Block IMUA<br /> tasting Menu</h2>
-                    <p className=''>
+                    <p className='text-justify'>
                       For the ultimate Butcher’s Block experience, opt for IMUA, a dining concept that beautifully embodies the culinary mastery and philosophy of Chef Jordan Keao, expressed through wood-fire cooking, whole-animal butchery, and a commitment to zero waste.
                     </p>
-                    <p className='my-6'>
+                    <p className='my-6 text-justify'>
                       Indulge in the signature multi-course dining experience, where you’ll savour Chef Jordan Keao’s iconic favourites. This culinary journey is meticulously crafted with a thoughtfully curated menu, complemented by exclusive off-the-menu creations that spotlight seasonal produce, creating an epic gastronomic adventure.
                     </p>
                     <div className='flex gap-8'>
@@ -123,7 +123,7 @@ const Home = () => {
                   <div className=''>
                     <h2 className='font-bold uppercase font-akzidenz text-sm'>SPA</h2>
                     <h2 className='font-canela text-5xl !font-thin tracking-wide my-6' >Personalised experiences in a refined Sanctuary</h2>
-                    <p className='mb-6'>
+                    <p className='mb-6 text-justify'>
                     Ramayana Spa is a tranquil hideaway which takes a holistic approach to wellbeing, blending Asian philosophies with modern therapeutic body and facial treatments, personal training and an outdoor pool.
                     </p>
                     <div className='flex gap-8'>

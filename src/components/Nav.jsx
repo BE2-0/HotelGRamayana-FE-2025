@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import logo from "../assets/images/logo.png"
 import logo2 from "../assets/images/logo2.png"
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 const Nav = () => {
   const [isDown, setIsDown] = useState(false);
   const triggerHeight = 200; // Height in pixels to toggle isDown
@@ -42,7 +43,7 @@ const Nav = () => {
             <ul className='uppercase flex gap-4 tracking-widest'>
               <li><a className='cursor-pointer' href="">About</a></li>
               <li><a className='cursor-pointer' href="">Suites</a></li>
-              <li><a className='cursor-pointer' href="">Dining</a></li>
+              <li><Link className='cursor-pointer' to="/dining">Dining</Link></li>
               <li><a className='cursor-pointer' href="">Wellness</a></li>
               <li><a className='cursor-pointer' href="">Experiences</a></li>
               <li><a className='cursor-pointer' href="">What's on</a></li>
@@ -71,7 +72,7 @@ const Nav = () => {
             <ul className='uppercase flex gap-4 tracking-widest'>
               <li><a className='cursor-pointer' href="">About</a></li>
               <li><a className='cursor-pointer' href="">Suites</a></li>
-              <li><a className='cursor-pointer' href="">Dining</a></li>
+              <li><Link className='cursor-pointer' to="/dining">Dining</Link></li>
               <li><a className='cursor-pointer' href="">Wellness</a></li>
               <li><a className='cursor-pointer' href="">Experiences</a></li>
               <li><a className='cursor-pointer' href="">What's on</a></li>
