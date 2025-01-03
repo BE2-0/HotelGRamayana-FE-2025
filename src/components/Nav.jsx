@@ -29,9 +29,11 @@ const Nav = () => {
       <div className="z-20 relative tracking-wider" >
         <div className=' text-white'>
           <div className="flex relative justify-center text-sm items-center py-5 text-white border-b border-gray-400 mx-20">
-            <div className='w-32'>
-              <img src={logo} alt="" className='w-full object-contain brightness-[2.5]' />
-            </div>
+            <Link to="/">
+              <div className='w-32'>
+                <img src={logo} alt="" className='w-full object-contain brightness-[2.5]' />
+              </div>
+            </Link>
             <div className='flex absolute right-0 top-0 bottom-0 gap-8 items-center'>
               <h2 className='cursor-pointer'>Sign In</h2>
               <h2 className='cursor-pointer'>Contact</h2>
@@ -61,13 +63,17 @@ const Nav = () => {
         } transition-transform duration-300 ease-in-out`} >
         <div className=' text-white'>
           <div className={`flex  items-center text-sm py-2 px-10 bg-white shadow-lg text-black justify-between`}>
-            <div className={`flex items-center gap-2`}>
-              <div className='w-10 '>
-                <img src={logo2} alt="" className='w-full object-contain' />
-              </div>
-              <div className='px-3 border-l border-gray-800'>
-                <h2 className='text-sm  tracking-widest uppercase font-medium font-akzidenz'>Ramayana</h2>
-              </div>
+            <div>
+              <Link to="/" className='cursor-pointer'>
+                <div className={`flex items-center gap-2`}>
+                  <div className='w-10 '>
+                    <img src={logo2} alt="" className='w-full object-contain' />
+                  </div>
+                  <div className='px-3 border-l border-gray-800'>
+                    <h2 className='text-sm  tracking-widest uppercase font-medium font-akzidenz'>Ramayana</h2>
+                  </div>
+                </div>
+              </Link>
             </div>
             <ul className='uppercase flex gap-4 tracking-widest'>
               <li><a className='cursor-pointer' href="">About</a></li>

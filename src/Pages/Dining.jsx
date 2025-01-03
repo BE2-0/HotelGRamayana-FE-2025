@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Nav from '../components/Nav'
 import heroVideo from "../assets/videos/heroVideo.mp4"
 import aboutimage from "../assets/images/about.png"
@@ -38,6 +38,10 @@ const data = [
     },
 ];
 const Dining = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+
     return (
         <>
             <div className=''>

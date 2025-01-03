@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Nav from '../components/Nav'
 import heroVideo from "../assets/videos/heroVideo.mp4"
 import aboutimage from "../assets/images/about.png"
@@ -7,6 +7,9 @@ import dineimage from "../assets/images/dine.png"
 import bedimage from "../assets/images/bed.png"
 import Footer from '../components/Footer'
 const Home = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
   return (
     <>
       <div className=''>
@@ -124,7 +127,7 @@ const Home = () => {
                     <h2 className='font-bold uppercase font-akzidenz text-sm'>SPA</h2>
                     <h2 className='font-canela text-5xl !font-thin tracking-wide my-6' >Personalised experiences in a refined Sanctuary</h2>
                     <p className='mb-6 text-justify'>
-                    Ramayana Spa is a tranquil hideaway which takes a holistic approach to wellbeing, blending Asian philosophies with modern therapeutic body and facial treatments, personal training and an outdoor pool.
+                      Ramayana Spa is a tranquil hideaway which takes a holistic approach to wellbeing, blending Asian philosophies with modern therapeutic body and facial treatments, personal training and an outdoor pool.
                     </p>
                     <div className='flex gap-8'>
                       <a href="" className='textbase py-1 border-b border-gray-400 text-gray-800'> Explore treatments</a>
