@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Nav from '../components/Nav'
 import heroVideo from "../assets/videos/heroVideo.mp4"
 import aboutimage from "../assets/images/about.png"
@@ -7,6 +7,7 @@ import dineimage from "../assets/images/dine.png"
 import dine2image from "../assets/images/dining2.png"
 import bedimage from "../assets/images/bed.png"
 import Footer from '../components/Footer'
+import Loader from '../common/Loader'
 const data = [
     {
         image: aboutimage,
@@ -38,12 +39,19 @@ const data = [
     },
 ];
 const Dining = () => {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [])
+     const [loading, setLoading] = useState(true);
+     useEffect(() => {
+       window.scrollTo(0, 0);
+       setTimeout(() => {
+         setLoading(false);
+       }, 1000);
+     }, [])
 
     return (
         <>
+         {loading && (
+                <Loader />
+            )}
             <div className=''>
                 <Nav />
                 <div className=' absolute top-0 left-0 w-full'>
