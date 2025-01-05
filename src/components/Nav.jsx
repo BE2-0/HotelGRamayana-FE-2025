@@ -3,7 +3,7 @@ import logo from "../assets/images/logo.png"
 import logo2 from "../assets/images/logo2.png"
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-const Nav = () => {
+const Nav = ({ isTextBlack }) => {
   const [isDown, setIsDown] = useState(false);
   const triggerHeight = 200; // Height in pixels to toggle isDown
 
@@ -27,8 +27,8 @@ const Nav = () => {
   return (
     <>
       <div className="z-20 relative tracking-wider" >
-        <div className=' text-white'>
-          <div className="flex relative justify-center text-sm items-center py-5 text-white border-b border-gray-400 mx-20">
+        <div className={` ${isTextBlack ? "text-black" : "text-white"}`}>
+          <div className={`flex relative justify-center text-sm items-center py-5 ${isTextBlack ? "text-black border-black" : "text-white border-gray-400"} border-b  mx-20`}>
             <Link to="/">
               <div className='w-32'>
                 <img src={logo} alt="" className='w-full object-contain brightness-[2.5]' />
@@ -37,7 +37,7 @@ const Nav = () => {
             <div className='flex absolute right-0 top-0 bottom-0 gap-8 items-center'>
               <h2 className='cursor-pointer'>Sign In</h2>
               <h2 className='cursor-pointer'>Contact</h2>
-              <a href="" className='px-8 py-2 border font-bold text-xs uppercase border-white cursor-pointer  font-akzidenz'>Book</a>
+              <a href="" className={`px-8 py-2 border font-bold text-xs uppercase ${isTextBlack ? "border-black" : "border-white"} cursor-pointer  font-akzidenz`}>Book</a>
             </div>
           </div>
 
@@ -51,7 +51,7 @@ const Nav = () => {
               <li><a className='cursor-pointer' href="">What's on</a></li>
               <li><a className='cursor-pointer' href="">occasions</a></li>
               <li><a className='cursor-pointer' href="">offers</a></li>
-              <li><a className='cursor-pointer' href="">gallery</a></li>
+              <li><Link className='cursor-pointer' to="/gallery">Gallery</Link></li>
               <li><a className='cursor-pointer' href="">gift card</a></li>
             </ul>
           </div>
@@ -59,7 +59,7 @@ const Nav = () => {
       </div>
 
 
-      <div className={`z-20 w-full tracking-wider ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
+      <div className={`z-50 w-full tracking-wider ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
         } transition-transform duration-300 ease-in-out`} >
         <div className=' text-white'>
           <div className={`flex  items-center text-sm py-2 px-10 bg-white shadow-lg text-black justify-between`}>
@@ -84,7 +84,7 @@ const Nav = () => {
               <li><a className='cursor-pointer' href="">What's on</a></li>
               <li><a className='cursor-pointer' href="">occasions</a></li>
               <li><a className='cursor-pointer' href="">offers</a></li>
-              <li><a className='cursor-pointer' href="">gallery</a></li>
+              <li><Link className='cursor-pointer' to="/gallery">Gallery</Link></li>
               <li><a className='cursor-pointer' href="">gift card</a></li>
             </ul>
             <div className={`flex gap-8 items-center`}>

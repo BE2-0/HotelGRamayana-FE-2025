@@ -17,3 +17,56 @@
   * {
     font-family: "Lato", serif;
   }
+/* 
+
+  
+.gallery {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  gap: 100px;
+}
+.gallery__item img {
+  width: 100%;
+} */
+/* 
+.gallery {
+  display: flex;
+  gap: 20px;
+}
+
+.gallery-item {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gallery-item img{
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  object-fit: cover;
+} */
+
+
+.gallery{
+  column-count: 3;
+  column-gap: 24px;
+}
+
+.gallery-item{
+  box-sizing: border-box;
+  break-inside: avoid;
+  counter-increment: item-counter;
+  width: 100%;
+  margin-bottom: 24px;
+  display: inline-flex;
+}
+
+
+.gallery-item img{
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: px;
+}
