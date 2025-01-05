@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Nav from '../components/Nav'
 import aboutimage from "../assets/images/about.png"
 import historyimage from "../assets/images/history.png"
@@ -18,6 +18,7 @@ import 'lightgallery/css/lg-thumbnail.css';
 import lgZoom from 'lightgallery/plugins/zoom';
 import lgVideo from 'lightgallery/plugins/video';
 import fjGallery from 'flickr-justified-gallery';
+import Loader from '../common/Loader'
 
 
 const data = [
@@ -78,7 +79,7 @@ const gallery = [
     {
         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-AoPvB59kkMhg5Z53.jpg",
     },
-  
+
     {
         imageUrl: "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=656,h=718,fit=crop/mnl3DyqLpOSqoMLB/reception-1-mePvl4Oy31iwqyy7.jpg",
     },
@@ -92,20 +93,13 @@ const gallery = [
         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-5-mP4nqkRL51CpRkgQ.jpg",
     },
 ];
-
-const groupImages = (images, columnCount) => {
-    const columns = Array.from({ length: columnCount }, () => []);
-    images.forEach((image, index) => {
-        columns[index % columnCount].push(image);
-    });
-    return columns;
-};
-
 const Gallery = () => {
-    const columnCount = 3;
-    const groupedImages = groupImages(gallery, columnCount);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         window.scrollTo(0, 0);
+        setTimeout(() => {
+            setLoading(false);
+        }, 1000);
     }, [])
     const onInit = () => {
         console.log('lightGallery has been initialized');
@@ -129,6 +123,9 @@ const Gallery = () => {
 
     return (
         <>
+            {loading && (
+                <Loader />
+            )}
             <div className=''>
                 <Nav isTextBlack={true} />
                 <div className=' absolute top-0 left-0 w-full'>
