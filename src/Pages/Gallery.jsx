@@ -19,7 +19,7 @@ import lgZoom from 'lightgallery/plugins/zoom';
 import lgVideo from 'lightgallery/plugins/video';
 import fjGallery from 'flickr-justified-gallery';
 import Loader from '../common/Loader'
-
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
 
 const data = [
     {
@@ -144,7 +144,7 @@ const Gallery = () => {
                     <div className='px-10 mt-10'>
                         <div className='mb-20'>
                             <LightGallery
-                                plugins={[lgZoom, lgVideo]}
+                                plugins={[lgVideo,lgThumbnail]}
                                 mode="lg-fade"
                                 pager={false}
                                 thumbnail={true}
