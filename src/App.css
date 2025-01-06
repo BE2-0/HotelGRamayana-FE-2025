@@ -70,3 +70,42 @@
   height: 100%;
   border-radius: px;
 }
+
+
+.rdrDefinedRangesWrapper{
+  display: none !important;
+}
+
+.rdrDateDisplayWrapper{
+  display: none !important;
+}
+
+.rdrMonthAndYearPickers{
+  font-family: "Canela Thin","serif";
+  font-size: 20px;
+  font-weight: 200 !important;
+  letter-spacing: 0.1em;
+  padding: 5px !important;
+}
+
+.rdrMonthName{
+  font-family: "Canela Thin","serif";
+  font-size: 30px;
+  font-weight: 500 !important;
+  padding: 8px !important;
+  letter-spacing: 0.05em;
+  text-align: center !important;
+}
+
+.rdrMonthAndYearWrapper{
+  height: auto !important;
+}
+
+.rdrCalendarWrapper{
+  font-size: 14px !important;
+  padding: 20px !important;
+}
+
+.rdrCalendarWrapper{
+  background-color: #f7f6f2;
+}
