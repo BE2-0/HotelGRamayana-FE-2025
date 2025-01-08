@@ -130,9 +130,9 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
         <div className='col-span-2 relative'>
           <img className='w-full h-full object-cover object-center brightness-75' src={contactImage} alt="" />
           <div className="absolute top-0 left-0 w-full h-[20vh] bg-gradient-to-b from-gray-900 opacity-75 z-10"></div>
-          <button onClick={handleContactUsClose} className='absolute top-5 left-5 text-gray-100 flex gap-2 items-center z-20'>
+          <button onClick={handleContactUsClose} className='absolute top-5 left-5 text-gray-100 flex gap-2 items-center z-20 tracking-[0.2rem]  hover:!tracking-[0.3rem] duration-300 ease-linear transition-all'>
             <HiXMark className='text-4xl !font-thin  ' />
-            <h2 className='uppercase tracking-[0.2rem] text-sm  font-akzidenz mt-0.5'>Close</h2>
+            <h2 className='uppercase text-sm  font-akzidenz mt-0.5'>Close</h2>
           </button>
         </div>
         <div className='p-14 overflow-y-auto'>
