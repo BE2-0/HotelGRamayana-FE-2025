@@ -67,15 +67,15 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
           {!hideNav && (
             <div className={`flex  items-center text-sm py-5 px-10 justify-center`}>
               <ul className='uppercase flex gap-4 tracking-widest'>
-                <li><a className={`${navStyle} ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} `} href="">About</a></li>
+                <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "about" ? "before:!w-full" : ""}`} to="/about">About</Link></li>
                 <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">Suites</a></li>
-                <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route=="dining"?"before:!w-full":""}`} to="/dining">Dining</Link></li>
+                <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "dining" ? "before:!w-full" : ""}`} to="/dining">Dining</Link></li>
                 <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">Wellness</a></li>
                 <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">Experiences</a></li>
                 <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">What's on</a></li>
                 <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">occasions</a></li>
                 <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">offers</a></li>
-                <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route=="gallery"?"before:!w-full":""}`} to="/gallery">Gallery</Link></li>
+                <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "gallery" ? "before:!w-full" : ""}`} to="/gallery">Gallery</Link></li>
                 <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">gift card</a></li>
               </ul>
             </div>
@@ -102,15 +102,15 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
                 </Link>
               </div>
               <ul className='uppercase flex gap-4 tracking-widest'>
-                <li><a className={`${navStyle}  before:bg-gray-600`} href="">About</a></li>
+                <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "about" ? "before:!w-full" : ""}`} to="/about">About</Link></li>
                 <li><a className={`${navStyle}  before:bg-gray-600`} href="">Suites</a></li>
-                <li><Link className={`${navStyle}  before:bg-gray-600 ${route=="dining"?"before:!w-full":""}`} to="/dining">Dining</Link></li>
+                <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "dining" ? "before:!w-full" : ""}`} to="/dining">Dining</Link></li>
                 <li><a className={`${navStyle}  before:bg-gray-600`} href="">Wellness</a></li>
                 <li><a className={`${navStyle}  before:bg-gray-600`} href="">Experiences</a></li>
                 <li><a className={`${navStyle}  before:bg-gray-600`} href="">What's on</a></li>
                 <li><a className={`${navStyle}  before:bg-gray-600`} href="">occasions</a></li>
                 <li><a className={`${navStyle}  before:bg-gray-600`} href="">offers</a></li>
-                <li><Link className={`${navStyle}  before:bg-gray-600 ${route=="gallery"?"before:!w-full":""}`} to="/gallery">Gallery</Link></li>
+                <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "gallery" ? "before:!w-full" : ""}`} to="/gallery">Gallery</Link></li>
                 <li><a className={`${navStyle}  before:bg-gray-600`} href="">gift card</a></li>
               </ul>
               <div className={`flex gap-8 items-center`}>
