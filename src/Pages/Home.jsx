@@ -7,6 +7,7 @@ import dineimage from "../assets/images/dine.png"
 import bedimage from "../assets/images/bed.png"
 import Footer from '../components/Footer'
 import Loader from '../common/Loader'
+import { useLocation } from 'react-router-dom'
 const Home = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
