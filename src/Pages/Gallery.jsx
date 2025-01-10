@@ -66,41 +66,55 @@ const data = [
 // },
 // ]
 
-const gallery = [
-    {
-        imageUrl: "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=656,h=521,fit=crop/mnl3DyqLpOSqoMLB/generated/generated-mnlv1DRlXRtDpEoD.png",
-    },
-    {
-        imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/turkis-royal-room-dOqyzB3GPDID1BKE.jpg",
-    },
-    {
-        imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
-    },
-    {
-        imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-AoPvB59kkMhg5Z53.jpg",
-    },
+// const gallery = [
+//     {
+//         imageUrl: "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=656,h=521,fit=crop/mnl3DyqLpOSqoMLB/generated/generated-mnlv1DRlXRtDpEoD.png",
+//     },
+//     {
+//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/turkis-royal-room-dOqyzB3GPDID1BKE.jpg",
+//     },
+//     {
+//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
+//     },
+//     {
+//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-AoPvB59kkMhg5Z53.jpg",
+//     },
 
-    {
-        imageUrl: "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=656,h=718,fit=crop/mnl3DyqLpOSqoMLB/reception-1-mePvl4Oy31iwqyy7.jpg",
-    },
-    {
-        imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
-    },
-    {
-        imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
-    },
-    {
-        imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-5-mP4nqkRL51CpRkgQ.jpg",
-    },
-];
+//     {
+//         imageUrl: "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=656,h=718,fit=crop/mnl3DyqLpOSqoMLB/reception-1-mePvl4Oy31iwqyy7.jpg",
+//     },
+//     {
+//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
+//     },
+//     {
+//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
+//     },
+//     {
+//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-5-mP4nqkRL51CpRkgQ.jpg",
+//     },
+// ];
+
+
 const Gallery = () => {
     const [loading, setLoading] = useState(true);
+    const [images, setImages] = useState([]);
     useEffect(() => {
-        window.scrollTo(0, 0);
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-    }, [])
+        window.scrollTo(0, 0); // Scroll to the top of the page on mount
+        const loadImages = async () => {
+          await importImages();
+          setLoading(false);
+        };
+        setTimeout(() => loadImages(), 1000); // Simulate delay for loading experience
+      }, []);
+    
+      const importImages = async () => {
+        const importedImages = import.meta.glob("../assets/Gallery/*.{jpg,JPG,jpeg,JPEG,png,svg}", { eager: true });
+        const loadedImages = Object.keys(importedImages).map((key) => {
+          const imageModule = importedImages[key];
+          return imageModule.default || key;
+        });
+        setImages(loadedImages);
+      };
     const onInit = () => {
         console.log('lightGallery has been initialized');
     };
@@ -158,9 +172,9 @@ const Gallery = () => {
                                     rotate: false,
                                 }}
                             >
-                                {gallery.length > 0 && gallery.map((element, index) => (
-                                    <a href={element.imageUrl} key={index} className='gallery-item'>
-                                        <img src={element.imageUrl} alt={element.imageUrl} />
+                                {images.length > 0 && images.map((image, index) => (
+                                    <a href={image} key={index} className='gallery-item'>
+                                        <img src={image} alt={image} />
                                     </a>
                                 ))}
                             </LightGallery>
