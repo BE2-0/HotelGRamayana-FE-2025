@@ -109,7 +109,8 @@ const Gallery = () => {
     
       const importImages = async () => {
         const importedImages = import.meta.glob("../assets/Gallery/*.{jpg,JPG,jpeg,JPEG,png,svg}", { eager: true });
-        const loadedImages = Object.keys(importedImages).map((key) => {
+        const imageKeys = Object.keys(importedImages).slice(0, 20); 
+        const loadedImages = imageKeys.map((key) => {
           const imageModule = importedImages[key];
           return imageModule.default || key;
         });

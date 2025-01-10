@@ -8,7 +8,7 @@ import dine2image from "../assets/images/dining2.png"
 import bedimage from "../assets/images/bed.png"
 import Footer from '../components/Footer'
 import Loader from '../common/Loader'
-import blogimage from "../assets/images/DSC08022.jpg"
+import blogimage from "../assets/Gallery/DSC08022.jpg"
 const data = [
     {
         image: aboutimage,
