@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import ContactUs from './ContactUs'
+import { useAuth } from '../contexts/authContext'
 const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const navStyle = "cursor-pointer relative before:absolute before:bottom-0 pb-0.5 before:left-1/2 before:h-0.5 before:w-0 before:rounded-5xl before:transform before:-translate-x-1/2 before:transition-all before:duration-300 before:ease-linear hover:before:w-full hover:before:scale-x-100 hover:before:transform-origin-center"
   const [isDown, setIsDown] = useState(false);
@@ -12,7 +13,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const [contactUsOpen, setContactUsOpen] = useState(false);
   const location = useLocation();
   const route = location.pathname.split('/')[1];
-
+  const { userLoggedIn } = useAuth();
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPosition = window.scrollY;
@@ -52,7 +53,9 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
               </div>
             </Link>
             <div className='flex absolute right-0 top-0 bottom-0 gap-8 items-center'>
-              <h2 className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign In</h2>
+              {!userLoggedIn && (
+                <Link to="/login" className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign In</Link>
+              )}
               <h2 className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} onClick={handleContactUsOpen}>Contact</h2>
               {!hideBookButton && (
                 <a target='_blank' href="/booking" className={`px-8 py-2 border font-bold text-xs uppercase ${isTextBlack ? "border-black" : "border-white"} cursor-pointer  font-akzidenz`}>Book</a>
@@ -110,7 +113,9 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
                 {/* <li><a className={`${navStyle}  before:bg-gray-600`} href="">gift card</a></li> */}
               </ul>
               <div className={`flex gap-8 items-center`}>
-                <h2 className={`${navStyle}  before:bg-gray-600`}>Sign In</h2>
+                {!userLoggedIn && (
+                  <Link to="/login" className={`${navStyle}  before:bg-gray-600`}>Sign In</Link>
+                )}
                 <h2 className={`${navStyle}  before:bg-gray-600`} onClick={handleContactUsOpen}>Contact</h2>
                 <a target='_blank' href="/booking" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer  font-akzidenz text-xs'>Book</a>
               </div>
