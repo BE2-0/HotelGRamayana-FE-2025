@@ -20,6 +20,8 @@ import lgVideo from 'lightgallery/plugins/video';
 import fjGallery from 'flickr-justified-gallery';
 import Loader from '../common/Loader'
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import GalleryPreview from '../components/GalleryPreview'
+import Fancybox from '../components/FancyBox'
 
 const data = [
     {
@@ -101,21 +103,21 @@ const Gallery = () => {
     useEffect(() => {
         window.scrollTo(0, 0); // Scroll to the top of the page on mount
         const loadImages = async () => {
-          await importImages();
-          setLoading(false);
+            await importImages();
+            setLoading(false);
         };
         setTimeout(() => loadImages(), 1000); // Simulate delay for loading experience
-      }, []);
-    
-      const importImages = async () => {
+    }, []);
+
+    const importImages = async () => {
         const importedImages = import.meta.glob("../assets/Gallery/*.{jpg,JPG,jpeg,JPEG,png,svg}", { eager: true });
-        const imageKeys = Object.keys(importedImages).slice(0, 20); 
+        const imageKeys = Object.keys(importedImages).slice(0, 20);
         const loadedImages = imageKeys.map((key) => {
-          const imageModule = importedImages[key];
-          return imageModule.default || key;
+            const imageModule = importedImages[key];
+            return imageModule.default || key;
         });
         setImages(loadedImages);
-      };
+    };
     const onInit = () => {
         console.log('lightGallery has been initialized');
     };
@@ -158,7 +160,7 @@ const Gallery = () => {
                     {/* contents */}
                     <div className='px-10 mt-10'>
                         <div className='mb-20'>
-                            <LightGallery
+                            {/* <LightGallery
                                 plugins={[lgVideo,lgThumbnail]}
                                 mode="lg-fade"
                                 pager={false}
@@ -178,7 +180,22 @@ const Gallery = () => {
                                         <img src={image} alt={image} />
                                     </a>
                                 ))}
-                            </LightGallery>
+                            </LightGallery> */}
+                            {/* {images.length > 0 && (
+                                <GalleryPreview images={images} />
+                            )} */}
+
+                            <Fancybox options={{
+                                Carousel: {
+                                    infinite: false,
+                                },
+                            }}>
+                                {images.length > 0 && images.map((image, index) => (
+                                    <a href={image} key={index} data-fancybox={`gallery-${index}`} className='gallery-item'>
+                                        <img src={image} alt={image} />
+                                    </a>
+                                ))}
+                            </Fancybox>
                         </div>
                     </div>
 
