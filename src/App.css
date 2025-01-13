@@ -14,7 +14,7 @@
   }
   
 
-  * {
+  body {
     font-family: "Lato", serif;
   }
 /* 
@@ -152,4 +152,8 @@
 }
 .swiper-pagination-bullet-active{
   width: 30px !important;
+}
+
+.font-canela *{
+ font-family: "Canela Thin", serif !important;
 }

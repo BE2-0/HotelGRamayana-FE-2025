@@ -60,7 +60,7 @@ const Testimonial = () => {
     const rating=4.5;
     const apiUrl = "/search.json?engine=google_maps&place_id=ChIJARpDes0Z6zkRh7Sm80lPBD8&api_key=062a69b3b5fe9bb1cbdb7b82c746f41271a33e0d9185405aa9352a8887194578";
     useEffect(() => {
-        fetchReviewsFromGoogle();
+        // fetchReviewsFromGoogle();
     }, [])
     const fetchReviewsFromGoogle = async () => {
         const response = await axios.get(apiUrl);

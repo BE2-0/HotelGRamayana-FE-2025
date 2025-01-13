@@ -7,6 +7,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { doSignInWithEmailAndPassword } from '../firebase/auth';
 import { useAuth } from '../contexts/authContext';
+import toast from 'react-hot-toast';
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -26,7 +27,27 @@ const Login = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        await doSignInWithEmailAndPassword(email, password);
+        try {
+            await doSignInWithEmailAndPassword(email, password);
+            toast.success("Signed in successfully!");
+        } catch (error) {
+            console.log(error)
+            console.error("Error Code:", error.code); // Log the exact error code
+            console.error("Error Message:", error.message); 
+            // Catch errors and display appropriate messages
+            if (error.code === "auth/user-not-found") {
+                toast.error("User not found. Please check your email.");
+            } else if (error.code === "auth/invalid-credential") {
+                toast.error("Invalid credentials. Please try again.");
+            } else if (error.code === "auth/too-many-requests") {
+                toast.error("Too many attempts. Please try again later.");
+            } else {
+                toast.error("An error occurred. Please try again.");
+            }
+            console.error("Error during sign-in:", error);
+        } finally {
+            setLoading(false); // Ensure loading is stopped in both success and error cases
+        }
     }
     return (
         <>
