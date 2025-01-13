@@ -6,6 +6,8 @@ import { Link, useLocation } from 'react-router-dom'
 
 import ContactUs from './ContactUs'
 import { useAuth } from '../contexts/authContext'
+import { doSignOut } from '../firebase/auth'
+import toast from 'react-hot-toast'
 const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const navStyle = "cursor-pointer relative before:absolute before:bottom-0 pb-0.5 before:left-1/2 before:h-0.5 before:w-0 before:rounded-5xl before:transform before:-translate-x-1/2 before:transition-all before:duration-300 before:ease-linear hover:before:w-full hover:before:scale-x-100 hover:before:transform-origin-center"
   const [isDown, setIsDown] = useState(false);
@@ -42,6 +44,12 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
     document.body.style.overflow = "auto";
     setContactUsOpen(false);
   }
+
+  const handleLogout=(e)=>{
+    e.preventDefault();
+    doSignOut();
+    toast.success("Logged Out Successfully");
+  }
   return (
     <>
       <div className="z-20 relative tracking-wider" >
@@ -55,6 +63,9 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
             <div className='flex absolute right-0 top-0 bottom-0 gap-8 items-center'>
               {!userLoggedIn && (
                 <Link to="/login" className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign In</Link>
+              )}
+              {userLoggedIn && (
+                <button onClick={handleLogout}  className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign Out</button>
               )}
               <h2 className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} onClick={handleContactUsOpen}>Contact</h2>
               {!hideBookButton && (
@@ -116,6 +127,9 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
                 {!userLoggedIn && (
                   <Link to="/login" className={`${navStyle}  before:bg-gray-600`}>Sign In</Link>
                 )}
+                 {userLoggedIn && (
+                <button onClick={handleLogout}  className={`${navStyle}  before:bg-gray-600`}>Sign Out</button>
+              )}
                 <h2 className={`${navStyle}  before:bg-gray-600`} onClick={handleContactUsOpen}>Contact</h2>
                 <a target='_blank' href="/booking" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer  font-akzidenz text-xs'>Book</a>
               </div>

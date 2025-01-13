@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         canela: ['Canela Thin', 'serif'],
+        lato: ['Lato', 'serif'],
         akzidenz: ['AkzidenzGroteskPro', 'sans-serif'], // Add your custom font
       },
     },
