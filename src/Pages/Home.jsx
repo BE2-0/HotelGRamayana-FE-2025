@@ -200,13 +200,13 @@ const Home = () => {
                       </div>
                     )}
                     <h2 contentEditable={isAboutEditable} className='!font-bold uppercase font-akzidenz text-sm' ref={aboutTitleRef}
-                      dangerouslySetInnerHTML={{ __html: aboutData.title }}
+                      dangerouslySetInnerHTML={{ __html: aboutData?.title??"" }}
                     ></h2>
                     <h2 contentEditable={isAboutEditable} className='!font-canela text-5xl uppercase !font-thin tracking-wide my-6'
                       ref={aboutSubTitleRef}
-                      dangerouslySetInnerHTML={{ __html: aboutData.sub_title }} ></h2>
+                      dangerouslySetInnerHTML={{ __html: aboutData?.sub_title??"" }} ></h2>
                     <p className='mb-10' contentEditable={isAboutEditable} ref={aboutDescriptionRef}
-                      dangerouslySetInnerHTML={{ __html: aboutData.description }}
+                      dangerouslySetInnerHTML={{ __html: aboutData?.description??"" }}
                     >
                     </p>
                     <a href="" className='textbase py-1 border-b border-gray-400 text-gray-800'> View Suites</a>
@@ -257,12 +257,12 @@ const Home = () => {
                     <h2 className='font-canela text-5xl !font-thin tracking-wide my-6'
                       contentEditable={isHistoryEditable}
                       ref={historyTitleRef}
-                      dangerouslySetInnerHTML={{ __html: historyData.title }}
+                      dangerouslySetInnerHTML={{ __html: historyData?.title??"" }}
                     ></h2>
                     <p className='mb-10 text-xl font-light text-justify'
                       contentEditable={isHistoryEditable}
                       ref={historyDescriptionRef}
-                      dangerouslySetInnerHTML={{ __html: historyData.description }}
+                      dangerouslySetInnerHTML={{ __html: historyData?.description??"" }}
                     >
                     </p>
                     <a href="" className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Read More</a>
@@ -294,7 +294,7 @@ const Home = () => {
                 };
               }
               return (
-                <div className='p-10'>
+                <div className='p-10' key={index}>
                   <div className='grid grid-cols-5 gap-10'>
                     <div className={`col-span-3 ${index % 2 === 0 ? "order-0 pr-10" : "order-1 pl-10"} `}>
                       <img src={dineimage} className='w-full object-contain' alt="" />
@@ -314,17 +314,17 @@ const Home = () => {
                           <h2 className='font-bold uppercase font-akzidenz text-sm'
                             contentEditable={editingServiceId == element.id}
                             ref={serviceRefs.current[index].titleRef}
-                            dangerouslySetInnerHTML={{ __html: element.title }}
+                            dangerouslySetInnerHTML={{ __html: element?.title??"" }}
                           ></h2>
                           <h2 className='font-canela text-5xl !font-thin tracking-wide my-6'
                             contentEditable={editingServiceId == element.id}
                             ref={serviceRefs.current[index].sub_titleRef}
-                            dangerouslySetInnerHTML={{ __html: element.sub_title }}
+                            dangerouslySetInnerHTML={{ __html: element?.sub_title??"" }}
                           ></h2>
                           <p className='text-justify'
                             contentEditable={editingServiceId == element.id}
                             ref={serviceRefs.current[index].descriptionRef}
-                            dangerouslySetInnerHTML={{ __html: element.description }}>
+                            dangerouslySetInnerHTML={{ __html: element?.description??"" }}>
                           </p>
                           {/* <p className='my-6 text-justify'>
                           Indulge in the signature multi-course dining experience, where you’ll savour Chef Jordan Keao’s iconic favourites. This culinary journey is meticulously crafted with a thoughtfully curated menu, complemented by exclusive off-the-menu creations that spotlight seasonal produce, creating an epic gastronomic adventure.

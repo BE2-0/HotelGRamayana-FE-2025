@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../components/Nav'
 import heroVideo from "../assets/videos/heroVideo.mp4"
 import aboutimage from "../assets/images/about.png"
@@ -11,8 +11,12 @@ import Loader from '../common/Loader'
 import { BsTelephone } from "react-icons/bs";
 import { CiMail } from "react-icons/ci";
 import { CiLocationOn } from "react-icons/ci";
+import { firestore } from '../firebase/firebase'
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore'
+import { useAuth } from '../contexts/authContext'
+
 const data = [
-    
+
     {
         image: historyimage,
         title: 'Smoky Delights',
@@ -37,12 +41,76 @@ const data = [
 ];
 const About = () => {
     const [loading, setLoading] = useState(true);
+    const collectionRef = collection(firestore, "About");
+    const { userLoggedIn } = useAuth();
+
+    // heading states
+    const [headingData, setHeadingData] = useState(null);
+    const [isHeadingEditable, setIsHeadingEditable] = useState(false);
+    const headingTitleRef = useRef(null);
+
+    // about states
+    const [aboutData, setAboutData] = useState(null);
+    const [isAboutEditable, setIsAboutEditable] = useState(false);
+    const aboutTitleRef = useRef(null);
+    const aboutDescriptionRef = useRef(null);
+
+    // information states
+    const [informationData, setInformationData] = useState(null);
+    const [isInformationEditable, setIsInformationEditable] = useState(false);
+    const informationPhoneRef = useRef(null);
+    const informationMailRef = useRef(null);
+    const informationAddressRef = useRef(null);
+
+    // contentHeading states
+    const [contentHeadingData, setContentHeadingData] = useState(null);
+    const [isContentHeadingEditable, setIsContentHeadingEditable] = useState(false);
+    const contentHeadingTitleRef = useRef(null);
+    const contentHeadingDescriptionRef = useRef(null);
+
+    //content states
+    const [contentsData, setContentsData] = useState([]);
+    const [editingContentId, setEditingContentId] = useState(null);
+    const contentRefs = useRef([]);
+
     useEffect(() => {
-        window.scrollTo(0, 0);
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-    }, [])
+        const initialize = async () => {
+            window.scrollTo(0, 0); // Scroll to the top
+            await fetchData(); // Await your fetch function
+            setLoading(false); // Set loading state
+        };
+
+        initialize(); // Call the async function
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const querySnapshot = await getDocs(collectionRef);
+            querySnapshot.forEach((doc) => {
+                if (doc.id === "about") {
+                    setAboutData(doc.data());
+                } else if (doc.id === "heading") {
+                    setHeadingData(doc.data());
+                }
+                else if (doc.id === "content") {
+                    setContentHeadingData(doc.data());
+                }
+                else if (doc.id === "information") {
+                    setInformationData(doc.data());
+                }
+            });
+            const contentsCollectionRef = collection(firestore, "About-Content");
+            const contentsQuerySnapshot = await getDocs(contentsCollectionRef);
+            const contentsData = [];
+            contentsQuerySnapshot.forEach((doc) => {
+                contentsData.push({ id: doc.id, ...doc.data() });
+            });
+            setContentsData(contentsData);
+        } catch (error) {
+            console.error("Error fetching data:", error)
+        }
+    }
+
 
     return (
         <>
@@ -58,8 +126,10 @@ const About = () => {
                         <img src={contactImage} className='w-full h-full object-center object-cover' alt="" />
                         <div className='absolute bottom-0 w-full text-center text-white tracking-widest z-20 py-10'>
                             <h2 className='font-bold uppercase font-akzidenz text-sm text-[#fffc]'>About</h2>
-                            <h2 className='font-canela text-5xl uppercase !font-thin tracking-wide mt-8' >Birthplace of <i className='lowercase font-light'>stories</i> and</h2>
-                            <h2 className='font-canela text-5xl uppercase !font-thin tracking-wide' >legends</h2>
+                            <h2 className='font-canela text-5xl !font-thin tracking-wide mt-8'
+                                contentEditable={isHeadingEditable}
+                                ref={headingTitleRef}
+                                dangerouslySetInnerHTML={{ __html: headingData?.title ?? "" }} ></h2>
                         </div>
                         {/* Overlay */}
                         <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-t from-gray-900 opacity-70 z-10"></div>
@@ -112,32 +182,96 @@ const About = () => {
 
                     <div className='px-10 bg-[#f6f1ef] flex justify-between gap-20 py-20'>
                         <div className='w-[40%]'>
-                            <h2 className='font-canela text-5xl !font-thin tracking-wide' >A veritable oasis in the city</h2>
-                            <p className=' text-base text-justify text-gray-600 mt-5'>
-                                Ramayana Nepal is at the heart of the vibrant business and civic district, a beacon of classic colonial architecture perfectly preserved among our modern-skyscraper neighbours. Within our walls, the Raffles Arcade is an exciting shopping destination in its own right; and we are walking distance to Singapore International Convention & Exhibition Centre and Esplanade – Theatres on the Bay. It is a two-minute ride on the Mass Rapid Transit to the bustling Orchard Road shopping strip, and Changi Airport is 20 minutes away.
+                            <h2 className='font-canela text-5xl !font-thin tracking-wide'
+                                contentEditable={isAboutEditable}
+                                ref={aboutTitleRef}
+                                dangerouslySetInnerHTML={{ __html: aboutData?.title ?? "" }}
+                            ></h2>
+                            <p className=' text-base text-justify text-gray-600 mt-5'
+                                contentEditable={isAboutEditable} ref={aboutDescriptionRef}
+                                dangerouslySetInnerHTML={{ __html: aboutData?.description ?? "" }}
+                            >
                             </p>
                         </div>
                         <div className='w-[30%]'>
                             <h2 className='font-canela text-3xl font-medium tracking-wide' >Information</h2>
                             <div className='tracking-wide text-sm mt-6'>
-                                <h2 className='flex gap-4 items-center border-b border-gray-400 py-2'><BsTelephone className='text-base text-gray-600' />+977 015923217</h2>
-                                <h2 className='flex gap-4 items-center border-b border-gray-400 py-2'><CiMail className='text-lg text-gray-600' />Info@hotelgramayana.com</h2>
-                                <h2 className='flex gap-4 items-center border-b border-gray-400 py-2'><CiLocationOn className='text-lg text-gray-600' />Kaldhara Chowk, Near Thamel</h2>
+                                <div className='flex gap-4 items-center border-b border-gray-400 py-2'><BsTelephone className='text-base text-gray-600' />
+                                    <h2
+                                        contentEditable={isInformationEditable}
+                                        ref={informationPhoneRef}
+                                        dangerouslySetInnerHTML={{ __html: informationData?.phone ?? "" }}
+                                    ></h2>
+                                </div>
+                                <div className='flex gap-4 items-center border-b border-gray-400 py-2'><CiMail className='text-lg text-gray-600' />
+                                    <h2
+                                        contentEditable={isInformationEditable}
+                                        ref={informationMailRef}
+                                        dangerouslySetInnerHTML={{ __html: informationData?.mail ?? "" }}
+                                    ></h2>
+                                </div>
+                                <div className='flex gap-4 items-center border-b border-gray-400 py-2'><CiLocationOn className='text-lg text-gray-600' />
+                                    <h2
+                                        contentEditable={isInformationEditable}
+                                        ref={informationAddressRef}
+                                        dangerouslySetInnerHTML={{ __html: informationData?.address ?? "" }}
+                                    ></h2>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div>
                         <div className='w-1/2 m-auto text-center pt-20 pb-10'>
-                            <h2 className='font-canela text-5xl !font-thin tracking-wide mt-8' >Explore Ramayana Nepal</h2>
-                            <p className='text-center text-lg text-gray-600 px-28 mt-5'>
-                                Become part of the legend when you stay at Ramayana Nepal. Take a look around our hotel's exceptional facilities and services.
+                            <h2 className='font-canela text-5xl !font-thin tracking-wide mt-8'
+                                contentEditable={isContentHeadingEditable}
+                                ref={contentHeadingTitleRef}
+                                dangerouslySetInnerHTML={{ __html: contentHeadingData?.title ?? "" }}
+                            ></h2>
+                            <p className='text-center text-lg text-gray-600 px-28 mt-5'
+                                contentEditable={isContentHeadingEditable}
+                                ref={contentHeadingDescriptionRef}
+                                dangerouslySetInnerHTML={{ __html: contentHeadingData?.description ?? "" }}
+                            >
                             </p>
                         </div>
                     </div>
                     <div className='pb-20 pt-10 px-10 bg-[#f6f1ef]'>
                         <div className=''>
                             <div className='grid grid-cols-3 gap-10'>
-                                {data.map((item, index) => (
+                                {contentsData.length > 0 && contentsData.map((element, index) => {
+                                    if (!contentRefs.current[index]) {
+                                        contentRefs.current[index] = {
+                                            titleRef: React.createRef(),
+                                            descriptionRef: React.createRef(),
+                                        };
+                                    }
+                                    return (
+                                        <div key={index} className='flex flex-col'>
+                                            <div className="h-80">
+                                                <img
+                                                    src={`https://hotelgramayana-55120.web.app/assets/history-abnC8s6H.png`}
+                                                    alt={element.title}
+                                                    className="w-full h-full object-cover object-center"
+                                                />
+                                            </div>
+                                            <div>
+                                                <h2 className="font-canela text-3xl !font-thin tracking-wide mt-8">
+                                                    {element.title}
+                                                </h2>
+                                                <p className="text-base text-gray-600 my-3">{element.description}</p>
+
+                                            </div>
+                                            <div className='mt-auto'>
+                                                <a
+                                                    className="text-base py-1 border-b border-gray-400 text-gray-800"
+                                                >
+                                                    Discover
+                                                </a>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                                {/* {data.map((item, index) => (
                                     <div key={index} className='flex flex-col'>
                                         <div className="h-80">
                                             <img
@@ -162,7 +296,7 @@ const About = () => {
                                             </a>
                                         </div>
                                     </div>
-                                ))}
+                                ))} */}
                             </div>
                         </div>
                     </div>
