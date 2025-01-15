@@ -10,7 +10,7 @@ import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 // import required modules
-import { EffectFade, Navigation, Pagination } from 'swiper/modules';
+import { Autoplay,EffectFade, Navigation, Pagination } from 'swiper/modules';
 import { FaQuoteLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa";
@@ -138,12 +138,16 @@ const Testimonial = () => {
                         prevEl: '.testimonial-prev',
                         nextEl: '.testimonial-next',
                     }}
+                    autoplay={{
+                        delay: 2500,
+                        disableOnInteraction: false,
+                      }}
                     pagination={{
                         clickable: true,
                     }}
                     fadeEffect={{ crossFade: true }}
                     // modules={[EffectFade, Navigation, Pagination]}
-                    modules={[EffectFade, Navigation, Pagination]}
+                    modules={[Autoplay,EffectFade, Navigation, Pagination]}
                     onSlideChange={(swiper) => {
                         // Disable/enable buttons based on active index
                         if (swiper.isBeginning) {
