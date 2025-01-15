@@ -20,54 +20,90 @@ import { MdOutlineStar } from "react-icons/md";
 import { MdOutlineStarHalf } from "react-icons/md";
 const testimonials = [
     {
-      username: "Edward Hisley",
-      date: "a week ago",
-      description: "I have been using pagedone for several months now, and I must say that it has made my life a lot easier. The platform's intuitive interface and ease of use have allowed me to manage my finances more effectively and make informed investment decisions. I particularly like the product's auto-tracking feature, which has saved me a lot of time and effort.",
-      rating: 4
+        name: "Edward Hisley",
+        publishAt: "a week ago",
+        text: "I have been using pagedone for several months now, and I must say that it has made my life a lot easier. The platform's intuitive interface and ease of use have allowed me to manage my finances more effectively and make informed investment decisions. I particularly like the product's auto-tracking feature, which has saved me a lot of time and effort.",
+        stars: 4,
+        reviewerPhotoUrl:"https://th.bing.com/th/id/OIP.mP1RB8xuQaHAvUkonYY6HwHaHK?rs=1&pid=ImgDetMain"
     },
     {
-      username: "Jane Doe",
-      date: "a day ago",
-      description: "The platform has completely transformed the way I approach project management. Its tools and insights are second to none, making my work much more streamlined and efficient.",
-      rating: 5
+        name: "Jane Doe",
+        publishAt: "a day ago",
+        text: "The platform has completely transformed the way I approach project management. Its tools and insights are second to none, making my work much more streamlined and efficient.",
+        stars: 5,
+        reviewerPhotoUrl:"https://th.bing.com/th/id/OIP.mP1RB8xuQaHAvUkonYY6HwHaHK?rs=1&pid=ImgDetMain"
     },
     {
-      username: "Michael Lee",
-      date: "3 days ago",
-      description: "Pagedone has been a game-changer for my daily workflows. The automation features have reduced my manual efforts by half, allowing me to focus more on innovation and development tasks.",
-      rating: 5
+        name: "Michael Lee",
+        publishAt: "3 days ago",
+        text: "Pagedone has been a game-changer for my daily workflows. The automation features have reduced my manual efforts by half, allowing me to focus more on innovation and development tasks.",
+        stars: 5,
+        reviewerPhotoUrl:"https://th.bing.com/th/id/OIP.mP1RB8xuQaHAvUkonYY6HwHaHK?rs=1&pid=ImgDetMain"
     },
     {
-      username: "Samantha Green",
-      date: "2 weeks ago",
-      description: "I love how easy it is to generate reports and analyze data with pagedone. It’s been a crucial tool for my team, enabling us to deliver better insights to our clients.",
-      rating: 4
+        name: "Samantha Green",
+        publishAt: "2 weeks ago",
+        text: "I love how easy it is to generate reports and analyze data with pagedone. It’s been a crucial tool for my team, enabling us to deliver better insights to our clients.",
+        stars: 4,
+        reviewerPhotoUrl:"https://th.bing.com/th/id/OIP.mP1RB8xuQaHAvUkonYY6HwHaHK?rs=1&pid=ImgDetMain"
     },
     {
-      username: "David Clarke",
-      date: "a month ago",
-      description: "Using pagedone has significantly improved our organization’s efficiency. From project tracking to real-time collaboration, it has everything we need to stay ahead in our industry.",
-      rating: 5
+        name: "David Clarke",
+        publishAt: "a month ago",
+        text: "Using pagedone has significantly improved our organization’s efficiency. From project tracking to real-time collaboration, it has everything we need to stay ahead in our industry.",
+        stars: 5,
+        reviewerPhotoUrl:"https://th.bing.com/th/id/OIP.mP1RB8xuQaHAvUkonYY6HwHaHK?rs=1&pid=ImgDetMain"
     }
-  ];
-  
+];
+
 
 
 const Testimonial = () => {
     const [disablePrev, setDisablePrev] = useState(true);
     const [disableNext, setDisableNext] = useState(false);
     const [reviews, setReviews] = useState([]);
-    const rating=4.5;
-    const apiUrl = "/search.json?engine=google_maps&place_id=ChIJARpDes0Z6zkRh7Sm80lPBD8&api_key=062a69b3b5fe9bb1cbdb7b82c746f41271a33e0d9185405aa9352a8887194578";
     useEffect(() => {
-        // fetchReviewsFromGoogle();
+        fetchReviewsFromGoogle();
     }, [])
+
     const fetchReviewsFromGoogle = async () => {
-        const response = await axios.get(apiUrl);
-        if (response.status == 200) {
-            const fetchedReviews = response.data.place_results.user_reviews.most_relevant;
-            console.log(fetchedReviews);
-            setReviews(fetchedReviews);
+        const datasetId=await fetchDatasetId();
+        if (datasetId && datasetId.trim() !== "") {
+            console.log("Dataset ID is valid:", datasetId);
+            fetchReviewsFromDataSet(datasetId);
+        }
+
+    }
+
+    const fetchDatasetId = async () => {
+        try {
+            const response = await axios.get("https://api.apify.com/v2/datasets?unnamed=true&desc=true&limit=1", {
+                headers: {
+                    Authorization: "Bearer apify_api_ufQbz4QI9ljCsQvjvKDaKVyTBl0Pr31DsIWb"
+                }
+            });
+            if (response.status == 200) {
+                const datasetId = response.data.data.items[0].id;
+                return datasetId;
+            }
+            return null;
+
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+    const fetchReviewsFromDataSet = async (datasetId) => {
+        try {
+            const response = await axios.get(`https://api.apify.com/v2/datasets/${datasetId}/items`);
+            if (response.status == 200) {
+                setReviews(response.data);
+            }
+            // return null;
+
+        } catch (error) {
+            console.log(error);
+            // return null;
         }
     }
     return (
@@ -123,33 +159,38 @@ const Testimonial = () => {
                     }}
                     className="mySwiper"
                 >
-                    {(reviews.length > 0 ? reviews:testimonials).map((element, index) => (
+                    {(reviews.length > 0 ? reviews : testimonials).map((element, index) => (
                         <SwiperSlide key={index}>
                             <div className='flex justify-center h-full items-center'>
                                 <div className='w-1/3 text-white'>
-                                    <div>
-                                        <h2 className='capitalize text-lg tracking-wider font-akzidenz font-semibold'>{element.username}</h2>
-                                        <p className='text-sm tracking-wider text-white leading-5 mt-2'>{element.date}</p>
-                                        <div className='text-yellow-400 mt-2 flex gap-1 text-xl'>
-                                            {Array.from({ length: 5 }, (_, index) =>
-                                                index < Math.floor(element.rating) ? (
-                                                    <MdOutlineStar key={index} />
-                                                ) : index === Math.floor(element.rating) && element.rating % 1 !== 0 ? (
-                                                    <MdOutlineStarHalf  key={index}/>
-                                                ) : (
-                                                    <MdOutlineStarBorder key={index} />
-                                                )
-                                            )}
+                                    <div className='flex gap-4'>
+                                        <div className='w-20 h-20'>
+                                            <img src={element.reviewerPhotoUrl} className='w-full h-full object-cover object-center rounded-full' alt="" />
+                                        </div>
+                                        <div>
+                                            <h2 className='capitalize text-lg tracking-wider font-akzidenz font-semibold'>{element.name}</h2>
+                                            <p className='text-sm tracking-wider text-white leading-5 mt-2'>{element.publishAt}</p>
+                                            <div className='text-yellow-400 mt-2 flex gap-1 text-xl'>
+                                                {Array.from({ length: 5 }, (_, index) =>
+                                                    index < Math.floor(element.stars) ? (
+                                                        <MdOutlineStar key={index} />
+                                                    ) : index === Math.floor(element.stars) && element.stars % 1 !== 0 ? (
+                                                        <MdOutlineStarHalf key={index} />
+                                                    ) : (
+                                                        <MdOutlineStarBorder key={index} />
+                                                    )
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                     <div className='mt-5 relative'>
-                                        {element.description ? <>
+                                        {element.text ? <>
 
                                             <div className='absolute top-0 -left-5'>
                                                 <FaQuoteLeft />
                                             </div>
                                             <p className='text-sm text-justify line-clamp-6 tracking-wider text-white leading-5'>
-                                                {element.description}
+                                                {element.text}
                                             </p>
                                         </> : <>
 
