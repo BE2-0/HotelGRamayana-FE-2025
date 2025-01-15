@@ -409,9 +409,6 @@ const Home = () => {
           {/*end of spa */}
 
           <Testimonial />
-
-
-
           {/* footer */}
           <Footer />
           {/*end of footer */}
