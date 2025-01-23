@@ -15,16 +15,22 @@ import { CiEdit } from "react-icons/ci";
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/authContext'
 import { HiOutlineXMark } from "react-icons/hi2";
+import ChangeImageModal from '../components/ChangeImageModal'
+import ImageChangeButton from '../components/ImageChangeButton'
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const collectionRef = collection(firestore, "Home");
   const { userLoggedIn } = useAuth();
+
+  const [existingImageUrl, setExistingImageUrl] = useState(null);
   // about states
   const [aboutData, setAboutData] = useState(null);
   const [isAboutEditable, setIsAboutEditable] = useState(false);
   const aboutTitleRef = useRef(null);
   const aboutSubTitleRef = useRef(null);
   const aboutDescriptionRef = useRef(null);
+  const [aboutImageModalOpen, setAboutImageModalOpen] = useState(false);
+
 
   // history states
   const [historyData, setHistoryData] = useState(null);
@@ -36,6 +42,11 @@ const Home = () => {
   const [servicesData, setServicesData] = useState([]);
   const [editingServiceId, setEditingServiceId] = useState(null);
   const serviceRefs = useRef([]);
+  const [servicesImageModalOpen, setServicesImageModalOpen] = useState(false);
+
+
+
+
   useEffect(() => {
     const initialize = async () => {
       window.scrollTo(0, 0); // Scroll to the top
@@ -97,6 +108,26 @@ const Home = () => {
     }
   }
 
+  //about image change
+  const aboutImageChange = async (imageUrl) => {
+    try {
+      const newAboutData = {
+        ...aboutData, // Spread the previous state to retain other properties
+        imageUrl: imageUrl, // Update only the imageUrl
+      };
+      const docRef = doc(firestore, "Home", "about");
+      await updateDoc(docRef, newAboutData);
+      setAboutData(newAboutData); // Set the new state
+      toast.success("Updated Successfully");
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+
+  }
+
   //history save
   const handleHistorySave = async (e) => {
     e.preventDefault();
@@ -156,6 +187,34 @@ const Home = () => {
 
   }
 
+  const servicesImageChange = async (imageUrl) => {
+    console.log(editingServiceId);
+    try {
+      const serviceIndex = servicesData.findIndex(service => service.id === editingServiceId);
+      if (serviceIndex !== -1) {
+        const updatedService = { ...servicesData[serviceIndex], imageUrl: imageUrl };
+        const docRef = doc(firestore, "Home-Services", editingServiceId);
+        await updateDoc(docRef, updatedService);
+        setServicesData(prevServicesData => { // Use a functional update for correct state updates based on previous state
+          return [
+            ...prevServicesData.slice(0, serviceIndex),
+            updatedService,
+            ...prevServicesData.slice(serviceIndex + 1),
+          ];
+        });
+        toast.success("Updated Successfully");
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setEditingServiceId(null);
+    }
+  }
+
   return (
     <>
       {loading && (
@@ -183,8 +242,13 @@ const Home = () => {
           <div className='px-40 py-10'>
             <div className='grid grid-cols-2 gap-10'>
               <div className='px-10'>
-                <div>
-                  <img src={aboutimage} className='w-full object-contain' alt="" />
+                <div className='relative'>
+                  {userLoggedIn && (
+                    <div className='absolute top-2 right-2'>
+                      <ImageChangeButton onClick={()=>{setAboutImageModalOpen(true);setExistingImageUrl(aboutData?.imageUrl ?? null);}} />
+                    </div>
+                  )}
+                  <img src={aboutData?.imageUrl ?? aboutimage} className='w-full object-contain' alt="" />
                 </div>
               </div>
               <div className='flex flex-col justify-center items-center pl-20 pr-10 tracking-wider'>
@@ -200,13 +264,13 @@ const Home = () => {
                       </div>
                     )}
                     <h2 contentEditable={isAboutEditable} className='!font-bold uppercase font-akzidenz text-sm' ref={aboutTitleRef}
-                      dangerouslySetInnerHTML={{ __html: aboutData?.title??"" }}
+                      dangerouslySetInnerHTML={{ __html: aboutData?.title ?? "" }}
                     ></h2>
                     <h2 contentEditable={isAboutEditable} className='!font-canela text-5xl uppercase !font-thin tracking-wide my-6'
                       ref={aboutSubTitleRef}
-                      dangerouslySetInnerHTML={{ __html: aboutData?.sub_title??"" }} ></h2>
+                      dangerouslySetInnerHTML={{ __html: aboutData?.sub_title ?? "" }} ></h2>
                     <p className='mb-10' contentEditable={isAboutEditable} ref={aboutDescriptionRef}
-                      dangerouslySetInnerHTML={{ __html: aboutData?.description??"" }}
+                      dangerouslySetInnerHTML={{ __html: aboutData?.description ?? "" }}
                     >
                     </p>
                     <a href="" className='textbase py-1 border-b border-gray-400 text-gray-800'> View Suites</a>
@@ -257,12 +321,12 @@ const Home = () => {
                     <h2 className='font-canela text-5xl !font-thin tracking-wide my-6'
                       contentEditable={isHistoryEditable}
                       ref={historyTitleRef}
-                      dangerouslySetInnerHTML={{ __html: historyData?.title??"" }}
+                      dangerouslySetInnerHTML={{ __html: historyData?.title ?? "" }}
                     ></h2>
                     <p className='mb-10 text-xl font-light text-justify'
                       contentEditable={isHistoryEditable}
                       ref={historyDescriptionRef}
-                      dangerouslySetInnerHTML={{ __html: historyData?.description??"" }}
+                      dangerouslySetInnerHTML={{ __html: historyData?.description ?? "" }}
                     >
                     </p>
                     <a href="" className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Read More</a>
@@ -297,7 +361,17 @@ const Home = () => {
                 <div className='p-10' key={index}>
                   <div className='grid grid-cols-5 gap-10'>
                     <div className={`col-span-3 ${index % 2 === 0 ? "order-0 pr-10" : "order-1 pl-10"} `}>
-                      <img src={dineimage} className='w-full object-contain' alt="" />
+                      <div className=' relative '>
+                        {userLoggedIn && (
+                          <div className='absolute top-2 right-2'>
+                            <div>
+                              <ImageChangeButton onClick={() => { setServicesImageModalOpen(true); setEditingServiceId(element.id);setExistingImageUrl(element?.imageUrl ?? null) }} />
+                              {/* <button onClick={() => { setServicesImageModalOpen(true); setEditingServiceId(element.id); }} className='px-4 text-sm tracking-widest py-2 rounded-xl text-white bg-gray-600 hover:bg-gray-800  duration-300 ease-linear cursor-pointer'>Change</button> */}
+                            </div>
+                          </div>
+                        )}
+                        <img src={element?.imageUrl ?? dineimage} className='w-full object-contain' alt="" />
+                      </div>
                     </div>
                     <div className='col-span-2 pr-10'>
                       <div className='flex flex-col justify-center items-center h-full tracking-wide relative'>
@@ -314,17 +388,17 @@ const Home = () => {
                           <h2 className='font-bold uppercase font-akzidenz text-sm'
                             contentEditable={editingServiceId == element.id}
                             ref={serviceRefs.current[index].titleRef}
-                            dangerouslySetInnerHTML={{ __html: element?.title??"" }}
+                            dangerouslySetInnerHTML={{ __html: element?.title ?? "" }}
                           ></h2>
                           <h2 className='font-canela text-5xl !font-thin tracking-wide my-6'
                             contentEditable={editingServiceId == element.id}
                             ref={serviceRefs.current[index].sub_titleRef}
-                            dangerouslySetInnerHTML={{ __html: element?.sub_title??"" }}
+                            dangerouslySetInnerHTML={{ __html: element?.sub_title ?? "" }}
                           ></h2>
                           <p className='text-justify'
                             contentEditable={editingServiceId == element.id}
                             ref={serviceRefs.current[index].descriptionRef}
-                            dangerouslySetInnerHTML={{ __html: element?.description??"" }}>
+                            dangerouslySetInnerHTML={{ __html: element?.description ?? "" }}>
                           </p>
                           {/* <p className='my-6 text-justify'>
                           Indulge in the signature multi-course dining experience, where you’ll savour Chef Jordan Keao’s iconic favourites. This culinary journey is meticulously crafted with a thoughtfully curated menu, complemented by exclusive off-the-menu creations that spotlight seasonal produce, creating an epic gastronomic adventure.
@@ -412,8 +486,26 @@ const Home = () => {
           {/* footer */}
           <Footer />
           {/*end of footer */}
+
+
+
+          {/* about image modal */}
+          <div>
+            <ChangeImageModal open={aboutImageModalOpen} setOpen={setAboutImageModalOpen} setLoading={setLoading} imageChange={aboutImageChange} handleClose={()=>{setAboutImageModalOpen(false);setExistingImageUrl(null);}} existingImageUrl={existingImageUrl} />
+          </div>
+          {/*end of about image modal */}
+
+          {/* services image modal */}
+          <div>
+            <ChangeImageModal open={servicesImageModalOpen} setOpen={setServicesImageModalOpen} setLoading={setLoading} imageChange={servicesImageChange} handleClose={()=>{setServicesImageModalOpen(false);setEditingServiceId(null);setExistingImageUrl(null);}} existingImageUrl={existingImageUrl} />
+          </div>
+          {/*end of services image modal */}
         </div>
       </div>
+
+
+
+
     </>
   )
 }

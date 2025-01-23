@@ -13,6 +13,8 @@
   "dependencies": {
     "@demark-pro/react-booking-calendar": "^4.0.3",
     "@fancyapps/ui": "^5.0.36",
+    "@headlessui/react": "^2.2.0",
+    "@heroicons/react": "^2.2.0",
     "axios": "^1.7.9",
     "firebase": "^11.1.0",
     "flickr-justified-gallery": "^2.2.0",
