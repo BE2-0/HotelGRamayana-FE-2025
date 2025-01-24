@@ -25,10 +25,11 @@ const ChangeImageModal = ({ open, setOpen, setLoading,imageChange,handleClose,ex
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("existingFileUrl", existingImageUrl);
+        if (existingImageUrl && existingImageUrl.trim() !== "") {
+            formData.append("existingFileUrl", existingImageUrl);
+          } 
         setOpen(false);
         setLoading(true);
-        const method = "post";
         const url = `${apiKey}api/file/upload`;
         const token="9c8fcb20-d2d7-4a1a-9e29-71a892cfa1f3";
         try {

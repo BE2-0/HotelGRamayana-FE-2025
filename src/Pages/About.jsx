@@ -17,34 +17,15 @@ import { useAuth } from '../contexts/authContext'
 import { CiEdit } from "react-icons/ci";
 import { HiOutlineXMark } from "react-icons/hi2";
 import toast from 'react-hot-toast'
-const data = [
+import ChangeImageModal from '../components/ChangeImageModal'
+import ImageChangeButton from '../components/ImageChangeButton'
 
-    {
-        image: historyimage,
-        title: 'Smoky Delights',
-        description:
-            'Experience the rich taste of smoky creations, prepared with precision and passion over a live fire.',
-        link: '#',
-    },
-    {
-        image: bedimage,
-        title: 'Flame & Sizzle',
-        description:
-            'Savor the extraordinary flavors of flame-grilled delicacies in a vibrant, immersive dining experience.',
-        link: '#',
-    },
-    {
-        image: dineimage,
-        title: 'Tiffin Room',
-        description:
-            "One of Singapore's oldest North Indian restaurants, serving up the golden age delicacies of the maharajahs since 1892.",
-        link: '#',
-    },
-];
 const About = () => {
     const [loading, setLoading] = useState(true);
     const collectionRef = collection(firestore, "About");
     const { userLoggedIn } = useAuth();
+    const [existingImageUrl, setExistingImageUrl] = useState(null);
+
 
     // heading states
     const [headingData, setHeadingData] = useState(null);
@@ -74,6 +55,7 @@ const About = () => {
     const [contentsData, setContentsData] = useState([]);
     const [editingContentId, setEditingContentId] = useState(null);
     const contentRefs = useRef([]);
+    const [contentsImageModalOpen, setContentsImageModalOpen] = useState(false);
 
     useEffect(() => {
         const initialize = async () => {
@@ -211,35 +193,63 @@ const About = () => {
     }
 
 
-    
-  const handleContentsSave = async (id, index) => {
-    try {
-      if (!userLoggedIn) {
-        toast.error("must login");
-        return;
-      }
-      const title = contentRefs.current[index].titleRef.current.innerHTML;
-      const description = contentRefs.current[index].descriptionRef.current.innerHTML;
-      const updatedData = {
-        title,
-        description
-      };
-      const docRef = doc(firestore, "About-Content", id);
-      await updateDoc(docRef, updatedData);
-      const updatedContents = contentsData.map((content) =>
-        content.id === id
-          ? { ...content, title: title, description: description }
-          : content
-      );
-      setContentsData(updatedContents); // Update state
-      setEditingContentId(null);
-      toast.success("Updated Successfully");
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
+
+    const handleContentsSave = async (id, index) => {
+        try {
+            if (!userLoggedIn) {
+                toast.error("must login");
+                return;
+            }
+            const title = contentRefs.current[index].titleRef.current.innerHTML;
+            const description = contentRefs.current[index].descriptionRef.current.innerHTML;
+            const updatedData = {
+                title,
+                description
+            };
+            const docRef = doc(firestore, "About-Content", id);
+            await updateDoc(docRef, updatedData);
+            const updatedContents = contentsData.map((content) =>
+                content.id === id
+                    ? { ...content, title: title, description: description }
+                    : content
+            );
+            setContentsData(updatedContents); // Update state
+            setEditingContentId(null);
+            toast.success("Updated Successfully");
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong");
+        }
+
     }
 
-  }
+    const contentsImageChange = async (imageUrl) => {
+        try {
+          const contentIndex = contentsData.findIndex(content => content.id === editingContentId);
+          if (contentIndex !== -1) {
+            const updatedContent = { ...contentsData[contentIndex], imageUrl: imageUrl };
+            const docRef = doc(firestore, "About-Content", editingContentId);
+            await updateDoc(docRef, updatedContent);
+            setContentsData(prevContentsData => { // Use a functional update for correct state updates based on previous state
+              return [
+                ...prevContentsData.slice(0, contentIndex),
+                updatedContent,
+                ...prevContentsData.slice(contentIndex + 1),
+              ];
+            });
+            toast.success("Updated Successfully");
+          } else {
+            toast.error("Something went wrong");
+          }
+        } catch (error) {
+          toast.error("Something went wrong");
+          console.log(error);
+        } finally {
+          setLoading(false);
+          setEditingContentId(null);
+        }
+      }
+    
 
 
 
@@ -441,9 +451,16 @@ const About = () => {
                                     return (
                                         <div key={index} className='flex flex-col relative'>
 
-                                            <div className="h-80">
+                                            <div className="h-80 relative">
+                                                {userLoggedIn && (
+                                                    <div className='absolute top-2 right-2'>
+                                                        <div>
+                                                            <ImageChangeButton onClick={() => { setContentsImageModalOpen(true); setEditingContentId(element.id); setExistingImageUrl(element?.imageUrl ?? null) }} />
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 <img
-                                                    src={`https://hotelgramayana-55120.web.app/assets/history-abnC8s6H.png`}
+                                                    src={element?.imageUrl??`https://hotelgramayana-55120.web.app/assets/history-abnC8s6H.png`}
                                                     alt={element.title}
                                                     className="w-full h-full object-cover object-center"
                                                 />
@@ -519,6 +536,12 @@ const About = () => {
                     {/* footer */}
                     <Footer />
                     {/*end of footer */}
+
+                    {/* contents image modal */}
+                    <div>
+                        <ChangeImageModal open={contentsImageModalOpen} setOpen={setContentsImageModalOpen} setLoading={setLoading} imageChange={contentsImageChange} handleClose={() => { setContentsImageModalOpen(false); setEditingContentId(null); setExistingImageUrl(null); }} existingImageUrl={existingImageUrl} />
+                    </div>
+                    {/*end of contents image modal */}
                 </div>
             </div>
         </>
