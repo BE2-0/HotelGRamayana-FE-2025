@@ -12,9 +12,13 @@
   },
   "dependencies": {
     "@demark-pro/react-booking-calendar": "^4.0.3",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@fancyapps/ui": "^5.0.36",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
+    "@mui/lab": "^6.0.0-beta.24",
+    "@mui/material": "^6.4.1",
     "axios": "^1.7.9",
     "firebase": "^11.1.0",
     "flickr-justified-gallery": "^2.2.0",

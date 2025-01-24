@@ -1,142 +1,128 @@
 import React, { useEffect, useState } from 'react'
 import Nav from '../components/Nav'
-import aboutimage from "../assets/images/about.png"
-import historyimage from "../assets/images/history.png"
-import dineimage from "../assets/images/dine.png"
-import dine2image from "../assets/images/dining2.png"
-import bedimage from "../assets/images/bed.png"
 import Footer from '../components/Footer'
 
-import LightGallery from 'lightgallery/react';
-
-// import styles
-import 'lightgallery/css/lightgallery.css';
-import 'lightgallery/css/lg-zoom.css';
-import 'lightgallery/css/lg-thumbnail.css';
-
 // import plugins if you need
-import lgZoom from 'lightgallery/plugins/zoom';
-import lgVideo from 'lightgallery/plugins/video';
-import fjGallery from 'flickr-justified-gallery';
 import Loader from '../common/Loader'
-import lgThumbnail from 'lightgallery/plugins/thumbnail';
-import GalleryPreview from '../components/GalleryPreview'
 import Fancybox from '../components/FancyBox'
+import { firestore } from '../firebase/firebase'
+import { collection, doc, getDocs, updateDoc, addDoc, deleteDoc } from 'firebase/firestore'
+import { useAuth } from '../contexts/authContext'
+import AddButton from '../components/AddButton'
+import ChangeImageModal from '../components/ChangeImageModal'
+import toast from 'react-hot-toast'
 
-const data = [
-    {
-        image: aboutimage,
-        title: "Butcher's Block",
-        description:
-            'Discover the wonderful depths of flavour that only pure wood-fire can forge, in this avant-garde atmospheric live cooking experience.',
-        link: '#',
-    },
-    {
-        image: historyimage,
-        title: 'Smoky Delights',
-        description:
-            'Experience the rich taste of smoky creations, prepared with precision and passion over a live fire.',
-        link: '#',
-    },
-    {
-        image: bedimage,
-        title: 'Flame & Sizzle',
-        description:
-            'Savor the extraordinary flavors of flame-grilled delicacies in a vibrant, immersive dining experience.',
-        link: '#',
-    },
-    {
-        image: dineimage,
-        title: 'Tiffin Room',
-        description:
-            "One of Singapore's oldest North Indian restaurants, serving up the golden age delicacies of the maharajahs since 1892.",
-        link: '#',
-    },
-];
-
-// const gallery = [{
-//     imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/turkis-royal-room-dOqyzB3GPDID1BKE.jpg",
-// },
-// {
-//     imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
-// },
-// {
-//     imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-5-mP4nqkRL51CpRkgQ.jpg",
-// },
-// {
-//     imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-AoPvB59kkMhg5Z53.jpg",
-// },
-// ]
-
-// const gallery = [
-//     {
-//         imageUrl: "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=656,h=521,fit=crop/mnl3DyqLpOSqoMLB/generated/generated-mnlv1DRlXRtDpEoD.png",
-//     },
-//     {
-//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/turkis-royal-room-dOqyzB3GPDID1BKE.jpg",
-//     },
-//     {
-//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
-//     },
-//     {
-//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-AoPvB59kkMhg5Z53.jpg",
-//     },
-
-//     {
-//         imageUrl: "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=656,h=718,fit=crop/mnl3DyqLpOSqoMLB/reception-1-mePvl4Oy31iwqyy7.jpg",
-//     },
-//     {
-//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
-//     },
-//     {
-//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/lobby-3-YD061kRqy2HpR4b8.jpg",
-//     },
-//     {
-//         imageUrl: "https://assets.zyrosite.com/mnl3DyqLpOSqoMLB/junior-suit-5-mP4nqkRL51CpRkgQ.jpg",
-//     },
-// ];
-
+import Box from '@mui/material/Box';
+import Masonry from '@mui/lab/Masonry';
+import DeleteModal from '../components/DeleteModal'
+import { MdDeleteOutline } from "react-icons/md";
+import axios from 'axios'
 
 const Gallery = () => {
+    const { userLoggedIn } = useAuth();
     const [loading, setLoading] = useState(true);
     const [images, setImages] = useState([]);
+    const [addImageModalOpen, setAddImageModalOpen] = useState(false);
+    const collectionRef = collection(firestore, "Gallery");
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [imageToDelete, setImageToDelete] = useState(null);
+    const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
+
     useEffect(() => {
-        window.scrollTo(0, 0); // Scroll to the top of the page on mount
-        const loadImages = async () => {
-            await importImages();
-            setLoading(false);
+        const initialize = async () => {
+            window.scrollTo(0, 0); // Scroll to the top
+            await fetchData(); // Await your fetch function
+            setLoading(false); // Set loading state
         };
-        setTimeout(() => loadImages(), 1000); // Simulate delay for loading experience
+
+        initialize(); // Call the async function
     }, []);
 
-    const importImages = async () => {
-        const importedImages = import.meta.glob("../assets/Gallery/*.{jpg,JPG,jpeg,JPEG,png,svg}", { eager: true });
-        const imageKeys = Object.keys(importedImages).slice(0, 20);
-        const loadedImages = imageKeys.map((key) => {
-            const imageModule = importedImages[key];
-            return imageModule.default || key;
-        });
-        setImages(loadedImages);
-    };
-    const onInit = () => {
-        console.log('lightGallery has been initialized');
-    };
-    // useEffect(() => {
-    //     fjGallery(document.querySelectorAll('.gallery'), {
-    //         itemSelector: '.gallery__item',
-    //         rowHeight: 180,
-    //         lastRow: 'start',
-    //         gutter: 2,
-    //         rowHeightTolerance: 0.1,
-    //         calculateItemsHeight: false,
-    //     });
-    // }, []);
+    const fetchData = async () => {
+        try {
+            const querySnapshot = await getDocs(collectionRef);
+            const galleryData = [];
+            querySnapshot.forEach((doc) => {
+                galleryData.push({ id: doc.id, ...doc.data() });
+            });
+            console.log(galleryData);
+            setImages(galleryData);
+        } catch (error) {
+            console.error("Error fetching data:", error)
+        }
+    }
+    //image save
+    //contents image save
+    const imageSave = async (imageUrl) => {
 
-    const getRandomSpan = () => {
-        const colSpan = Math.floor(Math.random() * 2) + 1; // Random value: 1 or 2
-        const rowSpan = Math.floor(Math.random() * 2) + 1; // Random value: 1 or 2
-        return { col: colSpan, row: rowSpan };
-    };
+        try {
+            const data = {
+                imageUrl: imageUrl, // The URL of the uploaded image
+                createdAt: new Date(), // Timestamp for when the image was saved
+            };
+            const docRef = await addDoc(collectionRef, data);
+            data.id = docRef.id;
+            setImages((prevImages) => [...prevImages, data]);
+            console.log("Document ID:", docRef.id);
+            toast.success("Image Added Successfully!");
+        } catch (error) {
+            toast.error("Something went wrong");
+            console.log(error);
+        }
+        finally {
+            setLoading(false);
+        }
+
+    }
+
+
+    //handle image delete
+    const handleImageDelete = async () => {
+        setShowDeleteModal(false);
+        if (imageToDelete) {
+            setLoading(true);
+            const url = `${apiKey}api/file/delete?fileUrl=${encodeURIComponent(imageToDelete.imageUrl)}`;
+            const token = "9c8fcb20-d2d7-4a1a-9e29-71a892cfa1f3";
+            try {
+                const response = await axios.delete(url, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Add the bearer token
+                        'Content-Type': 'multipart/form-data', // Important for sending formData
+                    },
+                });
+
+                if (response.status === 200) {
+                    console.log(response);
+                    const docRef = doc(firestore, "Gallery", imageToDelete.id);
+                    await deleteDoc(docRef);
+                    setImages((prevImages) => prevImages.filter((img) => img.id !== imageToDelete.id));
+                    toast.success("Deleted Successfully!");
+                }
+                else {
+                    toast.error("Something Went Wrong");
+                }
+            } catch (error) {
+                setLoading(false);
+                if (error.response) {
+                    var errorMessage = error.response.data.message;
+                    toast.error(errorMessage);
+                } else if (error.message) {
+                    console.log("Error", error.message);
+                    toast.error("Error", error.message);
+                } else {
+                    toast.error(error);
+                    console.log("Error", error);
+                }
+            }finally{
+                setLoading(false);
+            }
+        } else {
+            toast.error("Something Went Wrong");
+        }
+    }
+
+
+
 
     return (
         <>
@@ -159,146 +145,49 @@ const Gallery = () => {
 
                     {/* contents */}
                     <div className='px-10 mt-10'>
+                        {userLoggedIn && (
+                            <AddButton onClick={() => { setAddImageModalOpen(true); }} />
+                        )}
                         <div className='mb-20'>
-                            {/* <LightGallery
-                                plugins={[lgVideo,lgThumbnail]}
-                                mode="lg-fade"
-                                pager={false}
-                                thumbnail={true}
-                                galleryId={'nature'}
-                                autoplayFirstVideo={false}
-                                elementClassNames={'gallery'}
-                                mobileSettings={{
-                                    controls: false,
-                                    showCloseIcon: false,
-                                    download: false,
-                                    rotate: false,
-                                }}
-                            >
-                                {images.length > 0 && images.map((image, index) => (
-                                    <a href={image} key={index} className='gallery-item'>
-                                        <img src={image} alt={image} />
-                                    </a>
-                                ))}
-                            </LightGallery> */}
-                            {/* {images.length > 0 && (
-                                <GalleryPreview images={images} />
-                            )} */}
 
-                            <Fancybox options={{
-                                Carousel: {
-                                    infinite: false,
-                                },
-                            }}>
-                                {images.length > 0 && images.map((image, index) => (
-                                    <a href={image} key={index} data-fancybox={`gallery-${index}`} className='gallery-item'>
-                                        <img src={image} alt={image} />
-                                    </a>
-                                ))}
-                            </Fancybox>
+                            <Box >
+                                <Masonry columns={3} spacing={2}>
+                                    {images.length > 0 && images.map((image, index) => (
+                                        <div key={index} className='relative'>
+                                            <div onClick={(e) => { e.stopPropagation(); setShowDeleteModal(true); setImageToDelete(image); }} className='absolute z-40 cursor-pointer right-3 top-3 bg-gray-100 opacity-75 hover:opacity-100 transition-all duration-300 ease-linear w-8 h-8 flex items-center justify-center rounded-full'>
+                                                <MdDeleteOutline className='text-xl text-red-400' />
+                                            </div>
+                                            <Fancybox options={{
+                                                Carousel: {
+                                                    infinite: false,
+                                                },
+                                            }}>
+                                                <a href={image.imageUrl} key={index} data-fancybox={`gallery-${index}`} className='gallery-item relative'>
+
+                                                    <img src={image.imageUrl} alt={image.imageUrl} />
+                                                </a>
+                                            </Fancybox>
+                                        </div>
+                                    ))}
+                                </Masonry>
+                            </Box>
                         </div>
                     </div>
 
-
-                    {/* <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
-                        <div class="grid gap-4">
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center"
-                                    src="https://images.unsplash.com/photo-1432462770865-65b70566d673?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center "
-                                    src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=927&amp;q=80"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center"
-                                    src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=2940&amp;q=80"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                        </div>
-                        <div class="grid gap-4">
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center"
-                                    src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=687&amp;q=80"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center"
-                                    src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=800&amp;q=80"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center "
-                                    src="https://docs.material-tailwind.com/img/team-3.jpg"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                        </div>
-                        <div class="grid gap-4">
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center"
-                                    src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=2940&amp;q=80"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center "
-                                    src="https://docs.material-tailwind.com/img/team-3.jpg"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center"
-                                    src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=687&amp;q=80"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                        </div>
-                        <div class="grid gap-4">
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center"
-                                    src="https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=687&amp;q=80"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                            <div>
-                                <img
-                                    class="h-auto max-w-full rounded-lg object-cover object-center"
-                                    src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=927&amp;q=80"
-                                    alt="gallery-photo"
-                                />
-                            </div>
-                        </div>
-                    </div> */}
-
-                    {/* <div className="gallery">
-                        {gallery.length > 0 && gallery.map((element, index) => (
-                            <a href="" key={index} className='gallery-item'>
-                                <img src={element.imageUrl} alt="" />
-                            </a>
-                        ))}
-                    </div> */}
-                    {/*end of contents */}
                     {/* footer */}
                     <Footer />
                     {/*end of footer */}
+
+                    {/* contents image modal */}
+                    <div>
+                        <ChangeImageModal open={addImageModalOpen} setOpen={setAddImageModalOpen} setLoading={setLoading} imageChange={imageSave} handleClose={() => { setAddImageModalOpen(false); }} existingImageUrl={null} />
+                    </div>
+                    {/*end of contents image modal */}
+                    {/* contents image modal */}
+                    <div>
+                        <DeleteModal showDeleteModal={showDeleteModal} handleModalClose={() => { setShowDeleteModal(false) }} handleDelete={handleImageDelete} />
+                    </div>
+                    {/*end of contents image modal */}
                 </div>
             </div>
         </>
