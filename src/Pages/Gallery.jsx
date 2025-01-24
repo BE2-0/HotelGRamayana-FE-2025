@@ -54,7 +54,10 @@ const Gallery = () => {
     //image save
     //contents image save
     const imageSave = async (imageUrl) => {
-
+        if (!userLoggedIn) {
+            toast.error("must login");
+            return;
+        }
         try {
             const data = {
                 imageUrl: imageUrl, // The URL of the uploaded image
@@ -79,6 +82,10 @@ const Gallery = () => {
     //handle image delete
     const handleImageDelete = async () => {
         setShowDeleteModal(false);
+        if (!userLoggedIn) {
+            toast.error("must login");
+            return;
+        }
         if (imageToDelete) {
             setLoading(true);
             const url = `${apiKey}api/file/delete?fileUrl=${encodeURIComponent(imageToDelete.imageUrl)}`;
@@ -113,7 +120,7 @@ const Gallery = () => {
                     toast.error(error);
                     console.log("Error", error);
                 }
-            }finally{
+            } finally {
                 setLoading(false);
             }
         } else {
@@ -154,9 +161,11 @@ const Gallery = () => {
                                 <Masonry columns={3} spacing={2}>
                                     {images.length > 0 && images.map((image, index) => (
                                         <div key={index} className='relative'>
-                                            <div onClick={(e) => { e.stopPropagation(); setShowDeleteModal(true); setImageToDelete(image); }} className='absolute z-40 cursor-pointer right-3 top-3 bg-gray-100 opacity-75 hover:opacity-100 transition-all duration-300 ease-linear w-8 h-8 flex items-center justify-center rounded-full'>
-                                                <MdDeleteOutline className='text-xl text-red-400' />
-                                            </div>
+                                            {userLoggedIn && (
+                                                <div onClick={(e) => { e.stopPropagation(); setShowDeleteModal(true); setImageToDelete(image); }} className='absolute z-40 cursor-pointer right-3 top-3 bg-gray-100 opacity-75 hover:opacity-100 transition-all duration-300 ease-linear w-8 h-8 flex items-center justify-center rounded-full'>
+                                                    <MdDeleteOutline className='text-xl text-red-400' />
+                                                </div>
+                                            )}
                                             <Fancybox options={{
                                                 Carousel: {
                                                     infinite: false,
