@@ -17,6 +17,8 @@ import { HiOutlineXMark } from "react-icons/hi2";
 import toast from 'react-hot-toast'
 import ImageChangeButton from '../components/ImageChangeButton'
 import ChangeImageModal from '../components/ChangeImageModal'
+import AddButton from '../components/AddButton'
+import AddModal from '../components/AddModal'
 const data = [
     {
         image: aboutimage,
@@ -52,6 +54,9 @@ const Blog = () => {
     const collectionRef = collection(firestore, "Blog");
     const { userLoggedIn } = useAuth();
     const [existingImageUrl, setExistingImageUrl] = useState(null);
+
+
+    const [addModalOpen,setAddModalOpen]=useState(false);
 
 
     // heading states
@@ -288,6 +293,9 @@ const Blog = () => {
                             )}
                         </div>
                         <div className='my-20'>
+                            {userLoggedIn && (
+                                <AddButton onClick={() => { setAddModalOpen(true); }} text="Add Blog" />
+                            )}
                             <div className='grid grid-cols-3 gap-10'>
                                 {contentsData.length > 0 && contentsData.map((element, index) => {
                                     if (!contentRefs.current[index]) {
@@ -389,6 +397,12 @@ const Blog = () => {
                         <ChangeImageModal open={contentsImageModalOpen} setOpen={setContentsImageModalOpen} setLoading={setLoading} imageChange={contentsImageChange} handleClose={() => { setContentsImageModalOpen(false); setEditingContentId(null); setExistingImageUrl(null); }} existingImageUrl={existingImageUrl} />
                     </div>
                     {/*end of contents image modal */}
+
+                    {/* add modal */}
+                    <div>
+                        <AddModal open={addModalOpen} setOpen={setAddModalOpen} setLoading={setLoading} handleClose={()=>{setAddModalOpen(false)}} text={`Add Blog`} />
+                    </div>
+                    {/*end of add modal */}
                 </div>
             </div>
         </>

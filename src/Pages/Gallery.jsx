@@ -153,7 +153,7 @@ const Gallery = () => {
                     {/* contents */}
                     <div className='px-10 mt-10'>
                         {userLoggedIn && (
-                            <AddButton onClick={() => { setAddImageModalOpen(true); }} />
+                            <AddButton onClick={() => { setAddImageModalOpen(true); }} text="Add Image" />
                         )}
                         <div className='mb-20'>
 

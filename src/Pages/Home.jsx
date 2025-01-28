@@ -99,7 +99,10 @@ const Home = () => {
       };
       const docRef = doc(firestore, "Home", "about");
       await updateDoc(docRef, updatedData);
-      setAboutData(updatedData);
+      setAboutData((prevState) => ({
+        ...prevState,  // Preserve existing fields
+        ...updatedData // Overwrite title and description
+    }));
       setIsAboutEditable(false);
       toast.success("Updated Successfully");
     } catch (error) {
