@@ -8,6 +8,7 @@ import Booking from './Pages/Booking';
 import About from './Pages/About';
 import Blog from './Pages/Blog';
 import Login from './Pages/Login';
+import Suites from './Pages/Suites';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/suites" element={<Suites />} />
       </Routes>
     </>
   )

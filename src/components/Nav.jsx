@@ -78,7 +78,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
             <div className={`flex  items-center text-sm py-5 px-10 justify-center`}>
               <ul className='uppercase flex gap-4 tracking-widest'>
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "about" ? "before:!w-full" : ""}`} to="/about">About</Link></li>
-                <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">Suites</a></li>
+                <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "suites" ? "before:!w-full" : ""}`} to="/suites">Suites</Link></li>
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "dining" ? "before:!w-full" : ""}`} to="/dining">Dining</Link></li>
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "blog" ? "before:!w-full" : ""}`} to="/blog">Blog</Link></li>
                 {/* <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">Experiences</a></li> */}
@@ -113,7 +113,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
               </div>
               <ul className='uppercase flex gap-4 tracking-widest'>
                 <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "about" ? "before:!w-full" : ""}`} to="/about">About</Link></li>
-                <li><a className={`${navStyle}  before:bg-gray-600`} href="">Suites</a></li>
+                <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "suites" ? "before:!w-full" : ""}`} to="/suites">Suites</Link></li>
                 <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "dining" ? "before:!w-full" : ""}`} to="/dining">Dining</Link></li>
                 <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "blog" ? "before:!w-full" : ""}`} to="/blog">Blog</Link></li>
                 {/* <li><a className={`${navStyle}  before:bg-gray-600`} href="">Experiences</a></li> */}
