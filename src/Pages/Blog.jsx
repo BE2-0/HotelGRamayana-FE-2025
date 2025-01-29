@@ -1,16 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../components/Nav'
-import heroVideo from "../assets/videos/heroVideo.mp4"
-import aboutimage from "../assets/images/about.png"
-import historyimage from "../assets/images/history.png"
-import dineimage from "../assets/images/dine.png"
-import dine2image from "../assets/images/dining2.png"
-import bedimage from "../assets/images/bed.png"
 import Footer from '../components/Footer'
 import Loader from '../common/Loader'
 import blogimage from "../assets/Gallery/DSC08022.jpg"
 import { firestore } from '../firebase/firebase'
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, addDoc, deleteDoc, updateDoc } from 'firebase/firestore'
 import { useAuth } from '../contexts/authContext'
 import { CiEdit } from "react-icons/ci";
 import { HiOutlineXMark } from "react-icons/hi2";
@@ -19,45 +13,14 @@ import ImageChangeButton from '../components/ImageChangeButton'
 import ChangeImageModal from '../components/ChangeImageModal'
 import AddButton from '../components/AddButton'
 import AddModal from '../components/AddModal'
-const data = [
-    {
-        image: aboutimage,
-        title: "Butcher's Block",
-        description:
-            'Discover the wonderful depths of flavour that only pure wood-fire can forge, in this avant-garde atmospheric live cooking experience.',
-        link: '#',
-    },
-    {
-        image: historyimage,
-        title: 'Smoky Delights',
-        description:
-            'Experience the rich taste of smoky creations, prepared with precision and passion over a live fire.',
-        link: '#',
-    },
-    {
-        image: bedimage,
-        title: 'Flame & Sizzle',
-        description:
-            'Savor the extraordinary flavors of flame-grilled delicacies in a vibrant, immersive dining experience.',
-        link: '#',
-    },
-    {
-        image: dineimage,
-        title: 'Tiffin Room',
-        description:
-            "One of Singapore's oldest North Indian restaurants, serving up the golden age delicacies of the maharajahs since 1892.",
-        link: '#',
-    },
-];
+import DeleteModal from '../components/DeleteModal'
+import axios from 'axios'
 const Blog = () => {
     const [loading, setLoading] = useState(true);
+    const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
     const collectionRef = collection(firestore, "Blog");
     const { userLoggedIn } = useAuth();
     const [existingImageUrl, setExistingImageUrl] = useState(null);
-
-
-    const [addModalOpen,setAddModalOpen]=useState(false);
-
 
     // heading states
     const [headingData, setHeadingData] = useState(null);
@@ -75,6 +38,9 @@ const Blog = () => {
     const [editingContentId, setEditingContentId] = useState(null);
     const contentRefs = useRef([]);
     const [contentsImageModalOpen, setContentsImageModalOpen] = useState(false);
+    const [contentsAddModalOpen, setContentsAddModalOpen] = useState(false);
+    const [contentsDeleteModalOpen, setContentsDeleteModalOpen] = useState(false);
+    const [contentToDelete, setContentToDelete] = useState(null);
 
 
     useEffect(() => {
@@ -218,6 +184,81 @@ const Blog = () => {
         }
     }
 
+    //add new content
+    const addContent = async (data) => {
+        console.log(data);
+        try {
+            const docRef = await addDoc(collection(firestore, "Blog-Content"), data);
+            setContentsData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
+            toast.success("Data Added Successfully");
+        } catch (error) {
+            toast.error("Something went wrong");
+            console.log(error);
+
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    //contents save
+    const handleContentsDelete = async () => {
+        setContentsDeleteModalOpen(false);
+        if (!userLoggedIn) {
+            toast.error("must login");
+            return;
+        }
+        if (contentToDelete) {
+            setLoading(true);
+            try {
+                if (contentToDelete.imageUrl) {
+
+                    const url = `${apiKey}api/file/delete?fileUrl=${encodeURIComponent(contentToDelete.imageUrl)}`;
+                    const token = "9c8fcb20-d2d7-4a1a-9e29-71a892cfa1f3";
+                    const response = await axios.delete(url, {
+                        headers: {
+                            Authorization: `Bearer ${token}`, // Add the bearer token
+                            'Content-Type': 'multipart/form-data', // Important for sending formData
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        console.log(response);
+                        deleteContentFromFireStore(contentToDelete.id);
+                    }
+                    else {
+                        toast.error("Something Went Wrong");
+                    }
+                } else {
+                    deleteContentFromFireStore(contentToDelete.id);
+                }
+            } catch (error) {
+                setLoading(false);
+                if (error.response) {
+                    var errorMessage = error.response.data.message;
+                    toast.error(errorMessage);
+                } else if (error.message) {
+                    console.log("Error", error.message);
+                    toast.error("Error", error.message);
+                } else {
+                    toast.error(error);
+                    console.log("Error", error);
+                }
+            } finally {
+                setLoading(false);
+                setContentToDelete(null);
+            }
+        } else {
+            toast.error("Something Went Wrong");
+        }
+    }
+
+    const deleteContentFromFireStore = async (id) => {
+        const docRef = doc(firestore, "Blog-Content", id);
+        await deleteDoc(docRef);
+        setContentsData((prevDocs) => prevDocs.filter((doc) => doc.id !== id));
+        toast.success("Deleted Successfully!");
+    }
+
 
     return (
         <>
@@ -294,7 +335,7 @@ const Blog = () => {
                         </div>
                         <div className='my-20'>
                             {userLoggedIn && (
-                                <AddButton onClick={() => { setAddModalOpen(true); }} text="Add Blog" />
+                                <AddButton onClick={() => { setContentsAddModalOpen(true); }} text="Add Blog" />
                             )}
                             <div className='grid grid-cols-3 gap-10'>
                                 {contentsData.length > 0 && contentsData.map((element, index) => {
@@ -352,57 +393,41 @@ const Blog = () => {
                                                 </a>
                                             </div>
                                             {userLoggedIn && editingContentId == element.id && (
-                                                <div className='mt-4'>
+                                                <div className='mt-4 flex gap-5'>
                                                     <button onClick={(e) => { e.preventDefault(); handleContentsSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
+                                                    <button onClick={(e) => { e.preventDefault(); setContentsDeleteModalOpen(true); setContentToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-600 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
                                                 </div>
                                             )}
                                         </div>
                                     )
                                 })}
-                                {/* {data.map((item, index) => (
-                                    <div key={index} className='flex flex-col'>
-                                        <div className="h-80">
-                                            <img
-                                                src={item.image}
-                                                alt={item.title}
-                                                className="w-full h-full object-cover object-center"
-                                            />
-                                        </div>
-                                        <div>
-                                            <h2 className="font-canela text-3xl !font-thin tracking-wide mt-8">
-                                                {item.title}
-                                            </h2>
-                                            <p className="text-base text-gray-600 my-3">{item.description}</p>
-
-                                        </div>
-                                        <div className='mt-auto'>
-                                            <a
-                                                href={item.link}
-                                                className="text-base py-1 border-b border-gray-400 text-gray-800"
-                                            >
-                                                Discover
-                                            </a>
-                                        </div>
-                                    </div>
-                                ))} */}
                             </div>
                         </div>
                     </div>
                     {/*end of contents */}
+
                     {/* footer */}
                     <Footer />
                     {/*end of footer */}
+
                     {/* contents image modal */}
                     <div>
                         <ChangeImageModal open={contentsImageModalOpen} setOpen={setContentsImageModalOpen} setLoading={setLoading} imageChange={contentsImageChange} handleClose={() => { setContentsImageModalOpen(false); setEditingContentId(null); setExistingImageUrl(null); }} existingImageUrl={existingImageUrl} />
                     </div>
                     {/*end of contents image modal */}
 
-                    {/* add modal */}
+
+                    {/* add content modal */}
                     <div>
-                        <AddModal open={addModalOpen} setOpen={setAddModalOpen} setLoading={setLoading} handleClose={()=>{setAddModalOpen(false)}} text={`Add Blog`} />
+                        <AddModal open={contentsAddModalOpen} setOpen={setContentsAddModalOpen} setLoading={setLoading} handleClose={() => { setContentsAddModalOpen(false); }} text={`Add Blogs`} addContent={addContent} isDescription={true} />
                     </div>
-                    {/*end of add modal */}
+                    {/*end of add content modal */}
+
+                    {/* delete content modal */}
+                    <div>
+                        <DeleteModal showDeleteModal={contentsDeleteModalOpen} handleModalClose={() => { setContentToDelete(null); setContentsDeleteModalOpen(false); }} handleDelete={handleContentsDelete} />
+                    </div>
+                    {/*end of delete content modal */}
                 </div>
             </div>
         </>
