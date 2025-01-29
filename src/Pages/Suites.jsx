@@ -11,12 +11,16 @@ import { CiEdit } from "react-icons/ci";
 import { HiOutlineXMark } from "react-icons/hi2";
 import toast from 'react-hot-toast'
 import ChangeImageModal from '../components/ChangeImageModal'
+import AddModal from '../components/AddModal'
+import DeleteModal from '../components/DeleteModal'
+import axios from 'axios'
+import { Link } from 'react-router-dom'
 const Suites = () => {
     const [loading, setLoading] = useState(true);
+    const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
     const collectionRef = collection(firestore, "Suites");
     const { userLoggedIn } = useAuth();
     const [existingImageUrl, setExistingImageUrl] = useState(null);
-    const [addModalOpen, setAddModalOpen] = useState(false);
 
     // heading states
     const [headingData, setHeadingData] = useState(null);
@@ -39,17 +43,23 @@ const Suites = () => {
     const contentDescriptionRef = useRef(null);
     const [contentImageModalOpen, setContentImageModalOpen] = useState(false);
 
-    //content states
+    //contents states
     const [contentsData, setContentsData] = useState([]);
     const [editingContentId, setEditingContentId] = useState(null);
     const contentRefs = useRef([]);
     const [contentsImageModalOpen, setContentsImageModalOpen] = useState(false);
+    const [contentsAddModalOpen, setContentsAddModalOpen] = useState(false);
+    const [contentsDeleteModalOpen, setContentsDeleteModalOpen] = useState(false);
+    const [contentToDelete, setContentToDelete] = useState(null);
 
     //offers states
     const [offersData, setOffersData] = useState([]);
     const [editingOffersId, setEditingOffersId] = useState(null);
     const offersRefs = useRef([]);
     const [offersImageModalOpen, setOffersImageModalOpen] = useState(false);
+    const [offersAddModalOpen, setOffersAddModalOpen] = useState(false);
+    const [offersDeleteModalOpen, setOffersDeleteModalOpen] = useState(false);
+    const [offerToDelete, setOfferToDelete] = useState(null);
 
 
     useEffect(() => {
@@ -195,8 +205,8 @@ const Suites = () => {
         }
     }
 
-     //contentInformation image change
-     const contentInformationImageChange = async (imageUrl) => {
+    //contentInformation image change
+    const contentInformationImageChange = async (imageUrl) => {
         try {
             const newContentdata = {
                 ...contentData, // Spread the previous state to retain other properties
@@ -232,7 +242,7 @@ const Suites = () => {
             await updateDoc(docRef, updatedData);
             const updatedContents = contentsData.map((content) =>
                 content.id === id
-                    ? { ...content, title: title}
+                    ? { ...content, title: title }
                     : content
             );
             setContentsData(updatedContents); // Update state
@@ -243,6 +253,65 @@ const Suites = () => {
             toast.error("Something went wrong");
         }
 
+    }
+
+    //contents save
+    const handleContentsDelete = async () => {
+        setContentsDeleteModalOpen(false);
+        if (!userLoggedIn) {
+            toast.error("must login");
+            return;
+        }
+        if (contentToDelete) {
+            setLoading(true);
+            try {
+                if (contentToDelete.imageUrl) {
+
+                    const url = `${apiKey}api/file/delete?fileUrl=${encodeURIComponent(contentToDelete.imageUrl)}`;
+                    const token = "9c8fcb20-d2d7-4a1a-9e29-71a892cfa1f3";
+                    const response = await axios.delete(url, {
+                        headers: {
+                            Authorization: `Bearer ${token}`, // Add the bearer token
+                            'Content-Type': 'multipart/form-data', // Important for sending formData
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        console.log(response);
+                        deleteContentFromFireStore(contentToDelete.id);
+                    }
+                    else {
+                        toast.error("Something Went Wrong");
+                    }
+                } else {
+                    deleteContentFromFireStore(contentToDelete.id);
+                }
+            } catch (error) {
+                setLoading(false);
+                if (error.response) {
+                    var errorMessage = error.response.data.message;
+                    toast.error(errorMessage);
+                } else if (error.message) {
+                    console.log("Error", error.message);
+                    toast.error("Error", error.message);
+                } else {
+                    toast.error(error);
+                    console.log("Error", error);
+                }
+            } finally {
+                setLoading(false);
+                setContentToDelete(null);
+            }
+        } else {
+            toast.error("Something Went Wrong");
+        }
+    }
+
+    const deleteContentFromFireStore = async (id) => {
+        const docRef = doc(firestore, "Suites-Content", id);
+        await deleteDoc(docRef);
+        setContentsData((prevDocs) => prevDocs.filter((doc) => doc.id !== id));
+        toast.success("Deleted Successfully!");
     }
 
     //offers save
@@ -331,6 +400,97 @@ const Suites = () => {
         }
     }
 
+    //offers delete
+    const handleOffersDelete = async () => {
+        setOffersDeleteModalOpen(false);
+        if (!userLoggedIn) {
+            toast.error("must login");
+            return;
+        }
+        if (offerToDelete) {
+            setLoading(true);
+            try {
+                if (offerToDelete.imageUrl) {
+
+                    const url = `${apiKey}api/file/delete?fileUrl=${encodeURIComponent(offerToDelete.imageUrl)}`;
+                    const token = "9c8fcb20-d2d7-4a1a-9e29-71a892cfa1f3";
+                    const response = await axios.delete(url, {
+                        headers: {
+                            Authorization: `Bearer ${token}`, // Add the bearer token
+                            'Content-Type': 'multipart/form-data', // Important for sending formData
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        console.log(response);
+                        deleteOfferFromFireStore(offerToDelete.id);
+                    }
+                    else {
+                        toast.error("Something Went Wrong");
+                    }
+                } else {
+                    deleteOfferFromFireStore(offerToDelete.id);
+                }
+            } catch (error) {
+                setLoading(false);
+                if (error.response) {
+                    var errorMessage = error.response.data.message;
+                    toast.error(errorMessage);
+                } else if (error.message) {
+                    console.log("Error", error.message);
+                    toast.error("Error", error.message);
+                } else {
+                    toast.error(error);
+                    console.log("Error", error);
+                }
+            } finally {
+                setLoading(false);
+                setContentToDelete(null);
+            }
+        } else {
+            toast.error("Something Went Wrong");
+        }
+    }
+
+    const deleteOfferFromFireStore = async (id) => {
+        const docRef = doc(firestore, "Suites-Offers", id);
+        await deleteDoc(docRef);
+        setOffersData((prevDocs) => prevDocs.filter((doc) => doc.id !== id));
+        toast.success("Deleted Successfully!");
+    }
+
+
+    //add new content
+    const addContent = async (data) => {
+        console.log(data);
+        try {
+            const docRef = await addDoc(collection(firestore, "Suites-Content"), data);
+            setContentsData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
+            toast.success("Data Added Successfully");
+        } catch (error) {
+            toast.error("Something went wrong");
+            console.log(error);
+
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    //add new offers
+    const addOffers = async (data) => {
+        try {
+            const docRef = await addDoc(collection(firestore, "Suites-Offers"), data);
+            setOffersData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
+            toast.success("Data Added Successfully");
+        } catch (error) {
+            toast.error("Something went wrong");
+            console.log(error);
+
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <>
             {loading && (
@@ -387,7 +547,7 @@ const Suites = () => {
                                                 <ImageChangeButton onClick={() => { setAboutImageModalOpen(true); setExistingImageUrl(aboutData?.imageUrl ?? null); }} />
                                             </div>
                                         )}
-                                        <img src={aboutData?.imageUrl??`https://m.ahstatic.com/is/image/accorhotels/aja_p_5629-59?qlt=82&wid=1920&ts=1701454554080&dpr=off`} className='w-full object-cover object-center' alt="" />
+                                        <img src={aboutData?.imageUrl ?? `https://m.ahstatic.com/is/image/accorhotels/aja_p_5629-59?qlt=82&wid=1920&ts=1701454554080&dpr=off`} className='w-full object-cover object-center' alt="" />
                                     </div>
                                 </div>
                                 <div className='col-span-2 pr-10'>
@@ -430,7 +590,7 @@ const Suites = () => {
                         </div>
                         <div className='p-10 bg-[#f1f0e7]'>
                             {userLoggedIn && (
-                                <AddButton onClick={() => { setAddModalOpen(true); }} text="Add Suites" />
+                                <AddButton onClick={() => { setContentsAddModalOpen(true); }} text="Add Suites" />
                             )}
                             <div className='grid grid-cols-3 gap-10 gap-y-36'>
                                 {contentsData.length > 0 && contentsData.map((element, index) => {
@@ -480,15 +640,16 @@ const Suites = () => {
 
                                             </div>
                                             <div className='mt-auto'>
-                                                <a
+                                                <Link to={`/suites/${element.id}`}
                                                     className="text-base py-1 border-b border-gray-400 text-gray-800"
                                                 >
                                                     Discover
-                                                </a>
+                                                </Link>
                                             </div>
                                             {userLoggedIn && editingContentId == element.id && (
-                                                <div className='mt-4'>
+                                                <div className='mt-4 flex gap-5'>
                                                     <button onClick={(e) => { e.preventDefault(); handleContentsSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
+                                                    <button onClick={(e) => { e.preventDefault(); setContentsDeleteModalOpen(true); setContentToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-600 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
                                                 </div>
                                             )}
                                         </div>
@@ -544,7 +705,7 @@ const Suites = () => {
                                         {userLoggedIn && (
                                             <div className='absolute top-2 left-2'>
                                                 <div>
-                                                    <ImageChangeButton onClick={() => { setContentImageModalOpen(true);setExistingImageUrl(contentData?.imageUrl ?? null) }} />
+                                                    <ImageChangeButton onClick={() => { setContentImageModalOpen(true); setExistingImageUrl(contentData?.imageUrl ?? null) }} />
                                                 </div>
                                             </div>
                                         )}
@@ -562,7 +723,7 @@ const Suites = () => {
                             <h2 className='font-canela text-5xl text-center !font-thin tracking-wide my-6'
                             >Featured Offers</h2>
                             {userLoggedIn && (
-                                <AddButton onClick={() => { setAddModalOpen(true); }} text="Add Offers" />
+                                <AddButton onClick={() => { setOffersAddModalOpen(true); }} text="Add Offers" />
                             )}
                             <div className='grid grid-cols-3 gap-10 gap-y-24'>
                                 {offersData.length > 0 && offersData.map((element, index) => {
@@ -613,15 +774,16 @@ const Suites = () => {
 
                                             </div>
                                             <div className='mt-auto'>
-                                                <a
+                                                <Link to={`/suites/${element.id}`}
                                                     className="text-base py-1 border-b border-gray-400 text-gray-800"
                                                 >
                                                     View Offer
-                                                </a>
+                                                </Link>
                                             </div>
                                             {userLoggedIn && editingOffersId == element.id && (
-                                                <div className='mt-4'>
+                                                <div className='mt-4 flex gap-5'>
                                                     <button onClick={(e) => { e.preventDefault(); handleOffersSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
+                                                    <button onClick={(e) => { e.preventDefault(); setOffersDeleteModalOpen(true); setOfferToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-600 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
                                                 </div>
                                             )}
                                         </div>
@@ -661,6 +823,30 @@ const Suites = () => {
                         <ChangeImageModal open={offersImageModalOpen} setOpen={setOffersImageModalOpen} setLoading={setLoading} imageChange={offersImageChange} handleClose={() => { setOffersImageModalOpen(false); setEditingOffersId(null); setExistingImageUrl(null); }} existingImageUrl={existingImageUrl} />
                     </div>
                     {/*end of offers image modal */}
+
+                    {/* add content modal */}
+                    <div>
+                        <AddModal open={contentsAddModalOpen} setOpen={setContentsAddModalOpen} setLoading={setLoading} handleClose={() => { setContentsAddModalOpen(false); }} text={`Add Suites`} addContent={addContent} isDescription={false} />
+                    </div>
+                    {/*end of add content modal */}
+
+                    {/* delete content modal */}
+                    <div>
+                        <DeleteModal showDeleteModal={contentsDeleteModalOpen} handleModalClose={() => { setContentToDelete(null); setContentsDeleteModalOpen(false); }} handleDelete={handleContentsDelete} />
+                    </div>
+                    {/*end of delete content modal */}
+
+                    {/* add offer modal */}
+                    <div>
+                        <AddModal open={offersAddModalOpen} setOpen={setOffersAddModalOpen} setLoading={setLoading} handleClose={() => { setOffersAddModalOpen(false); }} text={`Add Offers`} addContent={addOffers} isDescription={true} />
+                    </div>
+                    {/*end of add offer modal */}
+
+                    {/* delete offer modal */}
+                    <div>
+                        <DeleteModal showDeleteModal={offersDeleteModalOpen} handleModalClose={() => { setOfferToDelete(null); setOffersDeleteModalOpen(false); }} handleDelete={handleOffersDelete} />
+                    </div>
+                    {/*end of delete offer modal */}
                 </div>
             </div>
         </>

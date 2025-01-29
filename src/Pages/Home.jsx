@@ -7,18 +7,23 @@ import dineimage from "../assets/images/dine.png"
 import bedimage from "../assets/images/bed.png"
 import Footer from '../components/Footer'
 import Loader from '../common/Loader'
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Testimonial from '../components/Testimonial'
 import { firestore } from '../firebase/firebase'
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, updateDoc,addDoc,deleteDoc } from 'firebase/firestore'
 import { CiEdit } from "react-icons/ci";
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/authContext'
 import { HiOutlineXMark } from "react-icons/hi2";
 import ChangeImageModal from '../components/ChangeImageModal'
 import ImageChangeButton from '../components/ImageChangeButton'
+import axios from 'axios'
+import AddButton from '../components/AddButton'
+import AddModal from '../components/AddModal'
+import DeleteModal from '../components/DeleteModal'
 const Home = () => {
   const [loading, setLoading] = useState(true);
+  const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
   const collectionRef = collection(firestore, "Home");
   const { userLoggedIn } = useAuth();
 
@@ -43,7 +48,9 @@ const Home = () => {
   const [editingServiceId, setEditingServiceId] = useState(null);
   const serviceRefs = useRef([]);
   const [servicesImageModalOpen, setServicesImageModalOpen] = useState(false);
-
+  const [servicesAddModalOpen, setServicesAddModalOpen] = useState(false);
+  const [servicesDeleteModalOpen, setServicesDeleteModalOpen] = useState(false);
+  const [serviceToDelete, setServiceToDelete] = useState(null);
 
 
 
@@ -102,7 +109,7 @@ const Home = () => {
       setAboutData((prevState) => ({
         ...prevState,  // Preserve existing fields
         ...updatedData // Overwrite title and description
-    }));
+      }));
       setIsAboutEditable(false);
       toast.success("Updated Successfully");
     } catch (error) {
@@ -218,6 +225,81 @@ const Home = () => {
     }
   }
 
+  //add new service
+  const addService = async (data) => {
+    console.log(data);
+    try {
+      const docRef = await addDoc(collection(firestore, "Home-Services"), data);
+      setServicesData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
+      toast.success("Data Added Successfully");
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  //service delete
+  const handleServicesDelete = async () => {
+    setServicesDeleteModalOpen(false);
+    if (!userLoggedIn) {
+      toast.error("must login");
+      return;
+    }
+    if (serviceToDelete) {
+      setLoading(true);
+      try {
+        if (serviceToDelete.imageUrl) {
+
+          const url = `${apiKey}api/file/delete?fileUrl=${encodeURIComponent(serviceToDelete.imageUrl)}`;
+          const token = "9c8fcb20-d2d7-4a1a-9e29-71a892cfa1f3";
+          const response = await axios.delete(url, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add the bearer token
+              'Content-Type': 'multipart/form-data', // Important for sending formData
+            },
+          });
+
+          if (response.status === 200) {
+            console.log(response);
+            deleteServiceFromFireStore(serviceToDelete.id);
+          }
+          else {
+            toast.error("Something Went Wrong");
+          }
+        } else {
+          deleteServiceFromFireStore(serviceToDelete.id);
+        }
+      } catch (error) {
+        setLoading(false);
+        if (error.response) {
+          var errorMessage = error.response.data.message;
+          toast.error(errorMessage);
+        } else if (error.message) {
+          console.log("Error", error.message);
+          toast.error("Error", error.message);
+        } else {
+          toast.error(error);
+          console.log("Error", error);
+        }
+      } finally {
+        setLoading(false);
+        setServiceToDelete(null);
+      }
+    } else {
+      toast.error("Something Went Wrong");
+    }
+  }
+
+  const deleteServiceFromFireStore = async (id) => {
+    const docRef = doc(firestore, "Home-Services", id);
+    await deleteDoc(docRef);
+    setServicesData((prevDocs) => prevDocs.filter((doc) => doc.id !== id));
+    toast.success("Deleted Successfully!");
+  }
+
   return (
     <>
       {loading && (
@@ -248,7 +330,7 @@ const Home = () => {
                 <div className='relative'>
                   {userLoggedIn && (
                     <div className='absolute top-2 right-2'>
-                      <ImageChangeButton onClick={()=>{setAboutImageModalOpen(true);setExistingImageUrl(aboutData?.imageUrl ?? null);}} />
+                      <ImageChangeButton onClick={() => { setAboutImageModalOpen(true); setExistingImageUrl(aboutData?.imageUrl ?? null); }} />
                     </div>
                   )}
                   <img src={aboutData?.imageUrl ?? aboutimage} className='w-full object-contain' alt="" />
@@ -276,7 +358,7 @@ const Home = () => {
                       dangerouslySetInnerHTML={{ __html: aboutData?.description ?? "" }}
                     >
                     </p>
-                    <a href="" className='textbase py-1 border-b border-gray-400 text-gray-800'> View Suites</a>
+                    <Link to="/suites" className='textbase py-1 border-b border-gray-400 text-gray-800'> View Suites</Link>
                     {userLoggedIn && isAboutEditable && (
                       <div className='mt-4'>
                         <button onClick={handleAboutSave} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
@@ -332,7 +414,7 @@ const Home = () => {
                       dangerouslySetInnerHTML={{ __html: historyData?.description ?? "" }}
                     >
                     </p>
-                    <a href="" className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Read More</a>
+                    <Link to="/about" className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Read More</Link>
                     {userLoggedIn && isHistoryEditable && (
                       <div className='mt-4'>
                         <button onClick={handleHistorySave} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
@@ -351,7 +433,11 @@ const Home = () => {
 
           {/* dining */}
           <div>
-
+            <div className='px-10'>
+              {userLoggedIn && (
+                <AddButton onClick={() => { setServicesAddModalOpen(true); }} text="Add" />
+              )}
+            </div>
             {servicesData.length > 0 && servicesData.map((element, index) => {
               if (!serviceRefs.current[index]) {
                 serviceRefs.current[index] = {
@@ -368,8 +454,7 @@ const Home = () => {
                         {userLoggedIn && (
                           <div className='absolute top-2 right-2'>
                             <div>
-                              <ImageChangeButton onClick={() => { setServicesImageModalOpen(true); setEditingServiceId(element.id);setExistingImageUrl(element?.imageUrl ?? null) }} />
-                              {/* <button onClick={() => { setServicesImageModalOpen(true); setEditingServiceId(element.id); }} className='px-4 text-sm tracking-widest py-2 rounded-xl text-white bg-gray-600 hover:bg-gray-800  duration-300 ease-linear cursor-pointer'>Change</button> */}
+                              <ImageChangeButton onClick={() => { setServicesImageModalOpen(true); setEditingServiceId(element.id); setExistingImageUrl(element?.imageUrl ?? null) }} />
                             </div>
                           </div>
                         )}
@@ -407,12 +492,13 @@ const Home = () => {
                           Indulge in the signature multi-course dining experience, where you’ll savour Chef Jordan Keao’s iconic favourites. This culinary journey is meticulously crafted with a thoughtfully curated menu, complemented by exclusive off-the-menu creations that spotlight seasonal produce, creating an epic gastronomic adventure.
                         </p> */}
                           <div className='flex gap-8 mt-6'>
-                            <a href="" className='textbase py-1 border-b border-gray-400 text-gray-800'> Discover more</a>
-                            <a href="" className='textbase py-1 border-b border-gray-400 text-gray-800'> Reserve</a>
+                            {/* <a href="" className='textbase py-1 border-b border-gray-400 text-gray-800'> Discover more</a> */}
+                            <Link to="/booking" className='textbase py-1 border-b border-gray-400 text-gray-800'> Reserve</Link>
                           </div>
                           {userLoggedIn && editingServiceId == element.id && (
-                            <div className='mt-4'>
+                            <div className='mt-4 flex gap-5'>
                               <button onClick={(e) => { e.preventDefault(); handleServicesSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
+                              <button onClick={(e) => { e.preventDefault(); setServicesDeleteModalOpen(true); setServiceToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-600 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
                             </div>
                           )}
                         </div>
@@ -494,15 +580,26 @@ const Home = () => {
 
           {/* about image modal */}
           <div>
-            <ChangeImageModal open={aboutImageModalOpen} setOpen={setAboutImageModalOpen} setLoading={setLoading} imageChange={aboutImageChange} handleClose={()=>{setAboutImageModalOpen(false);setExistingImageUrl(null);}} existingImageUrl={existingImageUrl} />
+            <ChangeImageModal open={aboutImageModalOpen} setOpen={setAboutImageModalOpen} setLoading={setLoading} imageChange={aboutImageChange} handleClose={() => { setAboutImageModalOpen(false); setExistingImageUrl(null); }} existingImageUrl={existingImageUrl} />
           </div>
           {/*end of about image modal */}
 
           {/* services image modal */}
           <div>
-            <ChangeImageModal open={servicesImageModalOpen} setOpen={setServicesImageModalOpen} setLoading={setLoading} imageChange={servicesImageChange} handleClose={()=>{setServicesImageModalOpen(false);setEditingServiceId(null);setExistingImageUrl(null);}} existingImageUrl={existingImageUrl} />
+            <ChangeImageModal open={servicesImageModalOpen} setOpen={setServicesImageModalOpen} setLoading={setLoading} imageChange={servicesImageChange} handleClose={() => { setServicesImageModalOpen(false); setEditingServiceId(null); setExistingImageUrl(null); }} existingImageUrl={existingImageUrl} />
           </div>
           {/*end of services image modal */}
+
+          {/* add service modal */}
+          <div>
+            <AddModal open={servicesAddModalOpen} setOpen={setServicesAddModalOpen} setLoading={setLoading} handleClose={() => { setServicesAddModalOpen(false); }} text={`Add`} addContent={addService} isDescription={true} isSubTitle={true} />
+          </div>
+          {/*end of add service modal */}
+
+          {/* delete service modal */}
+          <div>
+            <DeleteModal showDeleteModal={servicesDeleteModalOpen} handleModalClose={() => { setServiceToDelete(null); setServicesDeleteModalOpen(false); }} handleDelete={handleServicesDelete} />
+          </div>
         </div>
       </div>
 

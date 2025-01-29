@@ -12,16 +12,21 @@ import { BsTelephone } from "react-icons/bs";
 import { CiMail } from "react-icons/ci";
 import { CiLocationOn } from "react-icons/ci";
 import { firestore } from '../firebase/firebase'
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, updateDoc, addDoc, deleteDoc } from 'firebase/firestore'
 import { useAuth } from '../contexts/authContext'
 import { CiEdit } from "react-icons/ci";
 import { HiOutlineXMark } from "react-icons/hi2";
 import toast from 'react-hot-toast'
 import ChangeImageModal from '../components/ChangeImageModal'
 import ImageChangeButton from '../components/ImageChangeButton'
+import axios from 'axios'
+import AddModal from '../components/AddModal'
+import DeleteModal from '../components/DeleteModal'
+import AddButton from '../components/AddButton'
 
 const About = () => {
     const [loading, setLoading] = useState(true);
+    const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
     const collectionRef = collection(firestore, "About");
     const { userLoggedIn } = useAuth();
     const [existingImageUrl, setExistingImageUrl] = useState(null);
@@ -56,6 +61,9 @@ const About = () => {
     const [editingContentId, setEditingContentId] = useState(null);
     const contentRefs = useRef([]);
     const [contentsImageModalOpen, setContentsImageModalOpen] = useState(false);
+    const [contentsAddModalOpen, setContentsAddModalOpen] = useState(false);
+    const [contentsDeleteModalOpen, setContentsDeleteModalOpen] = useState(false);
+    const [contentToDelete, setContentToDelete] = useState(null);
 
     useEffect(() => {
         const initialize = async () => {
@@ -225,32 +233,105 @@ const About = () => {
 
     const contentsImageChange = async (imageUrl) => {
         try {
-          const contentIndex = contentsData.findIndex(content => content.id === editingContentId);
-          if (contentIndex !== -1) {
-            const updatedContent = { ...contentsData[contentIndex], imageUrl: imageUrl };
-            const docRef = doc(firestore, "About-Content", editingContentId);
-            await updateDoc(docRef, updatedContent);
-            setContentsData(prevContentsData => { // Use a functional update for correct state updates based on previous state
-              return [
-                ...prevContentsData.slice(0, contentIndex),
-                updatedContent,
-                ...prevContentsData.slice(contentIndex + 1),
-              ];
-            });
-            toast.success("Updated Successfully");
-          } else {
-            toast.error("Something went wrong");
-          }
+            const contentIndex = contentsData.findIndex(content => content.id === editingContentId);
+            if (contentIndex !== -1) {
+                const updatedContent = { ...contentsData[contentIndex], imageUrl: imageUrl };
+                const docRef = doc(firestore, "About-Content", editingContentId);
+                await updateDoc(docRef, updatedContent);
+                setContentsData(prevContentsData => { // Use a functional update for correct state updates based on previous state
+                    return [
+                        ...prevContentsData.slice(0, contentIndex),
+                        updatedContent,
+                        ...prevContentsData.slice(contentIndex + 1),
+                    ];
+                });
+                toast.success("Updated Successfully");
+            } else {
+                toast.error("Something went wrong");
+            }
         } catch (error) {
-          toast.error("Something went wrong");
-          console.log(error);
+            toast.error("Something went wrong");
+            console.log(error);
         } finally {
-          setLoading(false);
-          setEditingContentId(null);
+            setLoading(false);
+            setEditingContentId(null);
         }
-      }
-    
+    }
 
+    //add new content
+    const addContent = async (data) => {
+        console.log(data);
+        try {
+            const docRef = await addDoc(collection(firestore, "About-Content"), data);
+            setContentsData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
+            toast.success("Data Added Successfully");
+        } catch (error) {
+            toast.error("Something went wrong");
+            console.log(error);
+
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    //contents save
+    const handleContentsDelete = async () => {
+        setContentsDeleteModalOpen(false);
+        if (!userLoggedIn) {
+            toast.error("must login");
+            return;
+        }
+        if (contentToDelete) {
+            setLoading(true);
+            try {
+                if (contentToDelete.imageUrl) {
+
+                    const url = `${apiKey}api/file/delete?fileUrl=${encodeURIComponent(contentToDelete.imageUrl)}`;
+                    const token = "9c8fcb20-d2d7-4a1a-9e29-71a892cfa1f3";
+                    const response = await axios.delete(url, {
+                        headers: {
+                            Authorization: `Bearer ${token}`, // Add the bearer token
+                            'Content-Type': 'multipart/form-data', // Important for sending formData
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        console.log(response);
+                        deleteContentFromFireStore(contentToDelete.id);
+                    }
+                    else {
+                        toast.error("Something Went Wrong");
+                    }
+                } else {
+                    deleteContentFromFireStore(contentToDelete.id);
+                }
+            } catch (error) {
+                setLoading(false);
+                if (error.response) {
+                    var errorMessage = error.response.data.message;
+                    toast.error(errorMessage);
+                } else if (error.message) {
+                    console.log("Error", error.message);
+                    toast.error("Error", error.message);
+                } else {
+                    toast.error(error);
+                    console.log("Error", error);
+                }
+            } finally {
+                setLoading(false);
+                setContentToDelete(null);
+            }
+        } else {
+            toast.error("Something Went Wrong");
+        }
+    }
+
+    const deleteContentFromFireStore = async (id) => {
+        const docRef = doc(firestore, "About-Content", id);
+        await deleteDoc(docRef);
+        setContentsData((prevDocs) => prevDocs.filter((doc) => doc.id !== id));
+        toast.success("Deleted Successfully!");
+    }
 
 
     return (
@@ -297,48 +378,6 @@ const About = () => {
 
                     {/* Overlay */}
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
-
-                    {/* contents */}
-                    {/* <div className='p-10 relative'>
-                        <div className='absolute bg-[#E2E0D1] top-0 left-0 w-full h-[80vh] -z-10'></div>
-                        <div className='w-1/2 m-auto text-center'>
-                            <h2 className='font-canela text-5xl !font-thin tracking-wide mt-8' >Quintessential theatres of dining</h2>
-                            <p className='text-center text-lg text-gray-600 px-28 mt-5'>
-                                At the global crossroads that is Raffles Singapore, discover culinary journeys with diverse cultural histories and contemporary sensorial flair. A mise en scène brought to life by masters of gastronomy and mixology, our gastronomic experiences inspire curiosity and are quite literally in a world of their own.
-                            </p>
-                        </div>
-                        <div className='my-20'>
-                            <div className='grid grid-cols-2 gap-10'>
-                                {data.map((item, index) => (
-                                    <div key={index} className='flex flex-col'>
-                                        <div className="h-[30rem]">
-                                            <img
-                                                src={item.image}
-                                                alt={item.title}
-                                                className="w-full h-full object-cover object-center"
-                                            />
-                                        </div>
-                                        <div>
-                                            <h2 className="font-canela text-3xl !font-thin tracking-wide mt-8">
-                                                {item.title}
-                                            </h2>
-                                            <p className="text-base text-gray-600 my-3">{item.description}</p>
-
-                                        </div>
-                                        <div className='mt-auto'>
-                                            <a
-                                                href={item.link}
-                                                className="text-base py-1 border-b border-gray-400 text-gray-800"
-                                            >
-                                                Discover
-                                            </a>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div> */}
-
                     <div className='px-10 bg-[#f6f1ef] flex justify-between gap-20 py-20'>
                         <div className='w-[40%] relative'>
                             {userLoggedIn && (
@@ -440,6 +479,9 @@ const About = () => {
                     </div>
                     <div className='pb-20 pt-10 px-10 bg-[#f6f1ef]'>
                         <div className=''>
+                            {userLoggedIn && (
+                                <AddButton onClick={() => { setContentsAddModalOpen(true); }} text="Add" />
+                            )}
                             <div className='grid grid-cols-3 gap-10'>
                                 {contentsData.length > 0 && contentsData.map((element, index) => {
                                     if (!contentRefs.current[index]) {
@@ -460,7 +502,7 @@ const About = () => {
                                                     </div>
                                                 )}
                                                 <img
-                                                    src={element?.imageUrl??`https://hotelgramayana-55120.web.app/assets/history-abnC8s6H.png`}
+                                                    src={element?.imageUrl ?? `https://hotelgramayana-55120.web.app/assets/history-abnC8s6H.png`}
                                                     alt={element.title}
                                                     className="w-full h-full object-cover object-center"
                                                 />
@@ -496,43 +538,19 @@ const About = () => {
                                                 </a>
                                             </div>
                                             {userLoggedIn && editingContentId == element.id && (
-                                                <div className='mt-4'>
+                                                <div className='mt-4 flex gap-5'>
                                                     <button onClick={(e) => { e.preventDefault(); handleContentsSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
+                                                    <button onClick={(e) => { e.preventDefault(); setContentsDeleteModalOpen(true); setContentToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-600 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
                                                 </div>
                                             )}
                                         </div>
                                     )
                                 })}
-                                {/* {data.map((item, index) => (
-                                    <div key={index} className='flex flex-col'>
-                                        <div className="h-80">
-                                            <img
-                                                src={item.image}
-                                                alt={item.title}
-                                                className="w-full h-full object-cover object-center"
-                                            />
-                                        </div>
-                                        <div>
-                                            <h2 className="font-canela text-3xl !font-thin tracking-wide mt-8">
-                                                {item.title}
-                                            </h2>
-                                            <p className="text-base text-gray-600 my-3">{item.description}</p>
-
-                                        </div>
-                                        <div className='mt-auto'>
-                                            <a
-                                                href={item.link}
-                                                className="text-base py-1 border-b border-gray-400 text-gray-800"
-                                            >
-                                                Discover
-                                            </a>
-                                        </div>
-                                    </div>
-                                ))} */}
                             </div>
                         </div>
                     </div>
                     {/*end of contents */}
+
                     {/* footer */}
                     <Footer />
                     {/*end of footer */}
@@ -541,7 +559,18 @@ const About = () => {
                     <div>
                         <ChangeImageModal open={contentsImageModalOpen} setOpen={setContentsImageModalOpen} setLoading={setLoading} imageChange={contentsImageChange} handleClose={() => { setContentsImageModalOpen(false); setEditingContentId(null); setExistingImageUrl(null); }} existingImageUrl={existingImageUrl} />
                     </div>
-                    {/*end of contents image modal */}
+                    {/*end of contents image modal */}+
+
+                    {/* add content modal */}
+                    <div>
+                        <AddModal open={contentsAddModalOpen} setOpen={setContentsAddModalOpen} setLoading={setLoading} handleClose={() => { setContentsAddModalOpen(false); }} text={`Add`} addContent={addContent} isDescription={true} />
+                    </div>
+                    {/*end of add content modal */}
+
+                    {/* delete content modal */}
+                    <div>
+                        <DeleteModal showDeleteModal={contentsDeleteModalOpen} handleModalClose={() => { setContentToDelete(null); setContentsDeleteModalOpen(false); }} handleDelete={handleContentsDelete} />
+                    </div>
                 </div>
             </div>
         </>
