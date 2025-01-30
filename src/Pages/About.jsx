@@ -530,13 +530,13 @@ const About = () => {
                                                 ></p>
 
                                             </div>
-                                            <div className='mt-auto'>
+                                            {/* <div className='mt-auto'>
                                                 <a
                                                     className="text-base py-1 border-b border-gray-400 text-gray-800"
                                                 >
                                                     Discover
                                                 </a>
-                                            </div>
+                                            </div> */}
                                             {userLoggedIn && editingContentId == element.id && (
                                                 <div className='mt-4 flex gap-5'>
                                                     <button onClick={(e) => { e.preventDefault(); handleContentsSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>

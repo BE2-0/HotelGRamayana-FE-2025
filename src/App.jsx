@@ -10,6 +10,7 @@ import Blog from './Pages/Blog';
 import Login from './Pages/Login';
 import Suites from './Pages/Suites';
 import SingleSuite from './Pages/SingleSuite';
+import SingleOffer from './Pages/SingleOffer';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/suites" element={<Suites />} />
         <Route path="/suites/:id" element={<SingleSuite />} />
+        <Route path="/offers/:id" element={<SingleOffer />} />
       </Routes>
     </>
   )
