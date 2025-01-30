@@ -774,7 +774,7 @@ const Suites = () => {
 
                                             </div>
                                             <div className='mt-auto'>
-                                                <Link to={`/suites/${element.id}`}
+                                                <Link to={`/offers/${element.id}`}
                                                     className="text-base py-1 border-b border-gray-400 text-gray-800"
                                                 >
                                                     View Offer
