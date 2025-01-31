@@ -11,7 +11,7 @@ import Login from './Pages/Login';
 import Suites from './Pages/Suites';
 import SingleSuite from './Pages/SingleSuite';
 import SingleOffer from './Pages/SingleOffer';
-import SingleBlog from './Pages/singleBlog';
+import SingleBlog from './Pages/SingleBlog';
 
 function App() {
   return (
