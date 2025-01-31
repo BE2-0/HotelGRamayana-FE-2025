@@ -15,6 +15,7 @@ import AddButton from '../components/AddButton'
 import AddModal from '../components/AddModal'
 import DeleteModal from '../components/DeleteModal'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 const Blog = () => {
     const [loading, setLoading] = useState(true);
     const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
@@ -386,11 +387,11 @@ const Blog = () => {
 
                                             </div>
                                             <div className='mt-auto'>
-                                                <a
+                                                <Link to={`/blog/${element.id}`}
                                                     className="text-base py-1 border-b border-gray-400 text-gray-800"
                                                 >
                                                     Discover
-                                                </a>
+                                                </Link>
                                             </div>
                                             {userLoggedIn && editingContentId == element.id && (
                                                 <div className='mt-4 flex gap-5'>
