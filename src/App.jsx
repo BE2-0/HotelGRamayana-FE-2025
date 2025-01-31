@@ -11,6 +11,7 @@ import Login from './Pages/Login';
 import Suites from './Pages/Suites';
 import SingleSuite from './Pages/SingleSuite';
 import SingleOffer from './Pages/SingleOffer';
+import SingleBlog from './Pages/singleBlog';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<SingleBlog />} />
         <Route path="/suites" element={<Suites />} />
         <Route path="/suites/:id" element={<SingleSuite />} />
         <Route path="/offers/:id" element={<SingleOffer />} />
