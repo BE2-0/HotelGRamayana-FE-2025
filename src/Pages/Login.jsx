@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import bg from "../assets/Gallery/DSC07891.jpg"
+import bg from "../assets/images/login.jpg"
 import Loader from '../common/Loader';
 import { Link, Navigate, replace } from 'react-router-dom';
 import { IoEyeOutline } from "react-icons/io5";

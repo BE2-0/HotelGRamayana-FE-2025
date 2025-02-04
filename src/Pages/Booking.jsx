@@ -66,9 +66,11 @@ const Booking = () => {
 
 
     useEffect(() => {
+        document.body.style.overflow = "hidden";
         window.scrollTo(0, 0);
         setTimeout(() => {
             setLoading(false);
+            document.body.style.overflow = "auto";
         }, 1000);
     }, [])
 

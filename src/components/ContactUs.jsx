@@ -2,7 +2,7 @@ import React, { useReducer, useRef, useState } from 'react'
 import { BsTelephone } from "react-icons/bs";
 import { CiMail } from "react-icons/ci";
 import { CiLocationOn } from "react-icons/ci";
-import contactImage from "../assets/Gallery/DSC07999.jpg";
+import contactImage from "../assets/images/contact.jpg";
 import { HiXMark } from "react-icons/hi2";
 import logo from "../assets/images/logo.png"
 import toast from 'react-hot-toast';

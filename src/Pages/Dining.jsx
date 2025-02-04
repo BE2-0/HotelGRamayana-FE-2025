@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../components/Nav'
-import dine2image from "../assets/images/dining2.png"
+import dine2image from "../assets/images/dining.jpg"
 import Footer from '../components/Footer'
 import Loader from '../common/Loader'
 import { firestore } from '../firebase/firebase'
@@ -46,9 +46,11 @@ const Dining = () => {
 
     useEffect(() => {
         const initialize = async () => {
+            document.body.style.overflow = "hidden";
             window.scrollTo(0, 0); // Scroll to the top
             await fetchData(); // Await your fetch function
             setLoading(false); // Set loading state
+            document.body.style.overflow = "auto";
         };
 
         initialize(); // Call the async function

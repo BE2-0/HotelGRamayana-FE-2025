@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import Loader from '../common/Loader'
-import blogimage from "../assets/Gallery/DSC08022.jpg"
+import blogimage from "../assets/images/blog.jpg"
 import { firestore } from '../firebase/firebase'
 import { collection, doc, getDocs, addDoc, deleteDoc, updateDoc } from 'firebase/firestore'
 import { useAuth } from '../contexts/authContext'
@@ -46,9 +46,11 @@ const Blog = () => {
 
     useEffect(() => {
         const initialize = async () => {
+            document.body.style.overflow = "hidden";
             window.scrollTo(0, 0); // Scroll to the top
             await fetchData(); // Await your fetch function
             setLoading(false); // Set loading state
+            document.body.style.overflow = "auto";
         };
 
         initialize(); // Call the async function

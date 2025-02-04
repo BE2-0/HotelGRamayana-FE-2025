@@ -37,9 +37,11 @@ const SingleOffer = () => {
 
     useEffect(() => {
         const initialize = async () => {
+            document.body.style.overflow="hidden";
             window.scrollTo(0, 0); // Scroll to the top
             await fetchData(); // Await your fetch function
             setLoading(false); // Set loading state
+            document.body.style.overflow = "auto";
         };
 
         initialize(); // Call the async function

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import testimonialimage from "../assets/Gallery/DSC08006.jpg"
+import testimonialimage from "../assets/images/testimonial.jpg"
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
