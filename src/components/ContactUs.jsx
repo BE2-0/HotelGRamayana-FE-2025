@@ -7,7 +7,9 @@ import { HiXMark } from "react-icons/hi2";
 import logo from "../assets/images/logo.png"
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import Loader from '../common/Loader';
 const ContactUs = ({ contactUsOpen, handleContactUsClose }) => {
+    const [loading, setLoading] = useState(false);
     const apiKey = import.meta.env["VITE_API_SERVICE_URL"];
     const recipientEmail = import.meta.env["VITE_RECIPIENT_EMAIL"];
     const [name, setName] = useState("");
@@ -16,8 +18,7 @@ const ContactUs = ({ contactUsOpen, handleContactUsClose }) => {
     const [message, setMessage] = useState("");
     const acceptRef = useRef(null);
     const validateForm = () => {
-        if(!acceptRef.current.checked)
-        {
+        if (!acceptRef.current.checked) {
             toast.error("Please accept the policy");
             return false;
         }
@@ -32,7 +33,7 @@ const ContactUs = ({ contactUsOpen, handleContactUsClose }) => {
             return;
         }
         const data = {
-            to: [recipientEmail??"techdipesh36@gmail.com"],
+            to: [recipientEmail ?? "techdipesh36@gmail.com"],
             subject: "Contact Message from Hotel G Ramayana",
             content: `
             Name : ${name}
@@ -42,22 +43,27 @@ const ContactUs = ({ contactUsOpen, handleContactUsClose }) => {
             `
         }
         try {
-            const response = await axios.post(`${apiKey}api/email/sendEmail`,data)
-            if(response.status==200)
-            {
+            setLoading(true);
+            const response = await axios.post(`${apiKey}api/email/sendEmail`, data)
+            if (response.status == 200) {
                 toast.success(response.data.message);
                 setName("");
                 setEmail("");
                 setPhone("");
                 setMessage("");
-                acceptRef.current.checked=false;
+                acceptRef.current.checked = false;
             }
         } catch (error) {
             toast.error("something went wrong");
+        } finally {
+            setLoading(false);
         }
     }
     return (
         <>
+            {loading && (
+                <Loader />
+            )}
             {/* {contactUsOpen && ( */}
             <div className={`fixed top-0 left-0 right-0 h-[100vh] z-[60] grid grid-cols-3 bg-[#C9DADC] transition-all duration-500 ease-linear ${contactUsOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                 }`}>
