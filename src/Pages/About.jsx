@@ -561,7 +561,7 @@ const About = () => {
                     <div>
                         <ChangeImageModal open={contentsImageModalOpen} setOpen={setContentsImageModalOpen} setLoading={setLoading} imageChange={contentsImageChange} handleClose={() => { setContentsImageModalOpen(false); setEditingContentId(null); setExistingImageUrl(null); }} existingImageUrl={existingImageUrl} />
                     </div>
-                    {/*end of contents image modal */}+
+                    {/*end of contents image modal */}
 
                     {/* add content modal */}
                     <div>
