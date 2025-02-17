@@ -8,6 +8,9 @@ import ContactUs from './ContactUs'
 import { useAuth } from '../contexts/authContext'
 import { doSignOut } from '../firebase/auth'
 import toast from 'react-hot-toast'
+import Setting from './Setting'
+import Loader from '../common/Loader'
+import OfferPopup from './OfferPopUp'
 const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const navStyle = "cursor-pointer relative before:absolute before:bottom-0 pb-0.5 before:left-1/2 before:h-0.5 before:w-0 before:rounded-5xl before:transform before:-translate-x-1/2 before:transition-all before:duration-300 before:ease-linear hover:before:w-full hover:before:scale-x-100 hover:before:transform-origin-center"
   const [isDown, setIsDown] = useState(false);
@@ -16,6 +19,8 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const location = useLocation();
   const route = location.pathname.split('/')[1];
   const { userLoggedIn } = useAuth();
+  const [isSettingOpen, setIsSettingOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPosition = window.scrollY;
@@ -45,13 +50,17 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
     setContactUsOpen(false);
   }
 
-  const handleLogout=(e)=>{
+  const handleLogout = (e) => {
     e.preventDefault();
     doSignOut();
     toast.success("Logged Out Successfully");
   }
+
   return (
     <>
+      {loading && (
+        <Loader />
+      )}
       <div className="z-20 relative tracking-wider" >
         <div className={` ${isTextBlack ? "text-black" : "text-white"}`}>
           <div className={`flex relative justify-center text-sm items-center py-5 ${isTextBlack ? "text-black border-black" : "text-white border-gray-400"} border-b  mx-10`}>
@@ -61,11 +70,14 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
               </div>
             </Link>
             <div className='flex absolute right-0 top-0 bottom-0 gap-8 items-center'>
+              {userLoggedIn && (
+                <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Settings</button>
+              )}
               {!userLoggedIn && (
                 <Link to="/login" className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign In</Link>
               )}
               {userLoggedIn && (
-                <button onClick={handleLogout}  className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign Out</button>
+                <button onClick={handleLogout} className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign Out</button>
               )}
               <h2 className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} onClick={handleContactUsOpen}>Contact</h2>
               {!hideBookButton && (
@@ -124,12 +136,15 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
                 {/* <li><a className={`${navStyle}  before:bg-gray-600`} href="">gift card</a></li> */}
               </ul>
               <div className={`flex gap-8 items-center`}>
+                {userLoggedIn && (
+                  <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle} before:bg-gray-600`}>Settings</button>
+                )}
                 {!userLoggedIn && (
                   <Link to="/login" className={`${navStyle}  before:bg-gray-600`}>Sign In</Link>
                 )}
-                 {userLoggedIn && (
-                <button onClick={handleLogout}  className={`${navStyle}  before:bg-gray-600`}>Sign Out</button>
-              )}
+                {userLoggedIn && (
+                  <button onClick={handleLogout} className={`${navStyle}  before:bg-gray-600`}>Sign Out</button>
+                )}
                 <h2 className={`${navStyle}  before:bg-gray-600`} onClick={handleContactUsOpen}>Contact</h2>
                 <a target='_blank' href="/booking" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer  font-akzidenz text-xs'>Book</a>
               </div>
@@ -139,6 +154,8 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
       )}
 
       <ContactUs contactUsOpen={contactUsOpen} handleContactUsClose={handleContactUsClose} />
+      <Setting open={isSettingOpen} setOpen={setIsSettingOpen} setLoading={setLoading} handleClose={() => { setIsSettingOpen(false) }} text={`Settings`} />
+      <OfferPopup />
     </>
   )
 }
