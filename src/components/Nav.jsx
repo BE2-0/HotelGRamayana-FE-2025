@@ -98,7 +98,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
         <div className={`z-50 w-full tracking-wider ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
           } transition-transform duration-300 ease-in-out`} >
           <div className=' text-white'>
-            <div className={`flex  items-center text-sm py-2 px-10 bg-white shadow-lg text-black justify-between`}>
+            <div className={`flex  items-center text-sm py-2 px-10 bg-primary  shadow-lg text-black justify-between`}>
               <div>
                 <Link to="/" className='cursor-pointer'>
                   <div className={`flex items-center gap-2`}>

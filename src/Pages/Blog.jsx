@@ -308,7 +308,7 @@ const Blog = () => {
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
 
                     {/* contents */}
-                    <div className='p-10 relative'>
+                    <div className='p-10 relative bg-primary'>
                         <div className='absolute bg-[#E2E0D1] top-0 left-0 w-full h-[80vh] -z-10'></div>
                         <div className='w-1/2 m-auto text-center relative'>
                             {userLoggedIn && (
