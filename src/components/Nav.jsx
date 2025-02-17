@@ -10,7 +10,7 @@ import { doSignOut } from '../firebase/auth'
 import toast from 'react-hot-toast'
 import Setting from './Setting'
 import Loader from '../common/Loader'
-import OfferPopup from './OfferPopUp'
+import OfferPopup from './OfferPopup'
 const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const navStyle = "cursor-pointer relative before:absolute before:bottom-0 pb-0.5 before:left-1/2 before:h-0.5 before:w-0 before:rounded-5xl before:transform before:-translate-x-1/2 before:transition-all before:duration-300 before:ease-linear hover:before:w-full hover:before:scale-x-100 hover:before:transform-origin-center"
   const [isDown, setIsDown] = useState(false);
