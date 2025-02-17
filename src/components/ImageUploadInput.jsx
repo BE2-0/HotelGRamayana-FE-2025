@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { FaXmark } from "react-icons/fa6";
-const ImageUploadInput = ({ setFile,customKey }) => {
+const ImageUploadInput = ({ setFile,customKey,existingImageUrl }) => {
     const max_file_size = import.meta.env["VITE_MAX_FILE_SIZE"];
     const [image, setImage] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
+    useEffect(() => {
+        if(existingImageUrl)
+        {
+          setImage(existingImageUrl);
+        }
+      }, [])
     // Handle drag events
     const handleDragOver = (event) => {
         event.preventDefault();
