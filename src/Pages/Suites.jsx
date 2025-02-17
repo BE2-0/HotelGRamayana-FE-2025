@@ -539,7 +539,7 @@ const Suites = () => {
                     {/* end of hero section */}
 
                     {/* contents */}
-                    <div>
+                    <div className='bg-primary'>
                         <div className='p-10'>
                             <div className='grid grid-cols-5 gap-10'>
                                 <div className={`col-span-3 pr-10 `}>

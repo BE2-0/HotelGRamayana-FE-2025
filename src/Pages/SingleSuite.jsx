@@ -170,7 +170,7 @@ const SingleSuite = () => {
             {loading && (
                 <Loader />
             )}
-            <div className=''>
+            <div className=' bg-primary'>
                 <Nav isTextBlack={true} />
                 <div className=' absolute top-0 left-0 w-full'>
 
@@ -209,10 +209,10 @@ const SingleSuite = () => {
                         </div> */}
                     </div>
                     {/* end of hero section */}
-                    <div className='px-40 relative'>
-                        <div className='absolute -z-10 top-0 left-0 w-full h-1/2 bg-[#E2E0D1]'>
+                    <div className='px-40 relative bg-primary'>
+                        <div className='absolute z-10 top-0 left-0 w-full h-1/2 !bg-[#E2E0D1]'>
                         </div>
-                        <div className='relative'>
+                        <div className='relative z-20'>
                             {userLoggedIn && (
                                 <div className='absolute top-2 right-2'>
                                     <ImageChangeButton onClick={() => { setImageModalOpen(true); setExistingImageUrl(suite?.imageUrl ?? null); }} />
@@ -222,7 +222,7 @@ const SingleSuite = () => {
                         </div>
                     </div>
 
-                    <div className='px-40 mr-10 grid grid-cols-3 gap-28 py-20'>
+                    <div className='px-40 pr-52 grid grid-cols-3 gap-28 py-20 bg-primary'>
                         <div className='relative col-span-2'>
                             {/* {userLoggedIn && (
                                 <div className='absolute top-0 right-4 text-black'>
@@ -293,7 +293,7 @@ const SingleSuite = () => {
                         </div>
                     </div>
 
-                    <div className='px-40 py-20'>
+                    <div className='px-40 py-20  bg-primary'>
                         <div className='grid grid-cols-5 gap-10'>
 
                             <div className='col-span-2 pr-10'>
@@ -335,10 +335,10 @@ const SingleSuite = () => {
                         </div>
                     </div>
 
-                    <div className='px-40 relative py-20'>
-                        <div className='absolute -z-10 bottom-0 left-0 w-full h-2/3 bg-[#d5c0b5]'>
+                    <div className='px-40 relative py-20  bg-primary'>
+                        <div className='absolute z-10 bottom-0 left-0 w-full h-2/3 bg-[#d5c0b5]'>
                         </div>
-                        <div className='relative'>
+                        <div className='relative z-20'>
                             {userLoggedIn && (
                                 <div className='absolute top-2 right-2'>
                                     <ImageChangeButton onClick={() => { setImage2ModalOpen(true); setExistingImageUrl(suite?.imageUrl2 ?? null); }} />

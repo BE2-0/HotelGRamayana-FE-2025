@@ -153,11 +153,11 @@ const Gallery = () => {
                     {/* end of hero section */}
 
                     {/* contents */}
-                    <div className='px-10 mt-10'>
+                    <div className='px-10 mt-10 bg-primary'>
                         {userLoggedIn && (
                             <AddButton onClick={() => { setAddImageModalOpen(true); }} text="Add Image" />
                         )}
-                        <div className='mb-20'>
+                        <div className='pb-20'>
 
                             <Box >
                                 <Masonry columns={3} spacing={2}>

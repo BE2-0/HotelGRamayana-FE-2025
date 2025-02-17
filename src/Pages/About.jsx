@@ -450,7 +450,7 @@ const About = () => {
                             )}
                         </div>
                     </div>
-                    <div>
+                    <div className='bg-primary'>
                         <div className='w-1/2 relative m-auto text-center pt-20 pb-10'>
                             {userLoggedIn && (
                                 <div className='absolute top-10 right-4 text-black'>

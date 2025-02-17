@@ -147,7 +147,7 @@ const SingleBlog = () => {
 
                     {/* Overlay */}
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
-                    <div className='px-40 bg-[#f6f1ef] py-20'>
+                    <div className='px-40 bg-primary py-20'>
                         <div className='relative'>
                             <h2 className='font-canela text-5xl !font-thin tracking-wide'
                                 contentEditable={isEditable}

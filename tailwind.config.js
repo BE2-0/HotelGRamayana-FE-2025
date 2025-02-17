@@ -11,6 +11,9 @@ export default {
         lato: ['Lato', 'serif'],
         akzidenz: ['AkzidenzGroteskPro', 'sans-serif'], // Add your custom font
       },
+      colors: {
+        primary: '#F1ECE0', // Replace with your preferred primary color
+      },
     },
   },
   plugins: [],

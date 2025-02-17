@@ -326,7 +326,7 @@ const Home = () => {
           {/* Overlay */}
           <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
           {/* about section */}
-          <div className='px-40 py-10'>
+          <div className='px-40 py-10 bg-primary'>
             <div className='grid grid-cols-2 gap-10'>
               <div className='px-10'>
                 <div className='relative'>
@@ -434,7 +434,7 @@ const Home = () => {
 
 
           {/* dining */}
-          <div>
+          <div className='bg-primary'>
             <div className='px-10'>
               {userLoggedIn && (
                 <AddButton onClick={() => { setServicesAddModalOpen(true); }} text="Add" />
