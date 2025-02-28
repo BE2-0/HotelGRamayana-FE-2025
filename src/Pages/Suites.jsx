@@ -590,7 +590,7 @@ const Suites = () => {
 
                             </div>
                         </div>
-                        <div className='p-10 bg-[#f1f0e7]'>
+                        <div className='p-10 bg-primary'>
                             {userLoggedIn && (
                                 <AddButton onClick={() => { setContentsAddModalOpen(true); }} text="Add Suites" />
                             )}

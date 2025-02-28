@@ -309,7 +309,6 @@ const Blog = () => {
 
                     {/* contents */}
                     <div className='p-10 relative bg-primary'>
-                        <div className='absolute bg-[#E2E0D1] top-0 left-0 w-full h-[80vh] -z-10'></div>
                         <div className='w-1/2 m-auto text-center relative'>
                             {userLoggedIn && (
                                 <div className='absolute -top-4 right-0 text-black'>
@@ -349,7 +348,7 @@ const Blog = () => {
                                         };
                                     }
                                     return (
-                                        <div key={index} className='flex flex-col relative'>
+                                        <div key={index} className='flex flex-col relative bg-[#a7792b] rounded-md overflow-hidden'>
 
                                             <div className="h-80 relative">
                                                 {userLoggedIn && (
@@ -365,7 +364,7 @@ const Blog = () => {
                                                     className="w-full h-full object-cover object-center"
                                                 />
                                             </div>
-                                            <div className='relative'>
+                                            <div className='relative px-5 text-white'>
                                                 {userLoggedIn && (
                                                     <div className='absolute top-2 right-4 '>
                                                         {editingContentId == element.id ? <>
@@ -381,16 +380,16 @@ const Blog = () => {
                                                     dangerouslySetInnerHTML={{ __html: element?.title ?? "" }}
                                                 >
                                                 </h2>
-                                                <p className="text-base text-gray-600 my-3"
+                                                <p className="text-base  my-3"
                                                     contentEditable={editingContentId == element.id}
                                                     ref={contentRefs.current[index].descriptionRef}
                                                     dangerouslySetInnerHTML={{ __html: element?.description ?? "" }}
                                                 ></p>
 
                                             </div>
-                                            <div className='mt-auto'>
+                                            <div className='mt-auto px-5 pb-6'>
                                                 <Link to={`/blog/${element.id}`}
-                                                    className="text-base py-1 border-b border-gray-400 text-gray-800"
+                                                    className="text-base py-1 border-b border-white text-white"
                                                 >
                                                     Discover
                                                 </Link>

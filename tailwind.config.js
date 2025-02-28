@@ -12,7 +12,7 @@ export default {
         akzidenz: ['AkzidenzGroteskPro', 'sans-serif'], // Add your custom font
       },
       colors: {
-        primary: '#F1ECE0', // Replace with your preferred primary color
+        primary: '#e6d9c6', // Replace with your preferred primary color
       },
     },
   },
