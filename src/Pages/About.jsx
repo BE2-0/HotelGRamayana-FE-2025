@@ -380,7 +380,7 @@ const About = () => {
 
                     {/* Overlay */}
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
-                    <div className='px-10 bg-[#f6f1ef] flex justify-between gap-20 py-20'>
+                    <div className='px-10 bg-primary flex justify-between gap-20 py-20'>
                         <div className='w-[40%] relative'>
                             {userLoggedIn && (
                                 <div className='absolute top-0 right-4 text-black'>
@@ -479,7 +479,7 @@ const About = () => {
                             )}
                         </div>
                     </div>
-                    <div className='pb-20 pt-10 px-10 bg-[#f6f1ef]'>
+                    <div className='pb-20 pt-10 px-10 bg-primary'>
                         <div className=''>
                             {userLoggedIn && (
                                 <AddButton onClick={() => { setContentsAddModalOpen(true); }} text="Add" />
