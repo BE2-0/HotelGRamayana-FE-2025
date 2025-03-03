@@ -178,8 +178,9 @@
     background: 
     linear-gradient(rgba(143, 94, 46, 0.3), rgba(143, 94, 46, 0.3)), 
     url('/nepalipaper.png');
-    opacity: 0.5; /* Adjust opacity */
+    opacity: 0.9; /* Adjust opacity */
     z-index: -1;
+    
     /* background-color: rgba(143, 94, 46, 0.9);  */
 }
 
