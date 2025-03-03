@@ -10,7 +10,7 @@ import Loader from '../common/Loader'
 import { Link, useLocation } from 'react-router-dom';
 import Testimonial from '../components/Testimonial'
 import { firestore } from '../firebase/firebase'
-import { collection, doc, getDocs, updateDoc,addDoc,deleteDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, updateDoc, addDoc, deleteDoc } from 'firebase/firestore'
 import { CiEdit } from "react-icons/ci";
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/authContext'
@@ -56,11 +56,11 @@ const Home = () => {
 
   useEffect(() => {
     const initialize = async () => {
-      document.body.style.overflow="hidden";
+      document.body.style.overflow = "hidden";
       window.scrollTo(0, 0); // Scroll to the top
       await fetchData(); // Await your fetch function
       setLoading(false); // Set loading state
-      document.body.style.overflow="auto";
+      document.body.style.overflow = "auto";
     };
 
     initialize(); // Call the async function
@@ -326,16 +326,16 @@ const Home = () => {
           {/* Overlay */}
           <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
           {/* about section */}
-          <div className='px-40 py-10 bg-primary'>
+          <div className=' px-10 py-10 bg-primary'>
             <div className='grid grid-cols-2 gap-10'>
-              <div className='px-10'>
+              <div className=''>
                 <div className='relative'>
                   {userLoggedIn && (
                     <div className='absolute top-2 right-2'>
                       <ImageChangeButton onClick={() => { setAboutImageModalOpen(true); setExistingImageUrl(aboutData?.imageUrl ?? null); }} />
                     </div>
                   )}
-                  <img src={aboutData?.imageUrl ?? aboutimage} className='w-full object-contain' alt="" />
+                  <img src={aboutData?.imageUrl ?? aboutimage} className='w-full  rounded-xl object-contain' alt="" />
                 </div>
               </div>
               <div className='flex flex-col justify-center items-center pl-20 pr-10 tracking-wider'>
@@ -435,7 +435,7 @@ const Home = () => {
 
           {/* dining */}
           <div className='bg-primary'>
-            <div className='px-10'>
+            <div className=''>
               {userLoggedIn && (
                 <AddButton onClick={() => { setServicesAddModalOpen(true); }} text="Add" />
               )}
@@ -449,7 +449,7 @@ const Home = () => {
                 };
               }
               return (
-                <div className='p-10' key={index}>
+                <div className='' key={index}>
                   <div className='grid grid-cols-5 gap-10'>
                     <div className={`col-span-3 ${index % 2 === 0 ? "order-0 pr-10" : "order-1 pl-10"} `}>
                       <div className=' relative '>
