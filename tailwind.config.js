@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        canela: ['Canela Thin', 'serif'],
+        canela: ['ananda', 'serif'],
+        ananda: ['ananda', 'serif'],
         lato: ['Lato', 'serif'],
         akzidenz: ['AkzidenzGroteskPro', 'sans-serif'], // Add your custom font
       },

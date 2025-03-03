@@ -12,6 +12,15 @@
     font-weight: 400;
     font-style: normal;
   }
+
+  @font-face {
+    font-family: 'ananda';
+    src: url('/fonts/AnandaNeptouch.woff2') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+
+  }
   
 
   body {
@@ -156,7 +165,8 @@
 }
 
 .font-canela *{
- font-family: "Canela Thin", serif !important;
+ font-family: "ananda", serif !important;
+ background: transparent !important;
 }
 
 
