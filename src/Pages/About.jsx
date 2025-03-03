@@ -493,7 +493,7 @@ const About = () => {
                                         };
                                     }
                                     return (
-                                        <div key={index} className='flex flex-col relative'>
+                                        <div key={index} className='flex flex-col relative bg-[#a7792b] rounded-md overflow-hidden'>
 
                                             <div className="h-80 relative">
                                                 {userLoggedIn && (
@@ -509,7 +509,7 @@ const About = () => {
                                                     className="w-full h-full object-cover object-center"
                                                 />
                                             </div>
-                                            <div className='relative'>
+                                            <div className='relative px-5 text-white'>
                                                 {userLoggedIn && (
                                                     <div className='absolute top-2 right-4 '>
                                                         {editingContentId == element.id ? <>
@@ -525,7 +525,7 @@ const About = () => {
                                                     dangerouslySetInnerHTML={{ __html: element?.title ?? "" }}
                                                 >
                                                 </h2>
-                                                <p className="text-base text-gray-600 my-3"
+                                                <p className="text-base my-3"
                                                     contentEditable={editingContentId == element.id}
                                                     ref={contentRefs.current[index].descriptionRef}
                                                     dangerouslySetInnerHTML={{ __html: element?.description ?? "" }}
@@ -540,9 +540,9 @@ const About = () => {
                                                 </a>
                                             </div> */}
                                             {userLoggedIn && editingContentId == element.id && (
-                                                <div className='mt-4 flex gap-5'>
-                                                    <button onClick={(e) => { e.preventDefault(); handleContentsSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
-                                                    <button onClick={(e) => { e.preventDefault(); setContentsDeleteModalOpen(true); setContentToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-600 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
+                                                <div className='p-5 flex gap-5'>
+                                                    <button onClick={(e) => { e.preventDefault(); handleContentsSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase text-white border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
+                                                    <button onClick={(e) => { e.preventDefault(); setContentsDeleteModalOpen(true); setContentToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-800 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
                                                 </div>
                                             )}
                                         </div>
