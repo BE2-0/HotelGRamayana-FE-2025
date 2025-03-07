@@ -11,6 +11,8 @@ import toast from 'react-hot-toast'
 import Setting from './Setting'
 import Loader from '../common/Loader'
 import OfferPopup from './OfferPopup'
+import { FaBars } from "react-icons/fa";
+import SidebarButton from './SidebarButton'
 const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const navStyle = "cursor-pointer relative before:absolute before:bottom-0 pb-0.5 before:left-1/2 before:h-0.5 before:w-0 before:rounded-5xl before:transform before:-translate-x-1/2 before:transition-all before:duration-300 before:ease-linear hover:before:w-full hover:before:scale-x-100 hover:before:transform-origin-center"
   const [isDown, setIsDown] = useState(false);
@@ -21,6 +23,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const { userLoggedIn } = useAuth();
   const [isSettingOpen, setIsSettingOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPosition = window.scrollY;
@@ -40,6 +43,19 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
 
   }, [isDown]);
 
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = "hidden"; // Disable background scrolling
+    } else {
+      document.body.style.overflow = ""; // Re-enable background scrolling
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isSidebarOpen]);
+
   const handleContactUsOpen = () => {
     document.body.style.overflow = "hidden";
     setContactUsOpen(true);
@@ -56,20 +72,24 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
     toast.success("Logged Out Successfully");
   }
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  }
+
   return (
     <>
       {loading && (
         <Loader />
       )}
-      <div className="z-20 relative tracking-wider" >
+      <div className="z-20 relative tracking-wider " >
         <div className={` ${isTextBlack ? "text-black" : "text-white"}`}>
-          <div className={`flex relative justify-center text-sm items-center py-5 ${isTextBlack ? "text-black border-black" : "text-white border-gray-400"} border-b  mx-10`}>
+          <div className={`flex relative justify-center text-sm items-center py-5 ${isTextBlack ? "text-black border-black" : "text-white border-gray-400"} border-b mx-4 md:mx-10`}>
             <Link to="/">
               <div className='w-32'>
                 <img src={logo} alt="" className='w-full object-contain brightness-[2.5]' />
               </div>
             </Link>
-            <div className='flex absolute right-0 top-0 bottom-0 gap-8 items-center'>
+            <div className='absolute right-0 top-0 bottom-0 gap-8 items-center hidden md:flex '>
               {userLoggedIn && (
                 <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Settings</button>
               )}
@@ -84,21 +104,22 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
                 <a target='_blank' href="/booking" className={`px-8 py-2 border font-bold text-xs uppercase ${isTextBlack ? "border-black" : "border-white"} cursor-pointer  font-akzidenz`}>Book</a>
               )}
             </div>
+
+            {/* button to open toggle mobile nav */}
+            <div className='absolute left-0 top-1/2 -translate-y-1/2 block md:hidden'>
+              <FaBars className='text-2xl' onClick={() => { setIsSidebarOpen(true) }} />
+            </div>
+            {/*end of button to open toggle mobile nav */}
           </div>
 
           {!hideNav && (
-            <div className={`flex  items-center text-sm py-5 px-10 justify-center`}>
+            <div className={`items-center text-sm py-5 px-10 justify-center hidden md:flex `}>
               <ul className='uppercase flex gap-4 tracking-widest'>
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "about" ? "before:!w-full" : ""}`} to="/about">About</Link></li>
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "suites" ? "before:!w-full" : ""}`} to="/suites">Suites</Link></li>
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "dining" ? "before:!w-full" : ""}`} to="/dining">Dining</Link></li>
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "blog" ? "before:!w-full" : ""}`} to="/blog">Blog</Link></li>
-                {/* <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">Experiences</a></li> */}
-                {/* <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">What's on</a></li> */}
-                {/* <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">occasions</a></li> */}
-                {/* <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">offers</a></li> */}
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "gallery" ? "before:!w-full" : ""}`} to="/gallery">Gallery</Link></li>
-                {/* <li><a className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} href="">gift card</a></li> */}
               </ul>
             </div>
           )}
@@ -107,7 +128,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
       </div>
 
       {!hideNav && (
-        <div className={`z-50 w-full tracking-wider ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
+        <div className={`hidden md:block z-50 w-full tracking-wider ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
           } transition-transform duration-300 ease-in-out`} >
           <div className=' text-white'>
             <div className={`flex  items-center text-sm py-2 px-10 bg-primary  shadow-lg text-black justify-between`}>
@@ -128,12 +149,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
                 <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "suites" ? "before:!w-full" : ""}`} to="/suites">Suites</Link></li>
                 <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "dining" ? "before:!w-full" : ""}`} to="/dining">Dining</Link></li>
                 <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "blog" ? "before:!w-full" : ""}`} to="/blog">Blog</Link></li>
-                {/* <li><a className={`${navStyle}  before:bg-gray-600`} href="">Experiences</a></li> */}
-                {/* <li><a className={`${navStyle}  before:bg-gray-600`} href="">What's on</a></li> */}
-                {/* <li><a className={`${navStyle}  before:bg-gray-600`} href="">occasions</a></li> */}
-                {/* <li><a className={`${navStyle}  before:bg-gray-600`} href="">offers</a></li> */}
                 <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "gallery" ? "before:!w-full" : ""}`} to="/gallery">Gallery</Link></li>
-                {/* <li><a className={`${navStyle}  before:bg-gray-600`} href="">gift card</a></li> */}
               </ul>
               <div className={`flex gap-8 items-center`}>
                 {userLoggedIn && (
@@ -152,6 +168,37 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
           </div>
         </div>
       )}
+
+
+      {/* mobile nav */}
+      <div className=''>
+        <aside
+          id="default-sidebar"
+          className={`block md:hidden  fixed top-0 lg:left-0  ${isSidebarOpen ? "left-0" : "-left-full"} lg:w-64 w-[60%] h-screen bg-white  transition-[left] duration-500 ease-linear z-[997] `}
+          aria-label="Sidebar"
+        >
+          <div className="h-full px-3 py-4 pt-1 overflow-y-auto bg-primary">
+            <div className="p-2 flex items-center lg:justify-center gap-2 text-blue-600 dark:text-white my-4">
+              {/* <IoLogoBuffer className="text-5xl" /> */}
+              <Link to="/">
+                <div className="w-20 h-20">
+                  <img src={logo2} className="w-full h-full object-cover object-center" alt="" />
+                </div>
+              </Link>
+            </div>
+            <ul className="space-y-2 mt-5 text-2xl">
+              <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "about" ? "before:!w-full" : ""}`} to="/about">About</Link></li>
+              <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "suites" ? "before:!w-full" : ""}`} to="/suites">Suites</Link></li>
+              <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "dining" ? "before:!w-full" : ""}`} to="/dining">Dining</Link></li>
+              <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "blog" ? "before:!w-full" : ""}`} to="/blog">Blog</Link></li>
+              <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "gallery" ? "before:!w-full" : ""}`} to="/gallery">Gallery</Link></li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+      <div onClick={toggleSidebar} className={`fixed left-0 top-0 w-full h-screen z-[996] bg-gray-600 bg-opacity-50 transition-all duration-300 ease-linear  ${isSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0  pointer-events-none"} `}>
+      </div>
+      {/*end of mobile nav */}
 
       <ContactUs contactUsOpen={contactUsOpen} handleContactUsClose={handleContactUsClose} />
       <Setting open={isSettingOpen} setOpen={setIsSettingOpen} setLoading={setLoading} handleClose={() => { setIsSettingOpen(false) }} text={`Settings`} />

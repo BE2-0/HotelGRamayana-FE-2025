@@ -395,8 +395,8 @@ const Home = () => {
           {/* Overlay */}
           <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
           {/* about section */}
-          <div className=' px-10 py-10 bg-primary'>
-            <div className='grid grid-cols-2 gap-10'>
+          <div className='p-5 md:p-10 bg-primary'>
+            <div className='grid md:grid-cols-2 gap-10'>
               <div className=''>
                 <div className='relative'>
                   {userLoggedIn && (
@@ -407,7 +407,7 @@ const Home = () => {
                   <img src={aboutData?.imageUrl ?? aboutimage} className='w-full  rounded-xl object-contain' alt="" />
                 </div>
               </div>
-              <div className='flex flex-col justify-center items-center pl-20 pr-10 tracking-wider'>
+              <div className='flex flex-col justify-center items-center md:pl-20 md:pr-10 tracking-wider'>
                 {aboutData != null && (
                   <div className='relative'>
                     {userLoggedIn && (
@@ -445,7 +445,7 @@ const Home = () => {
 
 
           {/* our history */}
-          <div className='h-[92vh] flex items-center justify-center relative'>
+          <div className='h-[92vh] flex items-center justify-center relative p-5'>
 
             {/* Pseudo-element to apply brightness */}
             <div
@@ -459,7 +459,7 @@ const Home = () => {
               }}
             ></div>
 
-            <div className='w-[40%] relative'>
+            <div className='md:w-[40%] relative'>
               {historyData != null && (
                 <>
                   {userLoggedIn && (
@@ -522,8 +522,8 @@ const Home = () => {
               }
               return (
                 <div className='' key={index}>
-                  <div className='grid grid-cols-5 gap-10'>
-                    <div className={`col-span-3 ${index % 2 === 0 ? "order-0 pr-10" : "order-1 pl-10"} `}>
+                  <div className='grid md:grid-cols-5 gap-10 p-5 md:p-0'>
+                    <div className={`md:col-span-3 order-0  ${index % 2 === 0 ? "order-0 md:pr-10" : "md:order-1 md:pl-10"} `}>
                       <div className=' relative  w-full h-full'>
                         {userLoggedIn && (
                           <div className='absolute top-2 right-2'>
@@ -535,7 +535,7 @@ const Home = () => {
                         <img src={element?.imageUrl ?? dineimage} className='w-full object-cover h-full' alt="" />
                       </div>
                     </div>
-                    <div className={`col-span-2 py-10 pr-10 ${index % 2 === 0 ? "" : "pl-10"}`}>
+                    <div className={`md:col-span-2 py-10 md:pr-10 ${index % 2 === 0 ? "" : "md:pl-10"}`}>
                       <div className='flex flex-col justify-center items-center h-full tracking-wide relative'>
                         {userLoggedIn && (
                           <div className='absolute top-0 right-4 '>
