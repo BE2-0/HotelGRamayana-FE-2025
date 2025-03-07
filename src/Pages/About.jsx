@@ -444,7 +444,7 @@ const About = () => {
                     {/* Overlay */}
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
                     <div className='px-10 bg-primary flex justify-between gap-20 py-20'>
-                        <div className='w-[40%] relative'>
+                        <div className='w-[60%] relative'>
                             {userLoggedIn && (
                                 <div className='absolute top-0 right-4 text-black'>
                                     {isAboutEditable ? <>
@@ -460,7 +460,7 @@ const About = () => {
                                 ref={aboutTitleRef}
                                 dangerouslySetInnerHTML={{ __html: aboutData?.title ?? "" }}
                             ></h2>
-                            <p className=' text-base text-justify text-gray-600 mt-5'
+                            <p className=' text-base text-justify mt-5'
                                 contentEditable={isAboutEditable} ref={aboutDescriptionRef}
                                 dangerouslySetInnerHTML={{ __html: aboutData?.description ?? "" }}
                             >

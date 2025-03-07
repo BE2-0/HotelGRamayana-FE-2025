@@ -149,14 +149,14 @@ const SingleOffer = () => {
 
                     {/* Overlay */}
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
-                    <div className='px-10 bg-[#f6f1ef] grid grid-cols-2 gap-40 py-20'>
+                    <div className='px-10 bg-primary grid grid-cols-2 gap-40 py-20'>
                         <div className='relative'>
                             <h2 className='font-canela text-5xl !font-thin tracking-wide'
                                 contentEditable={isEditable}
                                 ref={detailsTitleRef}
                                 dangerouslySetInnerHTML={{ __html: offer?.details_title ?? "Lorem ipsum dolor sit amet consectetur adipisicing elit." }}
                             ></h2>
-                            <p className=' text-base text-justify text-gray-600 mt-5 tracking-wider'
+                            <p className=' text-base text-justify  mt-5 tracking-wider'
                                 contentEditable={isEditable} ref={detailsDescriptionRef}
                                 dangerouslySetInnerHTML={{ __html: offer?.details_description ?? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni mollitia ullam, minima voluptatibus explicabo ducimus illum sapiente doloremque! Corrupti, officia? Perspiciatis sequi ut sapiente reprehenderit nemo inventore ea non distinctio?" }}
                             >
@@ -173,7 +173,7 @@ const SingleOffer = () => {
                             </div>
                         </div>
                     </div>
-                    <div className=' bg-[#f6f1ef] '>
+                    <div className=' bg-primary'>
                         {userLoggedIn && isEditable && (
                             <div className='px-10 pb-10'>
                                 <button onClick={handleSave} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
