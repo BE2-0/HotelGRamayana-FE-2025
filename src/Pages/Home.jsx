@@ -10,7 +10,7 @@ import Loader from '../common/Loader'
 import { Link, useLocation } from 'react-router-dom';
 import Testimonial from '../components/Testimonial'
 import { firestore } from '../firebase/firebase'
-import { collection, doc, getDocs, updateDoc, addDoc, deleteDoc, orderBy,query } from 'firebase/firestore'
+import { collection, doc, getDocs, updateDoc, addDoc, deleteDoc, orderBy, query } from 'firebase/firestore'
 import { CiEdit } from "react-icons/ci";
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/authContext'
@@ -43,6 +43,7 @@ const Home = () => {
   // history states
   const [historyData, setHistoryData] = useState(null);
   const [isHistoryEditable, setIsHistoryEditable] = useState(false);
+  const historySubTitleRef = useRef(null);
   const historyTitleRef = useRef(null);
   const historyDescriptionRef = useRef(null);
 
@@ -153,9 +154,11 @@ const Home = () => {
         toast.error("must login");
         return;
       }
+      const sub_title = historySubTitleRef.current.innerHTML;
       const title = historyTitleRef.current.innerHTML;
       const description = historyDescriptionRef.current.innerHTML;
       const updatedData = {
+        sub_title,
         title,
         description
       };
@@ -236,8 +239,8 @@ const Home = () => {
   const addService = async (data) => {
     console.log(data);
     try {
-      const greatestPosition=findGreatestPosition(servicesData);
-      data.position=greatestPosition+1;
+      const greatestPosition = findGreatestPosition(servicesData);
+      data.position = greatestPosition + 1;
       const docRef = await addDoc(collection(firestore, "Home-Services"), data);
       setServicesData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
       toast.success("Data Added Successfully");
@@ -335,25 +338,25 @@ const Home = () => {
 
   const moveDown = async (index) => {
     if (index === servicesData.length - 1) return; // Prevent moving the last item down
-  
+
     // Create a copy of servicesData
     const updatedServices = [...servicesData];
-  
+
     // Swap the positions
     const tempPos = updatedServices[index].position;
     updatedServices[index].position = updatedServices[index + 1].position;
     updatedServices[index + 1].position = tempPos;
-  
+
     // Swap the elements in the array
     [updatedServices[index], updatedServices[index + 1]] = [updatedServices[index + 1], updatedServices[index]];
-  
+
     // Update state
     setServicesData([...updatedServices]);
-  
+
     // Update Firestore
     await updateServicePositions(updatedServices);
   };
-  
+
 
   const updateServicePositions = async (updatedServices) => {
     const updatePromises = updatedServices.map(async ({ id, position }) => {
@@ -364,7 +367,7 @@ const Home = () => {
         toast.error("something went wrong!")
       }
     });
-  
+
     await Promise.all(updatePromises);
   };
 
@@ -422,7 +425,7 @@ const Home = () => {
                     <h2 contentEditable={isAboutEditable} className='!font-canela text-5xl uppercase !font-thin tracking-wide my-6'
                       ref={aboutSubTitleRef}
                       dangerouslySetInnerHTML={{ __html: aboutData?.sub_title ?? "" }} ></h2>
-                    <p className='mb-10' contentEditable={isAboutEditable} ref={aboutDescriptionRef}
+                    <p className='mb-10 text-justify' contentEditable={isAboutEditable} ref={aboutDescriptionRef}
                       dangerouslySetInnerHTML={{ __html: aboutData?.description ?? "" }}
                     >
                     </p>
@@ -470,7 +473,10 @@ const Home = () => {
                   )}
                   <div className='text-white text-center tracking-wide'>
                     <h2 className='uppercase text-sm text-[#fffc] font-akzidenz font-bold'
-                    >Our History</h2>
+                      contentEditable={isHistoryEditable}
+                      ref={historySubTitleRef}
+                      dangerouslySetInnerHTML={{ __html: historyData?.sub_title ?? "" }}
+                    ></h2>
                     <h2 className='font-canela text-5xl !font-thin tracking-wide my-6'
                       contentEditable={isHistoryEditable}
                       ref={historyTitleRef}
@@ -567,8 +573,8 @@ const Home = () => {
                             <div className='mt-4 flex gap-5'>
                               <button onClick={(e) => { e.preventDefault(); handleServicesSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
                               <button onClick={(e) => { e.preventDefault(); setServicesDeleteModalOpen(true); setServiceToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-600 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
-                              <button onClick={()=>{moveUp(index)}}><IoIosArrowDropup className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
-                              <button onClick={()=>{moveDown(index)}}><IoIosArrowDropdown className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
+                              <button onClick={() => { moveUp(index) }}><IoIosArrowDropup className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
+                              <button onClick={() => { moveDown(index) }}><IoIosArrowDropdown className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
                             </div>
                           )}
                         </div>

@@ -88,6 +88,7 @@ const Setting = ({ open, setOpen, setLoading, handleClose, text}) => {
       console.log(error);
     }finally{
         setLoading(false);
+        handleClose();
     }
     }
      const fetchData = async () => {

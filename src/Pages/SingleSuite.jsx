@@ -12,9 +12,6 @@ import { HiOutlineXMark } from "react-icons/hi2";
 import toast from 'react-hot-toast'
 import ChangeImageModal from '../components/ChangeImageModal'
 import { useParams } from 'react-router-dom'
-import { BsTelephone } from "react-icons/bs";
-import { CiMail } from "react-icons/ci";
-import { CiLocationOn } from "react-icons/ci";
 import { CiUser } from "react-icons/ci";
 import { BsArrowsAngleExpand } from "react-icons/bs";
 import { IoBedOutline } from "react-icons/io5";
@@ -175,7 +172,7 @@ const SingleSuite = () => {
                 <div className=' absolute top-0 left-0 w-full'>
 
                     {/* hero section */}
-                    <div className="h-[60vh] relative bg-[#E2E0D1]">
+                    <div className="h-[70vh] relative bg-[#E2E0D1]">
                         <div className='absolute bottom-0 w-full flex justify-center text-center text-black tracking-widest z-20 py-10'>
                             <div className='relative'>
                                 <h2 className='font-bold uppercase font-akzidenz text-sm text-gray-600'>Suite</h2>
@@ -239,7 +236,7 @@ const SingleSuite = () => {
                                 ref={detailsTitleRef}
                                 dangerouslySetInnerHTML={{ __html: suite?.details_title ?? "Lorem ipsum dolor sit amet consectetur adipisicing elit" }}
                             ></h2>
-                            <p className=' text-lg text-justify text-gray-600 mt-5 tracking-wider'
+                            <p className=' text-lg text-justify mt-5 tracking-wider'
                                 contentEditable={isEditable} ref={detailsDescriptionRef}
                                 dangerouslySetInnerHTML={{ __html: suite?.details_description ?? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni mollitia ullam, minima voluptatibus explicabo ducimus illum sapiente doloremque! Corrupti, officia? Perspiciatis sequi ut sapiente reprehenderit nemo inventore ea non distinctio?" }}
                             >
@@ -346,7 +343,7 @@ const SingleSuite = () => {
                             )}
                             <img src={suite?.imageUrl2 ?? tempImage} className='w-full h-full object-cover object-center' alt="" />
                         </div>
-                        <div>
+                        <div className='relative z-20'>
                             {userLoggedIn && isEditable && (
                                 <div className='mt-4'>
                                     <button onClick={handleSave} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>

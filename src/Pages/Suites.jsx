@@ -677,7 +677,7 @@ const Suites = () => {
                                                 <ImageChangeButton onClick={() => { setAboutImageModalOpen(true); setExistingImageUrl(aboutData?.imageUrl ?? null); }} />
                                             </div>
                                         )}
-                                        <img src={aboutData?.imageUrl ?? `https://m.ahstatic.com/is/image/accorhotels/aja_p_5629-59?qlt=82&wid=1920&ts=1701454554080&dpr=off`} className='w-full object-cover object-center' alt="" />
+                                        <img src={aboutData?.imageUrl ?? `https://m.ahstatic.com/is/image/accorhotels/aja_p_5629-59?qlt=82&wid=1920&ts=1701454554080&dpr=off`} className='w-full object-cover object-center rounded-2xl' alt="" />
                                     </div>
                                 </div>
                                 <div className='col-span-2 pr-10'>
@@ -798,7 +798,7 @@ const Suites = () => {
 
                                 <div className='pr-10 '>
                                     <div className='flex flex-col justify-center items-center h-full tracking-wide'>
-                                        <div className='w-2/3 relative'>
+                                        <div className='relative'>
                                             {userLoggedIn && (
                                                 <div className='absolute top-0 right-4 '>
                                                     {isContentEditable ? <>
@@ -841,7 +841,7 @@ const Suites = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        <img src={contentData?.imageUrl ?? ""} className='!max-w-[80%] max-h-[100vh] object-cover object-center' alt="" />
+                                        <img src={contentData?.imageUrl ?? ""} className='!max-w-[80%] max-h-[100vh] object-cover object-center rounded-2xl' alt="" />
                                     </div>
                                 </div>
 
