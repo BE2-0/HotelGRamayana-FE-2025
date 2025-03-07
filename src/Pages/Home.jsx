@@ -10,7 +10,7 @@ import Loader from '../common/Loader'
 import { Link, useLocation } from 'react-router-dom';
 import Testimonial from '../components/Testimonial'
 import { firestore } from '../firebase/firebase'
-import { collection, doc, getDocs, updateDoc, addDoc, deleteDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, updateDoc, addDoc, deleteDoc, orderBy,query } from 'firebase/firestore'
 import { CiEdit } from "react-icons/ci";
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/authContext'
@@ -21,6 +21,9 @@ import axios from 'axios'
 import AddButton from '../components/AddButton'
 import AddModal from '../components/AddModal'
 import DeleteModal from '../components/DeleteModal'
+import { IoIosArrowDropup } from "react-icons/io";
+import { IoIosArrowDropdown } from "react-icons/io";
+import { findGreatestPosition } from "../utils/utils";
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
@@ -78,7 +81,9 @@ const Home = () => {
         }
       });
       const servicesCollectionRef = collection(firestore, "Home-Services");
-      const servicesQuerySnapshot = await getDocs(servicesCollectionRef);
+      const servicesQuery = query(servicesCollectionRef, orderBy("position", "asc"));
+      const servicesQuerySnapshot = await getDocs(servicesQuery);
+      console.log(servicesQuerySnapshot)
       const servicesData = [];
       servicesQuerySnapshot.forEach((doc) => {
         servicesData.push({ id: doc.id, ...doc.data() });
@@ -231,6 +236,8 @@ const Home = () => {
   const addService = async (data) => {
     console.log(data);
     try {
+      const greatestPosition=findGreatestPosition(servicesData);
+      data.position=greatestPosition+1;
       const docRef = await addDoc(collection(firestore, "Home-Services"), data);
       setServicesData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
       toast.success("Data Added Successfully");
@@ -242,6 +249,7 @@ const Home = () => {
       setLoading(false);
     }
   }
+
 
   //service delete
   const handleServicesDelete = async () => {
@@ -301,6 +309,64 @@ const Home = () => {
     setServicesData((prevDocs) => prevDocs.filter((doc) => doc.id !== id));
     toast.success("Deleted Successfully!");
   }
+
+
+  //move up and down the services
+  const moveUp = async (index) => {
+    if (index === 0) return; // Prevent moving the first item up
+
+    // Create a copy of servicesData
+    const updatedServices = [...servicesData];
+
+    // Swap the positions
+    const tempPos = updatedServices[index].position;
+    updatedServices[index].position = updatedServices[index - 1].position;
+    updatedServices[index - 1].position = tempPos;
+
+    // Swap the elements in the array
+    [updatedServices[index], updatedServices[index - 1]] = [updatedServices[index - 1], updatedServices[index]];
+
+    // Update state
+    setServicesData([...updatedServices]);
+
+    // Update Firestore
+    await updateServicePositions(updatedServices);
+  };
+
+  const moveDown = async (index) => {
+    if (index === servicesData.length - 1) return; // Prevent moving the last item down
+  
+    // Create a copy of servicesData
+    const updatedServices = [...servicesData];
+  
+    // Swap the positions
+    const tempPos = updatedServices[index].position;
+    updatedServices[index].position = updatedServices[index + 1].position;
+    updatedServices[index + 1].position = tempPos;
+  
+    // Swap the elements in the array
+    [updatedServices[index], updatedServices[index + 1]] = [updatedServices[index + 1], updatedServices[index]];
+  
+    // Update state
+    setServicesData([...updatedServices]);
+  
+    // Update Firestore
+    await updateServicePositions(updatedServices);
+  };
+  
+
+  const updateServicePositions = async (updatedServices) => {
+    const updatePromises = updatedServices.map(async ({ id, position }) => {
+      try {
+        const serviceRef = doc(firestore, "Home-Services", id);
+        await updateDoc(serviceRef, { position });
+      } catch (error) {
+        toast.error("something went wrong!")
+      }
+    });
+  
+    await Promise.all(updatePromises);
+  };
 
   return (
     <>
@@ -452,7 +518,7 @@ const Home = () => {
                 <div className='' key={index}>
                   <div className='grid grid-cols-5 gap-10'>
                     <div className={`col-span-3 ${index % 2 === 0 ? "order-0 pr-10" : "order-1 pl-10"} `}>
-                      <div className=' relative '>
+                      <div className=' relative  w-full h-full'>
                         {userLoggedIn && (
                           <div className='absolute top-2 right-2'>
                             <div>
@@ -460,10 +526,10 @@ const Home = () => {
                             </div>
                           </div>
                         )}
-                        <img src={element?.imageUrl ?? dineimage} className='w-full object-contain' alt="" />
+                        <img src={element?.imageUrl ?? dineimage} className='w-full object-cover h-full' alt="" />
                       </div>
                     </div>
-                    <div className='col-span-2 pr-10'>
+                    <div className={`col-span-2 py-10 pr-10 ${index % 2 === 0 ? "" : "pl-10"}`}>
                       <div className='flex flex-col justify-center items-center h-full tracking-wide relative'>
                         {userLoggedIn && (
                           <div className='absolute top-0 right-4 '>
@@ -501,6 +567,8 @@ const Home = () => {
                             <div className='mt-4 flex gap-5'>
                               <button onClick={(e) => { e.preventDefault(); handleServicesSave(element.id, index) }} className='px-8 py-2 border font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
                               <button onClick={(e) => { e.preventDefault(); setServicesDeleteModalOpen(true); setServiceToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-600 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
+                              <button onClick={()=>{moveUp(index)}}><IoIosArrowDropup className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
+                              <button onClick={()=>{moveDown(index)}}><IoIosArrowDropdown className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
                             </div>
                           )}
                         </div>

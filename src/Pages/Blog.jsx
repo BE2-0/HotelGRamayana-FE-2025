@@ -4,7 +4,7 @@ import Footer from '../components/Footer'
 import Loader from '../common/Loader'
 import blogimage from "../assets/images/blog.jpg"
 import { firestore } from '../firebase/firebase'
-import { collection, doc, getDocs, addDoc, deleteDoc, updateDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, addDoc, deleteDoc, updateDoc,query,orderBy } from 'firebase/firestore'
 import { useAuth } from '../contexts/authContext'
 import { CiEdit } from "react-icons/ci";
 import { HiOutlineXMark } from "react-icons/hi2";
@@ -16,6 +16,9 @@ import AddModal from '../components/AddModal'
 import DeleteModal from '../components/DeleteModal'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { findGreatestPosition } from "../utils/utils";
+import { IoIosArrowDropup } from "react-icons/io";
+import { IoIosArrowDropdown } from "react-icons/io";
 const Blog = () => {
     const [loading, setLoading] = useState(true);
     const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
@@ -67,7 +70,8 @@ const Blog = () => {
                 }
             });
             const contentsCollectionRef = collection(firestore, "Blog-Content");
-            const contentsQuerySnapshot = await getDocs(contentsCollectionRef);
+            const contentsQuery = query(contentsCollectionRef, orderBy("position", "asc"));
+            const contentsQuerySnapshot = await getDocs(contentsQuery);
             const contentsData = [];
             contentsQuerySnapshot.forEach((doc) => {
                 contentsData.push({ id: doc.id, ...doc.data() });
@@ -191,6 +195,8 @@ const Blog = () => {
     const addContent = async (data) => {
         console.log(data);
         try {
+            const greatestPosition = findGreatestPosition(contentsData);
+            data.position = greatestPosition + 1;
             const docRef = await addDoc(collection(firestore, "Blog-Content"), data);
             setContentsData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
             toast.success("Data Added Successfully");
@@ -261,6 +267,64 @@ const Blog = () => {
         setContentsData((prevDocs) => prevDocs.filter((doc) => doc.id !== id));
         toast.success("Deleted Successfully!");
     }
+
+    // Move up the content
+    const moveUp = async (index) => {
+        if (index === 0) return; // Prevent moving the first item up
+
+        // Create a copy of contentsData
+        const updatedContents = [...contentsData];
+
+        // Swap the positions
+        const tempPos = updatedContents[index].position;
+        updatedContents[index].position = updatedContents[index - 1].position;
+        updatedContents[index - 1].position = tempPos;
+
+        // Swap the elements in the array
+        [updatedContents[index], updatedContents[index - 1]] = [updatedContents[index - 1], updatedContents[index]];
+
+        // Update state
+        setContentsData([...updatedContents]);
+
+        // Update Firestore
+        await updateContentPositions(updatedContents);
+    };
+
+    // Move down the content
+    const moveDown = async (index) => {
+        if (index === contentsData.length - 1) return; // Prevent moving the last item down
+
+        // Create a copy of contentsData
+        const updatedContents = [...contentsData];
+
+        // Swap the positions
+        const tempPos = updatedContents[index].position;
+        updatedContents[index].position = updatedContents[index + 1].position;
+        updatedContents[index + 1].position = tempPos;
+
+        // Swap the elements in the array
+        [updatedContents[index], updatedContents[index + 1]] = [updatedContents[index + 1], updatedContents[index]];
+
+        // Update state
+        setContentsData([...updatedContents]);
+
+        // Update Firestore
+        await updateContentPositions(updatedContents);
+    };
+
+    // Update Firestore with new positions
+    const updateContentPositions = async (updatedContents) => {
+        const updatePromises = updatedContents.map(async ({ id, position }) => {
+            try {
+                const contentRef = doc(firestore, "Blog-Content", id);
+                await updateDoc(contentRef, { position });
+            } catch (error) {
+                toast.error("something went wrong!")
+            }
+        });
+
+        await Promise.all(updatePromises);
+    };
 
 
     return (
@@ -398,6 +462,8 @@ const Blog = () => {
                                                 <div className='p-5 flex gap-5'>
                                                     <button onClick={(e) => { e.preventDefault(); handleContentsSave(element.id, index) }} className='px-8 py-2 border text-white font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
                                                     <button onClick={(e) => { e.preventDefault(); setContentsDeleteModalOpen(true); setContentToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-800 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
+                                                    <button onClick={() => { moveUp(index) }}><IoIosArrowDropup className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
+                                                    <button onClick={() => { moveDown(index) }}><IoIosArrowDropdown className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
                                                 </div>
                                             )}
                                         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Loader from '../common/Loader'
 import { firestore } from '../firebase/firebase'
-import { collection, doc, getDocs, updateDoc, addDoc, deleteDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, updateDoc, addDoc, deleteDoc, query, orderBy } from 'firebase/firestore'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import AddButton from '../components/AddButton'
@@ -15,6 +15,9 @@ import AddModal from '../components/AddModal'
 import DeleteModal from '../components/DeleteModal'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import { findGreatestPosition } from "../utils/utils";
+import { IoIosArrowDropup } from "react-icons/io";
+import { IoIosArrowDropdown } from "react-icons/io";
 const Suites = () => {
     const [loading, setLoading] = useState(true);
     const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
@@ -87,7 +90,8 @@ const Suites = () => {
                 }
             });
             const contentsCollectionRef = collection(firestore, "Suites-Content");
-            const contentsQuerySnapshot = await getDocs(contentsCollectionRef);
+            const contentsQuery = query(contentsCollectionRef, orderBy("position", "asc"));
+            const contentsQuerySnapshot = await getDocs(contentsQuery);
             const contentsData = [];
             contentsQuerySnapshot.forEach((doc) => {
                 contentsData.push({ id: doc.id, ...doc.data() });
@@ -95,7 +99,8 @@ const Suites = () => {
             setContentsData(contentsData);
 
             const offersCollectionRef = collection(firestore, "Suites-Offers");
-            const offersQuerySnapshot = await getDocs(offersCollectionRef);
+            const offersQuery = query(offersCollectionRef, orderBy("position", "asc"));
+            const offersQuerySnapshot = await getDocs(offersQuery);
             const offersData = [];
             offersQuerySnapshot.forEach((doc) => {
                 offersData.push({ id: doc.id, ...doc.data() });
@@ -466,6 +471,8 @@ const Suites = () => {
     const addContent = async (data) => {
         console.log(data);
         try {
+            const greatestPosition = findGreatestPosition(contentsData);
+            data.position = greatestPosition + 1;
             const docRef = await addDoc(collection(firestore, "Suites-Content"), data);
             setContentsData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
             toast.success("Data Added Successfully");
@@ -481,6 +488,8 @@ const Suites = () => {
     //add new offers
     const addOffers = async (data) => {
         try {
+            const greatestPosition = findGreatestPosition(offersData);
+            data.position = greatestPosition + 1;
             const docRef = await addDoc(collection(firestore, "Suites-Offers"), data);
             setOffersData((prevContent) => [...prevContent, { id: docRef.id, ...data }]);
             toast.success("Data Added Successfully");
@@ -492,6 +501,125 @@ const Suites = () => {
             setLoading(false);
         }
     }
+
+    // Move up the content
+    const moveUp = async (index) => {
+        if (index === 0) return; // Prevent moving the first item up
+
+        // Create a copy of contentsData
+        const updatedContents = [...contentsData];
+
+        // Swap the positions
+        const tempPos = updatedContents[index].position;
+        updatedContents[index].position = updatedContents[index - 1].position;
+        updatedContents[index - 1].position = tempPos;
+
+        // Swap the elements in the array
+        [updatedContents[index], updatedContents[index - 1]] = [updatedContents[index - 1], updatedContents[index]];
+
+        // Update state
+        setContentsData([...updatedContents]);
+
+        // Update Firestore
+        await updateContentPositions(updatedContents);
+    };
+
+    // Move down the content
+    const moveDown = async (index) => {
+        if (index === contentsData.length - 1) return; // Prevent moving the last item down
+
+        // Create a copy of contentsData
+        const updatedContents = [...contentsData];
+
+        // Swap the positions
+        const tempPos = updatedContents[index].position;
+        updatedContents[index].position = updatedContents[index + 1].position;
+        updatedContents[index + 1].position = tempPos;
+
+        // Swap the elements in the array
+        [updatedContents[index], updatedContents[index + 1]] = [updatedContents[index + 1], updatedContents[index]];
+
+        // Update state
+        setContentsData([...updatedContents]);
+
+        // Update Firestore
+        await updateContentPositions(updatedContents);
+    };
+
+    // Update Firestore with new positions
+    const updateContentPositions = async (updatedContents) => {
+        const updatePromises = updatedContents.map(async ({ id, position }) => {
+            try {
+                const contentRef = doc(firestore, "Suites-Content", id);
+                await updateDoc(contentRef, { position });
+            } catch (error) {
+                toast.error("something went wrong!")
+            }
+        });
+
+        await Promise.all(updatePromises);
+    };
+
+
+
+    // Move up the offer
+    const moveUpOffer = async (index) => {
+        if (index === 0) return; // Prevent moving the first item up
+
+        // Create a copy of offersData
+        const updatedOffers = [...offersData];
+
+        // Swap the positions
+        const tempPos = updatedOffers[index].position;
+        updatedOffers[index].position = updatedOffers[index - 1].position;
+        updatedOffers[index - 1].position = tempPos;
+
+        // Swap the elements in the array
+        [updatedOffers[index], updatedOffers[index - 1]] = [updatedOffers[index - 1], updatedOffers[index]];
+
+        // Update state
+        setOffersData([...updatedOffers]);
+
+        // Update Firestore
+        await updateOfferPositions(updatedOffers);
+    };
+
+    // Move down the offer
+    const moveDownOffer = async (index) => {
+        if (index === offersData.length - 1) return; // Prevent moving the last item down
+
+        // Create a copy of offersData
+        const updatedOffers = [...offersData];
+
+        // Swap the positions
+        const tempPos = updatedOffers[index].position;
+        updatedOffers[index].position = updatedOffers[index + 1].position;
+        updatedOffers[index + 1].position = tempPos;
+
+        // Swap the elements in the array
+        [updatedOffers[index], updatedOffers[index + 1]] = [updatedOffers[index + 1], updatedOffers[index]];
+
+        // Update state
+        setOffersData([...updatedOffers]);
+
+        // Update Firestore
+        await updateOfferPositions(updatedOffers);
+    };
+
+    // Update Firestore with new positions for the offer
+    const updateOfferPositions = async (updatedOffers) => {
+        const updatePromises = updatedOffers.map(async ({ id, position }) => {
+            try {
+                const offerRef = doc(firestore, "Suites-Offers", id);
+                await updateDoc(offerRef, { position });
+            } catch (error) {
+                toast.error("Something went wrong while updating the offer positions!");
+            }
+        });
+
+        await Promise.all(updatePromises);
+    };
+
 
     return (
         <>
@@ -594,7 +722,7 @@ const Suites = () => {
                             {userLoggedIn && (
                                 <AddButton onClick={() => { setContentsAddModalOpen(true); }} text="Add Suites" />
                             )}
-                            <div className='grid grid-cols-3 gap-10 gap-y-36'>
+                            <div className='grid grid-cols-3 gap-10'>
                                 {contentsData.length > 0 && contentsData.map((element, index) => {
                                     if (!contentRefs.current[index]) {
                                         contentRefs.current[index] = {
@@ -652,6 +780,8 @@ const Suites = () => {
                                                 <div className='p-5 flex gap-5'>
                                                     <button onClick={(e) => { e.preventDefault(); handleContentsSave(element.id, index) }} className='px-8 py-2 border text-white font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
                                                     <button onClick={(e) => { e.preventDefault(); setContentsDeleteModalOpen(true); setContentToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-800 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
+                                                    <button onClick={() => { moveUp(index) }}><IoIosArrowDropup className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
+                                                    <button onClick={() => { moveDown(index) }}><IoIosArrowDropdown className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
                                                 </div>
                                             )}
                                         </div>
@@ -727,7 +857,7 @@ const Suites = () => {
                             {userLoggedIn && (
                                 <AddButton onClick={() => { setOffersAddModalOpen(true); }} text="Add Offers" />
                             )}
-                            <div className='grid grid-cols-3 gap-10 gap-y-24'>
+                            <div className='grid grid-cols-3 gap-10'>
                                 {offersData.length > 0 && offersData.map((element, index) => {
                                     if (!offersRefs.current[index]) {
                                         offersRefs.current[index] = {
@@ -786,6 +916,8 @@ const Suites = () => {
                                                 <div className='p-5 flex gap-5'>
                                                     <button onClick={(e) => { e.preventDefault(); handleOffersSave(element.id, index) }} className='px-8 py-2 border text-white font-semibold uppercase border-gray-400 hover:border-gray-50 duration-300 ease-linear cursor-pointer tracking-wider'>Save</button>
                                                     <button onClick={(e) => { e.preventDefault(); setOffersDeleteModalOpen(true); setOfferToDelete(element); }} className='px-8 py-2 border font-semibold uppercase text-red-800 border-red-400 hover:border-red-50 duration-300 ease-linear cursor-pointer tracking-wider'>Delete</button>
+                                                    <button onClick={() => { moveUpOffer(index) }}><IoIosArrowDropup className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
+                                                    <button onClick={() => { moveDownOffer(index) }}><IoIosArrowDropdown className='text-3xl font-bold hover:text-white duration-300 ease-linear' /></button>
                                                 </div>
                                             )}
                                         </div>

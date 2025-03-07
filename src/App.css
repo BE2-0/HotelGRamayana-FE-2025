@@ -194,3 +194,7 @@
     /* background-color: rgba(143, 94, 46, 0.9);  */
 }
 
+h2 *,p *{
+  background-color: transparent !important;
+}
+
