@@ -5,20 +5,20 @@ import { MdOutlineArrowRightAlt } from "react-icons/md";
 const Footer = () => {
     return (
         <>
-            <footer className='p-5 md:p-20' style={{
+            <footer className='p-5 lg:p-20' style={{
                 backgroundImage: `url(${footerimage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 zIndex: -1 // Ensures the pseudo-element is behind the content
             }}>
-                <div className='grid md:grid-cols-4 grid-cols-2 gap-10 text-white'>
-                    <div className='flex justify-center col-span-2 md:col-auto'>
+                <div className='grid lg:grid-cols-4 grid-cols-2 gap-10 text-white'>
+                    <div className='flex justify-center col-span-2 lg:col-auto'>
                         <div className='w-40'>
                             <img src={logo} alt="" className='w-full object-contain brightness-[2.5]' />
                         </div>
                     </div>
-                    <div className='text-sm tracking-wide flex md:justify-center'>
+                    <div className='text-sm tracking-wide flex lg:justify-center'>
                         <div>
                             <div>
                                 <h2 className='hover:underline cursor-pointer'>+977 015923217</h2>
@@ -31,7 +31,7 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    <div className='text-sm tracking-wide flex md:justify-center '>
+                    <div className='text-sm tracking-wide flex lg:justify-center '>
                         <div>
                             <div>
                                 <h2 className='hover:underline cursor-pointer'>Reserve Your Stay</h2>
@@ -44,7 +44,7 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    <div className='text-sm tracking-wide flex md:justify-center col-span-2 md:col-auto'>
+                    <div className='text-sm tracking-wide flex lg:justify-center col-span-2 lg:col-auto'>
                         <div>
                             <p className='text-xs'>Sign up for news from Ramayana Hotel Nepal</p>
                             <div className='flex w-full items-center gap-4  mt-3'>

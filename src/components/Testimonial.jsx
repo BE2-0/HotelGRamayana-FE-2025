@@ -111,12 +111,12 @@ const Testimonial = () => {
 
             {/* testimonial */}
             <div className='h-[60vh] relative' >
-                <div className='hidden md:flex absolute top-0 right-56 h-full  items-center z-10'>
+                <div className='hidden lg:flex absolute top-0 right-56 h-full  items-center z-10'>
                     <button className={`testimonial-next text-black  border ${disableNext ? "bg-gray-400 opacity-75 border-gray-400 cursor-default" : "opacity-100 bg-white border-white hover:text-white hover:bg-transparent cursor-pointer"}  transition-all duration-300 ease-linear  p-3 rounded-full`}>
                         <FaArrowRight className='text-lg' />
                     </button>
                 </div>
-                <div className='hidden md:flex absolute top-0 left-56 h-full  items-center z-10'>
+                <div className='hidden lg:flex absolute top-0 left-56 h-full  items-center z-10'>
                     <button className={`testimonial-prev text-black  border ${disablePrev ? "bg-gray-400 opacity-75 border-gray-400 cursor-default" : "opacity-100 bg-white border-white hover:text-white hover:bg-transparent cursor-pointer"}  transition-all duration-300 ease-linear p-3 rounded-full`}>
                         <FaArrowLeft className='text-lg' />
                     </button>
@@ -165,7 +165,7 @@ const Testimonial = () => {
                     {(reviews.length > 0 ? reviews : testimonials).map((element, index) => (
                         <SwiperSlide key={index}>
                             <div className='flex justify-center h-full items-center p-10'>
-                                <div className='md:w-1/3 text-white'>
+                                <div className='lg:w-1/3 text-white'>
                                     <div className='flex gap-4'>
                                         <div className='w-20 h-20'>
                                             <img src={element.reviewerPhotoUrl} className='w-full h-full object-cover object-center rounded-full' alt="" />

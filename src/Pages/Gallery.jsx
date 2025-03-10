@@ -145,7 +145,7 @@ const Gallery = () => {
                     {/* hero section */}
                     <div className="h-[50vh] relative bg-[#E2E0D1]">
                         <div className='absolute bottom-0 w-full text-center text-black tracking-widest z-20 py-10'>
-                            <h2 className='font-canela text-6xl font-medium tracking-widest mt-8' ><span className='font-canela uppercase'>Explore </span><i className='font-canela font-medium'>our</i> <span className='font-canela uppercase'> World</span></h2>
+                            <h2 className='font-canela text-3xl lg:text-6xl font-medium tracking-widest mt-8' ><span className='font-canela uppercase'>Explore </span><i className='font-canela font-medium'>our</i> <span className='font-canela uppercase'> World</span></h2>
                         </div>
                         <div className='absolute -z-10 top-0 left-0 w-full h-[150%] bg-[#E2E0D1]'>
                         </div>
@@ -153,15 +153,14 @@ const Gallery = () => {
                     {/* end of hero section */}
 
                     {/* contents */}
-                    <div className='px-10 mt-10 bg-primary'>
+                    <div className='lg:px-10 px-5 mt-10 bg-primary'>
                         {userLoggedIn && (
                             <AddButton onClick={() => { setAddImageModalOpen(true); }} text="Add Image" />
                         )}
                         {!loading && (
-                            <div className='pb-20'>
-
+                            <div className='py-20'>
                                 <Box >
-                                    <Masonry columns={3} spacing={2}>
+                                    <Masonry columns={{ xs: 1, sm: 2, lg: 3, lg: 4 }}  spacing={2}>
                                         {images.length > 0 && images.map((image, index) => (
                                             <div key={index} className='relative'>
                                                 {userLoggedIn && (

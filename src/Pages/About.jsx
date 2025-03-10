@@ -409,13 +409,13 @@ const About = () => {
                 <div className=' absolute top-0 left-0 w-full'>
 
                     {/* hero section */}
-                    <div className="h-[100vh] relative">
+                    <div className="h-[50vh] lg:h-[100vh] relative">
 
                         <img src={contactImage} className='w-full h-full object-center object-cover' alt="" />
                         <div className='absolute bottom-0 w-full text-center text-white flex justify-center tracking-widest z-20 py-10'>
                             <div className='relative'>
                                 <h2 className='font-bold uppercase font-akzidenz text-sm text-[#fffc]'>About</h2>
-                                <h2 className='font-canela text-5xl !font-thin tracking-wide mt-8'
+                                <h2 className='font-canela text-2xl lg:text-5xl !font-thin tracking-wide mt-8'
                                     contentEditable={isHeadingEditable}
                                     ref={headingTitleRef}
                                     dangerouslySetInnerHTML={{ __html: headingData?.title ?? "" }} ></h2>
@@ -443,8 +443,8 @@ const About = () => {
 
                     {/* Overlay */}
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
-                    <div className='px-10 bg-primary flex justify-between gap-20 py-20'>
-                        <div className='w-[60%] relative'>
+                    <div className='lg:px-10 p-5 bg-primary flex lg:flex-row flex-col justify-between gap-20 py-20'>
+                        <div className='lg:w-[60%] relative'>
                             {userLoggedIn && (
                                 <div className='absolute top-0 right-4 text-black'>
                                     {isAboutEditable ? <>
@@ -455,7 +455,7 @@ const About = () => {
                                 </div>
                             )}
 
-                            <h2 className='font-canela text-5xl !font-thin tracking-wide'
+                            <h2 className='font-canela text-4xl lg:text-5xl !font-thin tracking-wide'
                                 contentEditable={isAboutEditable}
                                 ref={aboutTitleRef}
                                 dangerouslySetInnerHTML={{ __html: aboutData?.title ?? "" }}
@@ -471,7 +471,7 @@ const About = () => {
                                 </div>
                             )}
                         </div>
-                        <div className='w-[30%] relative'>
+                        <div className='lg:w-[30%] relative'>
                             {userLoggedIn && (
                                 <div className='absolute top-0 right-4 text-black'>
                                     {isInformationEditable ? <>
@@ -513,8 +513,8 @@ const About = () => {
                             )}
                         </div>
                     </div>
-                    <div className='bg-primary'>
-                        <div className='w-1/2 relative m-auto text-center pt-20 pb-10'>
+                    <div className='bg-primary p-5'>
+                        <div className='lg:w-1/2 relative m-auto text-center pt-20 pb-10'>
                             {userLoggedIn && (
                                 <div className='absolute top-10 right-4 text-black'>
                                     {isContentHeadingEditable ? <>
@@ -524,12 +524,12 @@ const About = () => {
                                     </>}
                                 </div>
                             )}
-                            <h2 className='font-canela text-5xl !font-thin tracking-wide mt-8'
+                            <h2 className='font-canela text-4xl lg:text-5xl !font-thin tracking-wide mt-8'
                                 contentEditable={isContentHeadingEditable}
                                 ref={contentHeadingTitleRef}
                                 dangerouslySetInnerHTML={{ __html: contentHeadingData?.title ?? "" }}
                             ></h2>
-                            <p className='text-center text-lg text-gray-600 px-28 mt-5'
+                            <p className='text-center text-lg text-gray-600 lg:px-28 mt-5'
                                 contentEditable={isContentHeadingEditable}
                                 ref={contentHeadingDescriptionRef}
                                 dangerouslySetInnerHTML={{ __html: contentHeadingData?.description ?? "" }}
@@ -542,12 +542,12 @@ const About = () => {
                             )}
                         </div>
                     </div>
-                    <div className='pb-20 pt-10 px-10 bg-primary'>
+                    <div className='pb-20 pt-10 lg:px-10 px-5 bg-primary'>
                         <div className=''>
                             {userLoggedIn && (
                                 <AddButton onClick={() => { setContentsAddModalOpen(true); }} text="Add" />
                             )}
-                            <div className='grid grid-cols-3 gap-10'>
+                            <div className='grid lg:grid-cols-3 gap-10'>
                                 {contentsData.length > 0 && contentsData.map((element, index) => {
                                     if (!contentRefs.current[index]) {
                                         contentRefs.current[index] = {

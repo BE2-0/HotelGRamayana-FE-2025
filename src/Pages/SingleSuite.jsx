@@ -172,11 +172,11 @@ const SingleSuite = () => {
                 <div className=' absolute top-0 left-0 w-full'>
 
                     {/* hero section */}
-                    <div className="h-[70vh] relative bg-[#E2E0D1]">
+                    <div className="h-[50vh] lg:h-[70vh] relative bg-[#E2E0D1]">
                         <div className='absolute bottom-0 w-full flex justify-center text-center text-black tracking-widest z-20 py-10'>
                             <div className='relative'>
                                 <h2 className='font-bold uppercase font-akzidenz text-sm text-gray-600'>Suite</h2>
-                                <h2 className='font-canela text-8xl !font-thin tracking-wide my-5'
+                                <h2 className='font-canela text-2xl lg:text-5xl !font-thin tracking-wide my-5'
                                     contentEditable={isEditable}
                                     ref={titleRef}
                                     dangerouslySetInnerHTML={{ __html: suite?.title ?? "" }}
@@ -206,7 +206,7 @@ const SingleSuite = () => {
                         </div> */}
                     </div>
                     {/* end of hero section */}
-                    <div className='px-40 relative bg-primary'>
+                    <div className='lg:px-40 p-5 relative bg-primary'>
                         <div className='absolute z-10 top-0 left-0 w-full h-1/2 !bg-[#E2E0D1]'>
                         </div>
                         <div className='relative z-20'>
@@ -215,12 +215,12 @@ const SingleSuite = () => {
                                     <ImageChangeButton onClick={() => { setImageModalOpen(true); setExistingImageUrl(suite?.imageUrl ?? null); }} />
                                 </div>
                             )}
-                            <img src={suite?.imageUrl ?? tempImage} className='w-full h-full object-cover object-center' alt="" />
+                            <img src={suite?.imageUrl ?? tempImage} className='w-full h-full object-cover object-center rounded-2xl' alt="" />
                         </div>
                     </div>
 
-                    <div className='px-40 pr-52 grid grid-cols-3 gap-28 py-20 bg-primary'>
-                        <div className='relative col-span-2'>
+                    <div className='px-5 lg:px-40 lg:pr-52 grid lg:grid-cols-3 lg:gap-28 gap-10 lg:py-20 bg-primary'>
+                        <div className='relative lg:col-span-2'>
                             {/* {userLoggedIn && (
                                 <div className='absolute top-0 right-4 text-black'>
                                     {isEditable ? <>
@@ -231,7 +231,7 @@ const SingleSuite = () => {
                                 </div>
                             )} */}
 
-                            <h2 className='font-canela text-6xl !font-thin tracking-wide'
+                            <h2 className='font-canela text-4xl lg:text-5xl !font-thin tracking-wide'
                                 contentEditable={isEditable}
                                 ref={detailsTitleRef}
                                 dangerouslySetInnerHTML={{ __html: suite?.details_title ?? "Lorem ipsum dolor sit amet consectetur adipisicing elit" }}
@@ -290,10 +290,10 @@ const SingleSuite = () => {
                         </div>
                     </div>
 
-                    <div className='px-40 py-20  bg-primary'>
-                        <div className='grid grid-cols-5 gap-10'>
+                    <div className='p-5 lg:px-40 py-20  bg-primary'>
+                        <div className='grid lg:grid-cols-5 gap-10'>
 
-                            <div className='col-span-2 pr-10'>
+                            <div className='lg:col-span-2 lg:pr-10 order-1 lg:order-0'>
                                 <div className='items-center h-full tracking-wide relative'>
                                     {/* {userLoggedIn && (
                                         <div className='absolute top-0 right-4 '>
@@ -318,7 +318,7 @@ const SingleSuite = () => {
                                 </div>
                             </div>
 
-                            <div className={`col-span-3 pl-10`}>
+                            <div className={`lg:col-span-3 lg:pl-10 order-0 lg:order-1`}>
                                 <div className=' relative h-full '>
                                     {userLoggedIn && (
                                         <div className='absolute top-2 right-2'>
@@ -332,7 +332,7 @@ const SingleSuite = () => {
                         </div>
                     </div>
 
-                    <div className='px-40 relative py-20  bg-primary'>
+                    <div className='p-5 lg:px-40 relative lg:py-20 py-10  bg-primary'>
                         <div className='absolute z-10 bottom-0 left-0 w-full h-2/3 bg-[#d5c0b5]'>
                         </div>
                         <div className='relative z-20'>
@@ -341,7 +341,7 @@ const SingleSuite = () => {
                                     <ImageChangeButton onClick={() => { setImage2ModalOpen(true); setExistingImageUrl(suite?.imageUrl2 ?? null); }} />
                                 </div>
                             )}
-                            <img src={suite?.imageUrl2 ?? tempImage} className='w-full h-full object-cover object-center' alt="" />
+                            <img src={suite?.imageUrl2 ?? tempImage} className='w-full h-full object-cover object-center rounded-2xl' alt="" />
                         </div>
                         <div className='relative z-20'>
                             {userLoggedIn && isEditable && (

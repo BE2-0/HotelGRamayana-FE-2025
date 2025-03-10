@@ -113,13 +113,13 @@ const SingleBlog = () => {
                 <div className=' absolute top-0 left-0 w-full'>
 
                     {/* hero section */}
-                    <div className="h-[90vh] relative">
+                    <div className="h-[50vh] lg:h-[90vh] relative">
 
                         <img src={blog?.imageUrl ?? contactImage} className='w-full h-full object-center object-cover' alt="" />
                         <div className='absolute bottom-0 w-full text-center text-white flex justify-center tracking-widest z-20 py-10'>
                             <div className='relative'>
                                 <h2 className='font-bold uppercase font-akzidenz text-sm text-[#fffc]'>Blog</h2>
-                                <h2 className='font-canela text-5xl !font-thin tracking-wide mt-8'
+                                <h2 className='font-canela text-2xl lg:text-5xl !font-thin tracking-wide mt-8'
                                     contentEditable={isEditable}
                                     ref={titleRef}
                                     dangerouslySetInnerHTML={{ __html: blog?.title ?? "" }} ></h2>
@@ -147,14 +147,14 @@ const SingleBlog = () => {
 
                     {/* Overlay */}
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
-                    <div className='px-40 bg-primary py-20'>
+                    <div className='lg:px-40 p-5 bg-primary py-20'>
                         <div className='relative'>
-                            <h2 className='font-canela text-5xl !font-thin tracking-wide'
+                            <h2 className='font-canela text-4xl lg:text-5xl !font-thin tracking-wide'
                                 contentEditable={isEditable}
                                 ref={detailsTitleRef}
                                 dangerouslySetInnerHTML={{ __html: blog?.details_title ?? "Lorem ipsum dolor sit amet consectetur adipisicing elit." }}
                             ></h2>
-                            <p className=' text-base text-justify text-gray-600 mt-5 tracking-wider'
+                            <p className=' text-base text-justify mt-5 tracking-wider'
                                 contentEditable={isEditable} ref={detailsDescriptionRef}
                                 dangerouslySetInnerHTML={{ __html: blog?.details_description ?? "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni mollitia ullam, minima voluptatibus explicabo ducimus illum sapiente doloremque! Corrupti, officia? Perspiciatis sequi ut sapiente reprehenderit nemo inventore ea non distinctio?" }}
                             >

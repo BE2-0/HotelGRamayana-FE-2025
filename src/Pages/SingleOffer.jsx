@@ -115,13 +115,13 @@ const SingleOffer = () => {
                 <div className=' absolute top-0 left-0 w-full'>
 
                     {/* hero section */}
-                    <div className="h-[90vh] relative">
+                    <div className="h-[50vh] lg:h-[90vh] relative">
 
                         <img src={offer?.imageUrl ?? contactImage} className='w-full h-full object-center object-cover' alt="" />
                         <div className='absolute bottom-0 w-full text-center text-white flex justify-center tracking-widest z-20 py-10'>
                             <div className='relative'>
                                 <h2 className='font-bold uppercase font-akzidenz text-sm text-[#fffc]'>OFFER</h2>
-                                <h2 className='font-canela text-5xl !font-thin tracking-wide mt-8'
+                                <h2 className='font-canela text-2xl lg:text-5xl !font-thin tracking-wide mt-8'
                                     contentEditable={isEditable}
                                     ref={titleRef}
                                     dangerouslySetInnerHTML={{ __html: offer?.title ?? "" }} ></h2>
@@ -149,9 +149,9 @@ const SingleOffer = () => {
 
                     {/* Overlay */}
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
-                    <div className='px-10 bg-primary grid grid-cols-2 gap-40 py-20'>
+                    <div className='p-5 lg:px-10 bg-primary grid lg:grid-cols-2 gap-10 lg:gap-40 lg:py-20'>
                         <div className='relative'>
-                            <h2 className='font-canela text-5xl !font-thin tracking-wide'
+                            <h2 className='font-canela text-4xl lg:text-5xl !font-thin tracking-wide'
                                 contentEditable={isEditable}
                                 ref={detailsTitleRef}
                                 dangerouslySetInnerHTML={{ __html: offer?.details_title ?? "Lorem ipsum dolor sit amet consectetur adipisicing elit." }}
@@ -163,7 +163,7 @@ const SingleOffer = () => {
                             </p>
                         </div>
                         <div className='relative'>
-                            <div className='!mr-40'>
+                            <div className='lg:!mr-40'>
                                 <h2 className='font-canela text-3xl font-medium tracking-wide' >Offer Includes</h2>
                                 <p className='text-justify mt-6'
                                     contentEditable={isEditable}

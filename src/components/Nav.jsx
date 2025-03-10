@@ -59,6 +59,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const handleContactUsOpen = () => {
     document.body.style.overflow = "hidden";
     setContactUsOpen(true);
+    setIsSidebarOpen(false);
   }
 
   const handleContactUsClose = () => {
@@ -83,13 +84,13 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
       )}
       <div className="z-20 relative tracking-wider " >
         <div className={` ${isTextBlack ? "text-black" : "text-white"}`}>
-          <div className={`flex relative justify-center text-sm items-center py-5 ${isTextBlack ? "text-black border-black" : "text-white border-gray-400"} border-b mx-4 md:mx-10`}>
+          <div className={`flex relative justify-center text-sm items-center py-5 ${isTextBlack ? "text-black border-black" : "text-white border-gray-400"} border-b mx-4 lg:mx-10`}>
             <Link to="/">
               <div className='w-32'>
                 <img src={logo} alt="" className='w-full object-contain brightness-[2.5]' />
               </div>
             </Link>
-            <div className='absolute right-0 top-0 bottom-0 gap-8 items-center hidden md:flex '>
+            <div className='absolute right-0 top-0 bottom-0 gap-8 items-center hidden lg:flex '>
               {userLoggedIn && (
                 <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Settings</button>
               )}
@@ -106,14 +107,14 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
             </div>
 
             {/* button to open toggle mobile nav */}
-            <div className='absolute left-0 top-1/2 -translate-y-1/2 block md:hidden'>
+            <div className='absolute left-0 top-1/2 -translate-y-1/2 block lg:hidden'>
               <FaBars className='text-2xl' onClick={() => { setIsSidebarOpen(true) }} />
             </div>
             {/*end of button to open toggle mobile nav */}
           </div>
 
           {!hideNav && (
-            <div className={`items-center text-sm py-5 px-10 justify-center hidden md:flex `}>
+            <div className={`items-center text-sm py-5 px-10 justify-center hidden lg:flex `}>
               <ul className='uppercase flex gap-4 tracking-widest'>
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "about" ? "before:!w-full" : ""}`} to="/about">About</Link></li>
                 <li><Link className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"} ${route == "suites" ? "before:!w-full" : ""}`} to="/suites">Suites</Link></li>
@@ -128,7 +129,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
       </div>
 
       {!hideNav && (
-        <div className={`hidden md:block z-50 w-full tracking-wider ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
+        <div className={`hidden lg:block z-50 w-full tracking-wider ${isDown ? "fixed top-0 left-0 transform translate-y-0 opacity-100 pointer-events-auto" : "transform -translate-y-full opacity-0 pointer-events-none"
           } transition-transform duration-300 ease-in-out`} >
           <div className=' text-white'>
             <div className={`flex  items-center text-sm py-2 px-10 bg-primary  shadow-lg text-black justify-between`}>
@@ -174,7 +175,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
       <div className=''>
         <aside
           id="default-sidebar"
-          className={`block md:hidden  fixed top-0 lg:left-0  ${isSidebarOpen ? "left-0" : "-left-full"} lg:w-64 w-[60%] h-screen bg-white  transition-[left] duration-500 ease-linear z-[997] `}
+          className={`block lg:hidden  fixed top-0 lg:left-0  ${isSidebarOpen ? "left-0" : "-left-full"} lg:w-64 w-[60%] h-screen bg-white  transition-[left] duration-500 ease-linear z-[997] `}
           aria-label="Sidebar"
         >
           <div className="h-full px-3 py-4 pt-1 overflow-y-auto bg-primary">
@@ -192,6 +193,20 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "dining" ? "before:!w-full" : ""}`} to="/dining">Dining</Link></li>
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "blog" ? "before:!w-full" : ""}`} to="/blog">Blog</Link></li>
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "gallery" ? "before:!w-full" : ""}`} to="/gallery">Gallery</Link></li>
+              <div className={`flex flex-col gap-2`}>
+                {userLoggedIn && (
+                  <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle} before:bg-gray-600`}>Settings</button>
+                )}
+               
+                {userLoggedIn && (
+                  <button onClick={handleLogout} className={`${navStyle}  before:bg-gray-600`}>Sign Out</button>
+                )}
+                <h2 className={`${navStyle}  before:bg-gray-600`} onClick={handleContactUsOpen}>Contact</h2>
+                <a target='_blank' href="/booking" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer  font-akzidenz text-xs'>Book</a>
+                {!userLoggedIn && (
+                  <Link to="/login" className={`${navStyle}  before:bg-gray-600`}>Sign In</Link>
+                )}
+              </div>
             </ul>
           </div>
         </aside>

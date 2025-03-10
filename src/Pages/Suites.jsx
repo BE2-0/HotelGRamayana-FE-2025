@@ -632,15 +632,15 @@ const Suites = () => {
 
                     {/* hero section */}
                     <div className="h-[60vh] relative bg-[#E2E0D1]">
-                        <div className='absolute bottom-0 w-full flex justify-center text-center text-black tracking-widest z-20 py-10'>
+                        <div className='absolute bottom-0 w-full flex justify-center text-center text-black tracking-widest z-20 py-10 p-5'>
                             <div className='relative'>
                                 <h2 className='font-bold uppercase font-akzidenz text-sm text-gray-600'>Suites</h2>
-                                <h2 className='font-canela text-5xl !font-thin tracking-wide my-5'
+                                <h2 className='font-canela  text-2xl lg:text-5xl !font-thin tracking-wide my-5'
                                     contentEditable={isHeadingEditable}
                                     ref={headingTitleRef}
                                     dangerouslySetInnerHTML={{ __html: headingData?.title ?? "" }}
                                 ></h2>
-                                <p className='text-center text-lg text-gray-600 mt-5'
+                                <p className='text-center text-base lg:text-lg text-gray-600 mt-5'
                                     contentEditable={isHeadingEditable} ref={headingDescriptionRef}
                                     dangerouslySetInnerHTML={{ __html: headingData?.description ?? "" }}
                                 >
@@ -668,9 +668,9 @@ const Suites = () => {
 
                     {/* contents */}
                     <div className='bg-primary'>
-                        <div className='p-10'>
-                            <div className='grid grid-cols-5 gap-10'>
-                                <div className={`col-span-3 pr-10 `}>
+                        <div className='lg:p-10 p-5'>
+                            <div className='grid lg:grid-cols-5 gap-10'>
+                                <div className={`lg:col-span-3 lg:pr-10 `}>
                                     <div className=' relative '>
                                         {userLoggedIn && (
                                             <div className='absolute top-2 right-2'>
@@ -680,7 +680,7 @@ const Suites = () => {
                                         <img src={aboutData?.imageUrl ?? `https://m.ahstatic.com/is/image/accorhotels/aja_p_5629-59?qlt=82&wid=1920&ts=1701454554080&dpr=off`} className='w-full object-cover object-center rounded-2xl' alt="" />
                                     </div>
                                 </div>
-                                <div className='col-span-2 pr-10'>
+                                <div className='lg:col-span-2 lg:pr-10'>
                                     <div className='flex flex-col justify-center items-center h-full tracking-wide relative'>
                                         {userLoggedIn && (
                                             <div className='absolute top-0 right-4 '>
@@ -692,7 +692,7 @@ const Suites = () => {
                                             </div>
                                         )}
                                         <div className=''>
-                                            <h2 className='font-canela text-5xl !font-thin tracking-wide my-6'
+                                            <h2 className='font-canela text-4xl lg:text-5xl !font-thin tracking-wide mb-6 lg:my-6'
                                                 contentEditable={isAboutEditable}
                                                 ref={aboutTitleRef}
                                                 dangerouslySetInnerHTML={{ __html: aboutData?.title ?? "" }}
@@ -718,11 +718,11 @@ const Suites = () => {
 
                             </div>
                         </div>
-                        <div className='p-10 bg-primary'>
+                        <div className='lg:p-10 p-5 bg-primary'>
                             {userLoggedIn && (
                                 <AddButton onClick={() => { setContentsAddModalOpen(true); }} text="Add Suites" />
                             )}
-                            <div className='grid grid-cols-3 gap-10'>
+                            <div className='grid lg:grid-cols-3 gap-10'>
                                 {contentsData.length > 0 && contentsData.map((element, index) => {
                                     if (!contentRefs.current[index]) {
                                         contentRefs.current[index] = {
@@ -730,9 +730,9 @@ const Suites = () => {
                                         };
                                     }
                                     return (
-                                        <div key={index} className='flex flex-col relative bg-[#a7792b] rounded-md overflow-hidden'>
+                                        <div key={index} className='flex flex-col relative bg-[#a7792b] rounded-2xl overflow-hidden'>
 
-                                            <div className="h-80 relative">
+                                            <div className="lg:h-80 h-52 relative">
                                                 {userLoggedIn && (
                                                     <div className='absolute top-2 right-2'>
                                                         <div>
@@ -793,10 +793,10 @@ const Suites = () => {
 
 
                         {/* contents information */}
-                        <div className='p-10 bg-[#f6f1ef]'>
-                            <div className='grid grid-cols-2 gap-10'>
+                        <div className='lg:p-10 p-5 bg-[#f6f1ef]'>
+                            <div className='grid lg:grid-cols-2 gap-10'>
 
-                                <div className='pr-10 '>
+                                <div className='lg:pr-10 '>
                                     <div className='flex flex-col justify-center items-center h-full tracking-wide'>
                                         <div className='relative'>
                                             {userLoggedIn && (
@@ -808,7 +808,7 @@ const Suites = () => {
                                                     </>}
                                                 </div>
                                             )}
-                                            <h2 className='font-canela text-5xl !font-thin tracking-wide my-6'
+                                            <h2 className='font-canela text-4xl lg:text-5xl !font-thin tracking-wide my-6'
                                                 contentEditable={isContentEditable}
                                                 ref={contentTitleRef}
                                                 dangerouslySetInnerHTML={{ __html: contentData?.title ?? "" }}
@@ -832,7 +832,7 @@ const Suites = () => {
                                     </div>
                                 </div>
 
-                                <div className={` pl-10 `}>
+                                <div className={` lg:pl-10 `}>
                                     <div className=' relative '>
                                         {userLoggedIn && (
                                             <div className='absolute top-2 left-2'>
@@ -841,7 +841,7 @@ const Suites = () => {
                                                 </div>
                                             </div>
                                         )}
-                                        <img src={contentData?.imageUrl ?? ""} className='!max-w-[80%] max-h-[100vh] object-cover object-center rounded-2xl' alt="" />
+                                        <img src={contentData?.imageUrl ?? ""} className='lg:!max-w-[80%] max-h-[100vh] object-cover object-center rounded-2xl' alt="" />
                                     </div>
                                 </div>
 
@@ -851,13 +851,13 @@ const Suites = () => {
 
 
                         {/* offers */}
-                        <div className='p-10 py-20'>
-                            <h2 className='font-canela text-5xl text-center !font-thin tracking-wide my-6'
+                        <div className='lg:p-10 p-5 py-20'>
+                            <h2 className='font-canela text-4xl lg:text-5xl text-center !font-thin tracking-wide my-6'
                             >Featured Offers</h2>
                             {userLoggedIn && (
                                 <AddButton onClick={() => { setOffersAddModalOpen(true); }} text="Add Offers" />
                             )}
-                            <div className='grid grid-cols-3 gap-10'>
+                            <div className='grid lg:grid-cols-3 gap-10'>
                                 {offersData.length > 0 && offersData.map((element, index) => {
                                     if (!offersRefs.current[index]) {
                                         offersRefs.current[index] = {
@@ -866,9 +866,9 @@ const Suites = () => {
                                         };
                                     }
                                     return (
-                                        <div key={index} className='flex flex-col relative bg-[#a7792b] rounded-md overflow-hidden'>
+                                        <div key={index} className='flex flex-col relative bg-[#a7792b] rounded-2xl overflow-hidden'>
 
-                                            <div className="h-80 relative">
+                                            <div className="h-52 lg:h-80 relative">
                                                 {userLoggedIn && (
                                                     <div className='absolute top-2 right-2'>
                                                         <div>

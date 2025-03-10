@@ -337,12 +337,12 @@ const Blog = () => {
                 <div className=' absolute top-0 left-0 w-full'>
 
                     {/* hero section */}
-                    <div className="h-[100vh] relative">
+                    <div className="h-[50vh] lg:h-[100vh] relative">
                         <img src={blogimage} className='w-full h-full object-top object-cover' alt="" />
                         <div className='absolute bottom-0 w-full flex justify-center text-center text-white tracking-widest z-20 py-10'>
                             <div className="relative">
                                 <h2 className='font-bold uppercase font-akzidenz text-sm text-[#fffc]'>Blog</h2>
-                                <h2 className='font-canela text-5xl  !font-thin tracking-wide mt-8'
+                                <h2 className='font-canela text-2xl lg:text-5xl  !font-thin tracking-wide mt-8'
                                     contentEditable={isHeadingEditable}
                                     ref={headingTitleRef}
                                     dangerouslySetInnerHTML={{ __html: headingData?.title ?? "" }}
@@ -372,8 +372,8 @@ const Blog = () => {
                     <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
 
                     {/* contents */}
-                    <div className='p-10 relative bg-primary'>
-                        <div className='w-1/2 m-auto text-center relative'>
+                    <div className='lg:p-10 p-5 relative bg-primary'>
+                        <div className='lg:w-1/2 m-auto text-center relative'>
                             {userLoggedIn && (
                                 <div className='absolute -top-4 right-0 text-black'>
                                     {isAboutEditable ? <>
@@ -383,12 +383,12 @@ const Blog = () => {
                                     </>}
                                 </div>
                             )}
-                            <h2 className='font-canela text-5xl !font-thin tracking-wide mt-8'
+                            <h2 className='font-canela text-4xl lg:text-5xl !font-thin tracking-wide mt-8'
                                 contentEditable={isAboutEditable}
                                 ref={aboutTitleRef}
                                 dangerouslySetInnerHTML={{ __html: aboutData?.title ?? "" }}
                             ></h2>
-                            <p className='text-center text-lg text-gray-600 px-28 mt-5'
+                            <p className='text-center text-lg lg:px-28 mt-5'
                                 contentEditable={isAboutEditable} ref={aboutDescriptionRef}
                                 dangerouslySetInnerHTML={{ __html: aboutData?.description ?? "" }}
                             >
@@ -403,7 +403,7 @@ const Blog = () => {
                             {userLoggedIn && (
                                 <AddButton onClick={() => { setContentsAddModalOpen(true); }} text="Add Blog" />
                             )}
-                            <div className='grid grid-cols-3 gap-10'>
+                            <div className='grid lg:grid-cols-3 gap-10'>
                                 {contentsData.length > 0 && contentsData.map((element, index) => {
                                     if (!contentRefs.current[index]) {
                                         contentRefs.current[index] = {
@@ -412,9 +412,9 @@ const Blog = () => {
                                         };
                                     }
                                     return (
-                                        <div key={index} className='flex flex-col relative bg-[#a7792b] rounded-md overflow-hidden'>
+                                        <div key={index} className='flex flex-col relative bg-[#a7792b] rounded-2xl overflow-hidden'>
 
-                                            <div className="h-80 relative">
+                                            <div className="h-52 lg:h-80 relative">
                                                 {userLoggedIn && (
                                                     <div className='absolute top-2 right-2'>
                                                         <div>
