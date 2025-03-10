@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../components/Nav'
-import heroVideo from "../assets/videos/heroVideo.mp4"
 import aboutimage from "../assets/images/about.png"
 import historyimage from "../assets/images/history.png"
 import dineimage from "../assets/images/dine.png"
@@ -24,6 +23,7 @@ import DeleteModal from '../components/DeleteModal'
 import { IoIosArrowDropup } from "react-icons/io";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { findGreatestPosition } from "../utils/utils";
+import HeroSection from '../components/HeroSection'
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const apiKey = import.meta.env["VITE_IMAGE_SERVICE_URL"];
@@ -381,7 +381,7 @@ const Home = () => {
         <div className=' absolute top-0 left-0 w-full'>
 
           {/* hero section */}
-          <div className="lg:h-[100vh] h-[50vh]">
+          {/* <div className="lg:h-[100vh] h-[50vh]">
             <video
               src={heroVideo}
               autoPlay
@@ -389,7 +389,8 @@ const Home = () => {
               muted
               className="w-full h-full object-cover"
             ></video>
-          </div>
+          </div> */}
+          <HeroSection />
           {/* end of hero section */}
 
           {/* Overlay */}
