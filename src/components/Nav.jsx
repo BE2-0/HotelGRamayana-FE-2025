@@ -13,7 +13,7 @@ import Loader from '../common/Loader'
 import OfferPopup from './OfferPopup'
 import { FaBars } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
-const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
+const Nav = ({ isTextBlack, hideNav, hideBookButton, isHome = false }) => {
   const navStyle = "cursor-pointer relative before:absolute before:bottom-0 pb-0.5 before:left-1/2 before:h-0.5 before:w-0 before:rounded-5xl before:transform before:-translate-x-1/2 before:transition-all before:duration-300 before:ease-linear hover:before:w-full hover:before:scale-x-100 hover:before:transform-origin-center"
   const [isDown, setIsDown] = useState(false);
   const triggerHeight = 200; // Height in pixels to toggle isDown
@@ -82,7 +82,7 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
       {loading && (
         <Loader />
       )}
-      <div className="z-20 relative tracking-wider " >
+      <div className={`z-20 relative tracking-wider ${isHome ? "bg-[#423d33] lg:bg-transparent" : ""}`} >
         <div className={` ${isTextBlack ? "text-black" : "text-white"}`}>
           <div className={`flex relative justify-center text-sm items-center py-5 ${isTextBlack ? "text-black border-black" : "text-white border-gray-400"} lg:border-b mx-4 lg:mx-10`}>
             <Link to="/">
@@ -204,18 +204,14 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
                   <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle} text-left before:bg-gray-600`}>Settings</button>
                 )}
 
-
+                {userLoggedIn && (
+                  <button onClick={handleLogout} className={`${navStyle}  before:bg-gray-600 text-left`}>Sign Out</button>
+                )}
+                {!userLoggedIn && (
+                  <Link to="/login" className={`${navStyle}  before:bg-gray-600`}>Sign In</Link>
+                )}
               </div>
             </ul>
-            <div className='absolute bottom-0 left-0 w-full bg-red-600'>
-              {userLoggedIn && (
-                <button onClick={handleLogout} className={`${navStyle}  before:bg-gray-600 text-left`}>Sign Out</button>
-              )}
-              {!userLoggedIn && (
-                <Link to="/login" className={`${navStyle}  before:bg-gray-600`}>Sign In</Link>
-              )}
-              asfdasdf
-            </div>
           </div>
         </aside>
       </div>

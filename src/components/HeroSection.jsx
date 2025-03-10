@@ -2,9 +2,7 @@ import React from 'react'
 const HeroSection = () => {
     const videoSrc = `https://www.youtube.com/embed/BImcneF2CxE?autoplay=1&controls=0&modestbranding=1&rel=0&mute=1&loop=1&playlist=BImcneF2CxE`;
     return (
-        <div id='player' className=" relative pointer-events-none w-full !h-screen " style={{
-            backgroundImage: "url('/path-to-your-image.jpg')",
-        }}>
+        <div id='player' className=" relative pointer-events-none aspect-video w-full " >
             {/* <video
                 src={heroVideo}
                 autoPlay

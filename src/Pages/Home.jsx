@@ -377,8 +377,8 @@ const Home = () => {
         <Loader />
       )}
       <div className={`${loading ? "pointer-events-none" : ""}`}>
-        <Nav />
-        <div className=' absolute top-0 left-0 w-full'>
+        <Nav isHome={true} />
+        <div className='  top-0 left-0 w-full'>
 
           {/* hero section */}
           {/* <div className="lg:h-[100vh] h-[50vh]">
@@ -394,7 +394,7 @@ const Home = () => {
           {/* end of hero section */}
 
           {/* Overlay */}
-          <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10"></div>
+          <div className="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-gray-900 opacity-70 z-10 lg:block hidden"></div>
           {/* about section */}
           <div className='p-5 lg:p-10 bg-primary'>
             <div className='grid lg:grid-cols-2 gap-10'>
