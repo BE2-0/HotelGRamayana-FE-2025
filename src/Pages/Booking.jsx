@@ -55,7 +55,7 @@ const Booking = () => {
     const [noOfRooms, setNoOfRooms] = useState(1);
     const [noOfAdults, setNoOfAdults] = useState(1);
     const [noOfChildrens, setNoOfChildrens] = useState(1);
-
+    const [direction, setDirection] = useState(window.innerWidth < 1024 ? 'vertical' : 'horizontal');
     const [state, setState] = useState([
         {
             startDate: new Date(),
@@ -73,6 +73,28 @@ const Booking = () => {
             document.body.style.overflow = "auto";
         }, 1000);
     }, [])
+
+
+    useEffect(() => {
+        const handleResize = () => {
+            const newDirection = window.innerWidth < 1024 ? 'vertical' : 'horizontal';
+            if (newDirection !== direction) {
+                setDirection(newDirection);
+            }
+        };
+
+        // ✅ Add event listener for window resize
+        window.addEventListener('resize', handleResize);
+
+        // ✅ Cleanup to avoid memory leaks
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [direction]);
+
+    const handleResize = () => {
+        setDirection(window.innerWidth < 768 ? 'vertical' : 'horizontal');
+    };
 
     const increaseRoomQuantity = () => {
         var value = noOfRooms + 1;
@@ -123,7 +145,7 @@ const Booking = () => {
                     </div>
                     {/* end of hero section */}
                     {/* contents */}
-                    <div className='py-10 px-40 bg-[#E2E0D1] flex gap-8'>
+                    <div className='py-10 lg:px-40 px-5 bg-[#E2E0D1] flex flex-wrap gap-8'>
                         <div className=''>
                             <DateRangePicker
                                 onChange={item => setState([item.selection])}
@@ -131,9 +153,10 @@ const Booking = () => {
                                 moveRangeOnFirstSelection={false}
                                 months={2}
                                 ranges={state}
-                                className="w-full "
-                                direction="horizontal"
+                                className="!w-full "
+                                direction={direction}
                                 showMonthAndYearPickers={false}
+                                key={direction} // ✅ Forces re-render on direction change
                             />
                         </div>
                         <div className='flex flex-col gap-5 flex-grow pt-10 tracking-wider'>

@@ -113,13 +113,22 @@
 
 .rdrCalendarWrapper{
   font-size: 14px !important;
-  padding: 20px !important;
+  padding: 20px;
 }
+
+
 
 .rdrCalendarWrapper{
   background-color: #f7f6f2;
 }
-
+@media (max-width: 1024px) {
+  .rdrCalendarWrapper{
+    padding: 0px !important;
+  }
+  .rdrMonth{
+    width: 90vw !important;
+  }
+}
 
 .swiper {
   width: 100%;
