@@ -194,15 +194,16 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "blog" ? "before:!w-full" : ""}`} to="/blog">Blog</Link></li>
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "gallery" ? "before:!w-full" : ""}`} to="/gallery">Gallery</Link></li>
               <div className={`flex flex-col gap-2`}>
+                
+                <h2 className={`${navStyle}  before:bg-gray-600`} onClick={handleContactUsOpen}>Contact</h2>
+                <a target='_blank' href="/booking" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer  font-akzidenz text-xs'>Book</a>
                 {userLoggedIn && (
-                  <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle} before:bg-gray-600`}>Settings</button>
+                  <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle} text-left before:bg-gray-600`}>Settings</button>
                 )}
                
                 {userLoggedIn && (
-                  <button onClick={handleLogout} className={`${navStyle}  before:bg-gray-600`}>Sign Out</button>
+                  <button onClick={handleLogout} className={`${navStyle}  before:bg-gray-600 text-left`}>Sign Out</button>
                 )}
-                <h2 className={`${navStyle}  before:bg-gray-600`} onClick={handleContactUsOpen}>Contact</h2>
-                <a target='_blank' href="/booking" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer  font-akzidenz text-xs'>Book</a>
                 {!userLoggedIn && (
                   <Link to="/login" className={`${navStyle}  before:bg-gray-600`}>Sign In</Link>
                 )}
