@@ -1,11 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../components/Nav'
-import heroVideo from "../assets/videos/heroVideo.mp4"
-import aboutimage from "../assets/images/about.png"
-import historyimage from "../assets/images/history.png"
-import dineimage from "../assets/images/dine.png"
 import contactImage from "../assets/images/contact.jpg"
-import bedimage from "../assets/images/bed.png"
 import Footer from '../components/Footer'
 import Loader from '../common/Loader'
 import { BsTelephone } from "react-icons/bs";
