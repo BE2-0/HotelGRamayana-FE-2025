@@ -378,7 +378,7 @@ const Home = () => {
       )}
       <div className={`${loading ? "pointer-events-none" : ""}`}>
         <Nav isHome={true} />
-        <div className='  top-0 left-0 w-full'>
+        <div className='lg:absolute static  top-0 left-0 w-full'>
 
           {/* hero section */}
           {/* <div className="lg:h-[100vh] h-[50vh]">
