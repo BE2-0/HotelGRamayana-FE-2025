@@ -207,3 +207,32 @@ h2 *,p *{
   background-color: transparent !important;
 }
 
+
+#player{
+  overflow: hidden;
+}
+#player iframe {
+  transition: transform 0.3s ease; /* Smooth zoom transition */
+  object-fit: cover; /* Ensures video covers the container */
+}
+
+/* For small screens (Mobile) */
+@media (max-width: 767px) {
+  #player iframe {
+    transform: scale(1.2); /* Zoom in on small screens */
+  }
+}
+
+/* For medium screens (Tablets) */
+@media (max-width: 1024px) and (min-width: 768px) {
+  #player iframe {
+    transform: scale(1); /* No zoom on tablets */
+  }
+}
+
+/* For large screens (Desktops) */
+@media (min-width: 1025px) {
+  #player iframe {
+    transform: scale(1.5); /* Zoom in on large screens */
+  }
+}

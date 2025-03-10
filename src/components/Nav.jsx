@@ -12,7 +12,7 @@ import Setting from './Setting'
 import Loader from '../common/Loader'
 import OfferPopup from './OfferPopup'
 import { FaBars } from "react-icons/fa";
-import SidebarButton from './SidebarButton'
+import { FaXmark } from "react-icons/fa6";
 const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
   const navStyle = "cursor-pointer relative before:absolute before:bottom-0 pb-0.5 before:left-1/2 before:h-0.5 before:w-0 before:rounded-5xl before:transform before:-translate-x-1/2 before:transition-all before:duration-300 before:ease-linear hover:before:w-full hover:before:scale-x-100 hover:before:transform-origin-center"
   const [isDown, setIsDown] = useState(false);
@@ -84,25 +84,25 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
       )}
       <div className="z-20 relative tracking-wider " >
         <div className={` ${isTextBlack ? "text-black" : "text-white"}`}>
-          <div className={`flex relative justify-center text-sm items-center py-5 ${isTextBlack ? "text-black border-black" : "text-white border-gray-400"} border-b mx-4 lg:mx-10`}>
+          <div className={`flex relative justify-center text-sm items-center py-5 ${isTextBlack ? "text-black border-black" : "text-white border-gray-400"} lg:border-b mx-4 lg:mx-10`}>
             <Link to="/">
-              <div className='w-32'>
+              <div className='lg:w-32 w-24'>
                 <img src={logo} alt="" className='w-full object-contain brightness-[2.5]' />
               </div>
             </Link>
-            <div className='absolute right-0 top-0 bottom-0 gap-8 items-center hidden lg:flex '>
+            <div className='absolute right-0 top-0 bottom-0 gap-8 items-center flex '>
               {userLoggedIn && (
-                <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Settings</button>
+                <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle} hidden lg:block  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Settings</button>
               )}
               {!userLoggedIn && (
-                <Link to="/login" className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign In</Link>
+                <Link to="/login" className={`${navStyle} hidden lg:block  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign In</Link>
               )}
               {userLoggedIn && (
-                <button onClick={handleLogout} className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign Out</button>
+                <button onClick={handleLogout} className={`${navStyle} hidden lg:block  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`}>Sign Out</button>
               )}
-              <h2 className={`${navStyle}  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} onClick={handleContactUsOpen}>Contact</h2>
+              <h2 className={`${navStyle} hidden lg:block  ${isTextBlack ? "before:bg-gray-600" : "before:bg-gray-300"}`} onClick={handleContactUsOpen}>Contact</h2>
               {!hideBookButton && (
-                <a target='_blank' href="/booking" className={`px-8 py-2 border font-bold text-xs uppercase ${isTextBlack ? "border-black" : "border-white"} cursor-pointer  font-akzidenz`}>Book</a>
+                <a target='_blank' href="/booking" className={`px-2.5 lg:px-8 py-1.5 lg:py-2 border font-bold text-xs uppercase ${isTextBlack ? "border-black" : "border-white"} cursor-pointer  font-akzidenz`}>Book</a>
               )}
             </div>
 
@@ -175,44 +175,51 @@ const Nav = ({ isTextBlack, hideNav, hideBookButton }) => {
       <div className=''>
         <aside
           id="default-sidebar"
-          className={`block lg:hidden  fixed top-0 lg:left-0  ${isSidebarOpen ? "left-0" : "-left-full"} lg:w-64 w-[60%] h-screen bg-white  transition-[left] duration-500 ease-linear z-[997] `}
+          className={`block lg:hidden  fixed top-0 lg:left-0  ${isSidebarOpen ? "left-0" : "-left-full"} w-full h-screen bg-white  transition-[left] duration-500 ease-linear z-[997] `}
           aria-label="Sidebar"
         >
-          <div className="h-full px-3 py-4 pt-1 overflow-y-auto bg-primary">
-            <div className="p-2 flex items-center lg:justify-center gap-2 text-blue-600 dark:text-white my-4">
+          <div className="h-full px-3 overflow-y-auto bg-primary relative">
+            <div className="px-2 flex items-center justify-center gap-2 text-blue-600 border-b pb-5 border-black dark:text-white my-4 relative ">
               {/* <IoLogoBuffer className="text-5xl" /> */}
               <Link to="/">
-                <div className="w-20 h-20">
-                  <img src={logo2} className="w-full h-full object-cover object-center" alt="" />
+                <div className="w-24">
+                  <img src={logo} className="w-full" alt="" />
                 </div>
               </Link>
+              <div className='absolute right-0 top-1/2 -translate-y-1/2 block lg:hidden text-black'>
+                <FaXmark className='text-2xl font-bold' onClick={() => { setIsSidebarOpen(false) }} />
+              </div>
             </div>
-            <ul className="space-y-2 mt-5 text-2xl">
+            <ul className="space-y-2 mt-5 text-xl">
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "about" ? "before:!w-full" : ""}`} to="/about">About</Link></li>
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "suites" ? "before:!w-full" : ""}`} to="/suites">Suites</Link></li>
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "dining" ? "before:!w-full" : ""}`} to="/dining">Dining</Link></li>
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "blog" ? "before:!w-full" : ""}`} to="/blog">Blog</Link></li>
               <li><Link className={`${navStyle}  before:bg-gray-600 ${route == "gallery" ? "before:!w-full" : ""}`} to="/gallery">Gallery</Link></li>
               <div className={`flex flex-col gap-2`}>
-                
+
                 <h2 className={`${navStyle}  before:bg-gray-600`} onClick={handleContactUsOpen}>Contact</h2>
-                <a target='_blank' href="/booking" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer  font-akzidenz text-xs'>Book</a>
+                {/* <a target='_blank' href="/booking" className='px-8 py-2 border font-bold uppercase border-black cursor-pointer  font-akzidenz text-xs'>Book</a> */}
                 {userLoggedIn && (
                   <button onClick={() => { setIsSettingOpen(true) }} className={`${navStyle} text-left before:bg-gray-600`}>Settings</button>
                 )}
-               
-                {userLoggedIn && (
-                  <button onClick={handleLogout} className={`${navStyle}  before:bg-gray-600 text-left`}>Sign Out</button>
-                )}
-                {!userLoggedIn && (
-                  <Link to="/login" className={`${navStyle}  before:bg-gray-600`}>Sign In</Link>
-                )}
+
+
               </div>
             </ul>
+            <div className='absolute bottom-0 left-0 w-full bg-red-600'>
+              {userLoggedIn && (
+                <button onClick={handleLogout} className={`${navStyle}  before:bg-gray-600 text-left`}>Sign Out</button>
+              )}
+              {!userLoggedIn && (
+                <Link to="/login" className={`${navStyle}  before:bg-gray-600`}>Sign In</Link>
+              )}
+              asfdasdf
+            </div>
           </div>
         </aside>
       </div>
-      <div onClick={toggleSidebar} className={`fixed left-0 top-0 w-full h-screen z-[996] bg-gray-600 bg-opacity-50 transition-all duration-300 ease-linear  ${isSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0  pointer-events-none"} `}>
+      <div onClick={toggleSidebar} className={`fixed left-0 top-0 w-full h-screen z-[996] bg-white transition-all duration-300 ease-linear  ${isSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0  pointer-events-none"} `}>
       </div>
       {/*end of mobile nav */}
 
